@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🌲 KROI Rezervime — Sistema e Rezervimeve Online
 
 Sistem i plotë rezervimesh për **KROI Agroturizëm & Restorant** me Node.js, Express dhe MySQL.
@@ -122,3 +123,6 @@ pm2 save
 - Durimi i tavolinave: **2 orë** nga ora e rezervimit
 - Anulimi i kabinave: **falas deri 48 orë** para check-in (politikë, nuk zbatohet automatikisht)
 - Të gjitha të dhënat ruhen me **utf8mb4** për karakteret shqipe (ë, ç, etj.)
+=======
+# kroi-rezervime
+>>>>>>> f03f01a462b940b530357284b932b94391cdfd0d

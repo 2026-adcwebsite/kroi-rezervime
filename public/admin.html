@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KROI — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F4EF;--surface:#FFF;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.13);
+  --gold:#8B6914;--gold-l:#A67C1E;--gold-bg:rgba(139,105,20,0.08);--gold-br:rgba(139,105,20,0.25);
+  --moss:#3D6B3A;--moss-l:#4E8A4A;--moss-bg:rgba(61,107,58,0.09);--moss-br:rgba(61,107,58,0.28);
+  --red:#C0392B;--red-bg:rgba(192,57,43,0.08);--red-br:rgba(192,57,43,0.25);
+  --blue:#2563A8;--blue-bg:rgba(37,99,168,0.08);--blue-br:rgba(37,99,168,0.25);
+  --amber:#92620A;--amber-bg:rgba(146,98,10,0.08);--amber-br:rgba(146,98,10,0.25);
+  --text:#1A1A18;--muted:#6B6558;--dim:#9E9488;--sw:230px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;}
+
+/* LOGIN */
+.login-wrap{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;}
+.login-wrap.hidden{display:none;}
+.login-box{background:var(--surface);border:1.5px solid var(--border2);border-radius:20px;padding:2.5rem 2rem;width:340px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.08);}
+.login-logo{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.2rem;}
+.login-sub{font-size:.73rem;color:var(--dim);letter-spacing:.2em;text-transform:uppercase;margin-bottom:2rem;}
+.login-box input{width:100%;background:var(--bg);border:1.5px solid var(--border2);border-radius:10px;color:var(--text);padding:.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;margin-bottom:1rem;transition:.2s;}
+.login-box input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-bg);}
+.login-box button{width:100%;background:var(--gold);color:#fff;border:none;border-radius:10px;padding:.85rem;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.95rem;cursor:pointer;transition:.2s;}
+.login-box button:hover{background:var(--gold-l);}
+.login-err{color:var(--red);font-size:.82rem;margin-top:.5rem;display:none;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sw);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;overflow-y:auto;}
+.sidebar-logo{padding:1.4rem 1.3rem 1rem;border-bottom:1px solid var(--border);}
+.sidebar-logo .name{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);}
+.sidebar-logo .sub{font-size:.67rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;gap:5px;margin-top:1px;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--moss);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+nav.snav{flex:1;padding:.8rem 0;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:.6rem 1.3rem;font-size:.84rem;color:var(--muted);cursor:pointer;transition:.15s;border-left:2px solid transparent;}
+.nav-item:hover{color:var(--text);background:var(--bg);}
+.nav-item.active{color:var(--gold);border-left-color:var(--gold);background:var(--gold-bg);font-weight:500;}
+.nav-item .icon{font-size:.93rem;width:20px;text-align:center;flex-shrink:0;}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;border-radius:10px;padding:1px 7px;font-size:.67rem;font-weight:600;}
+.nav-sec{padding:.55rem 1.3rem .2rem;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:.3rem;}
+.sidebar-footer{padding:.9rem 1.3rem;border-top:1px solid var(--border);}
+.clock{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;}
+.btn-logout{width:100%;background:transparent;border:1.5px solid var(--border2);border-radius:8px;color:var(--muted);padding:.5rem;font-family:'DM Sans',sans-serif;font-size:.79rem;cursor:pointer;transition:.2s;margin-top:.6rem;}
+.btn-logout:hover{border-color:var(--red-br);color:var(--red);}
+
+/* MAIN */
+.main{margin-left:var(--sw);flex:1;min-height:100vh;}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.9rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;box-shadow:0 1px 8px rgba(0,0,0,.04);}
+.topbar h1{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text);font-weight:400;}
+.topbar-right{display:flex;align-items:center;gap:.8rem;}
+.btn-icon{background:transparent;border:1.5px solid var(--border2);border-radius:8px;color:var(--muted);padding:.4rem .9rem;font-family:'DM Sans',sans-serif;font-size:.79rem;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:5px;text-decoration:none;}
+.btn-icon:hover{border-color:var(--gold);color:var(--gold);}
+.last-ref{font-size:.73rem;color:var(--dim);}
+.content{padding:1.5rem 2rem;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+.stat-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:1.2rem 1.3rem;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.stat-label{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:.5rem;font-weight:500;}
+.stat-value{font-family:'Playfair Display',serif;font-size:2rem;line-height:1;margin-bottom:.3rem;}
+.stat-sub{font-size:.73rem;color:var(--dim);}
+.sc-gold{border-color:var(--gold-br);}.sc-gold .stat-value{color:var(--gold);}
+.sc-green{border-color:var(--moss-br);}.sc-green .stat-value{color:var(--moss);}
+.sc-blue{border-color:var(--blue-br);}.sc-blue .stat-value{color:var(--blue);}
+.sc-amber{border-color:var(--amber-br);}.sc-amber .stat-value{color:var(--amber);}
+
+/* SECTION */
+.section{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;margin-bottom:1.5rem;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.sec-head{padding:1rem 1.3rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.sec-head h2{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:400;color:var(--text);}
+.sec-head-actions{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;}
+
+/* TABLE */
+.rez-table{width:100%;border-collapse:collapse;font-size:.83rem;}
+.rez-table th{padding:.65rem 1rem;text-align:left;font-size:.63rem;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);font-weight:500;border-bottom:1px solid var(--border);background:var(--bg);}
+.rez-table td{padding:.73rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+.rez-table tr:last-child td{border-bottom:none;}
+.rez-table tr:hover td{background:var(--bg);}
+.emri{font-weight:500;color:var(--text);}
+.detail{font-size:.74rem;color:var(--muted);margin-top:2px;}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:.69rem;font-weight:600;letter-spacing:.04em;}
+.b-aktive{background:var(--moss-bg);color:var(--moss);border:1px solid var(--moss-br);}
+.b-anuluar{background:var(--red-bg);color:var(--red);border:1px solid var(--red-br);}
+.b-perfunduar{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-br);}
+.b-tav{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-br);}
+.b-kab{background:var(--moss-bg);color:var(--moss);border:1px solid var(--moss-br);}
+.b-admin{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-br);}
+.btn-sm{border:none;border-radius:6px;padding:.3rem .75rem;font-family:'DM Sans',sans-serif;font-size:.73rem;font-weight:500;cursor:pointer;transition:.15s;}
+.btn-kryer{background:var(--moss-bg);color:var(--moss);border:1px solid var(--moss-br);}
+.btn-kryer:hover{background:var(--moss-br);}
+.btn-anulo{background:var(--red-bg);color:var(--red);border:1px solid var(--red-br);margin-left:4px;}
+.btn-anulo:hover{background:var(--red-br);}
+.btn-liro{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-br);margin-left:4px;}
+.btn-liro:hover{background:var(--amber-br);}
+.btn-primary{background:var(--moss);color:#fff;border:none;border-radius:8px;padding:.45rem 1rem;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;transition:.2s;}
+.btn-primary:hover{background:var(--moss-l);}
+.btn-gold{background:var(--gold);color:#fff;border:none;border-radius:8px;padding:.45rem 1rem;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;transition:.2s;}
+.btn-gold:hover{background:var(--gold-l);}
+.filter-bar{padding:.75rem 1.3rem;border-bottom:1px solid var(--border);display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;background:var(--bg);}
+.filter-bar label{font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);font-weight:500;}
+.filter-bar input,.filter-bar select{background:var(--surface);border:1.5px solid var(--border2);border-radius:6px;color:var(--text);padding:.38rem .8rem;font-family:'DM Sans',sans-serif;font-size:.82rem;outline:none;transition:.2s;}
+.filter-bar input:focus,.filter-bar select:focus{border-color:var(--gold);}
+
+/* ── CABIN CALENDAR (Airbnb style) ── */
+.cabin-cal-tabs{display:flex;gap:.5rem;padding:1rem 1.3rem;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.cab-tab{padding:.4rem 1rem;border-radius:20px;font-size:.8rem;font-weight:500;cursor:pointer;border:1.5px solid var(--border2);color:var(--muted);transition:.2s;background:var(--surface);}
+.cab-tab:hover{border-color:var(--gold-br);color:var(--gold);}
+.cab-tab.active{background:var(--gold);color:#fff;border-color:var(--gold);}
+
+.cabin-cal-wrap{padding:1.3rem;}
+.cabin-cal-nav{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;}
+.cabin-cal-nav h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);font-weight:400;flex:1;text-align:center;}
+.ccal-btn{background:var(--bg);border:1.5px solid var(--border2);border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:1rem;color:var(--muted);transition:.2s;display:flex;align-items:center;justify-content:center;}
+.ccal-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+.cabin-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.ccal-dname{text-align:center;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);padding:.3rem 0;}
+.ccal-day{min-height:56px;border-radius:8px;border:1.5px solid transparent;padding:.25rem .3rem;font-size:.78rem;position:relative;transition:.15s;cursor:default;}
+.ccal-day.today{border-color:var(--gold);background:var(--gold-bg);}
+.ccal-day.other-m{opacity:.25;}
+.ccal-day .day-num{font-weight:500;color:var(--text);margin-bottom:3px;font-size:.75rem;}
+.ccal-day.today .day-num{color:var(--gold);}
+
+/* reservation block inside day */
+.rez-block{
+  border-radius:5px;padding:2px 6px;font-size:.65rem;font-weight:600;
+  cursor:pointer;transition:.15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-top:2px;
+}
+.rez-block.aktive{background:var(--moss-bg);color:var(--moss);border:1px solid var(--moss-br);}
+.rez-block.aktive:hover{background:var(--moss-br);}
+.rez-block.perfunduar{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-br);}
+
+/* spans multiple days */
+.ccal-day.rez-start .rez-block{border-radius:5px 0 0 5px;margin-right:-4px;}
+.ccal-day.rez-mid .rez-block{border-radius:0;margin-right:-4px;margin-left:-4px;}
+.ccal-day.rez-end .rez-block{border-radius:0 5px 5px 0;margin-left:-4px;}
+
+/* ── TIMELINE TAVOLINA ── */
+.timeline-wrap{padding:1.3rem;overflow-x:auto;}
+.timeline-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;flex-wrap:wrap;}
+.timeline-date-nav{display:flex;align-items:center;gap:.5rem;}
+.tl-nav-btn{background:var(--bg);border:1.5px solid var(--border2);border-radius:7px;width:30px;height:30px;cursor:pointer;font-size:.9rem;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:.2s;}
+.tl-nav-btn:hover{border-color:var(--gold);color:var(--gold);}
+.tl-date-label{font-family:'Playfair Display',serif;font-size:1rem;color:var(--text);font-weight:400;min-width:140px;text-align:center;}
+
+.timeline-grid{display:grid;grid-template-columns:80px 1fr;gap:0;min-width:700px;}
+.tl-hours-header{grid-column:2;display:grid;border-bottom:1px solid var(--border);margin-bottom:2px;}
+.tl-hour-mark{font-size:.62rem;color:var(--dim);text-align:center;padding:.2rem 0;border-left:1px solid var(--border);}
+.tl-row{display:contents;}
+.tl-label{padding:.5rem .8rem;font-size:.78rem;font-weight:500;color:var(--text);border-right:1px solid var(--border);display:flex;align-items:center;background:var(--bg);min-height:48px;}
+.tl-label .tl-zona{font-size:.65rem;color:var(--dim);display:block;}
+.tl-track{position:relative;border-bottom:1px solid var(--border);min-height:48px;background:var(--surface);}
+.tl-track:hover{background:rgba(139,105,20,.03);}
+
+/* reservation block on timeline */
+.tl-block{
+  position:absolute;top:6px;bottom:6px;
+  border-radius:8px;padding:0 8px;
+  display:flex;align-items:center;
+  font-size:.72rem;font-weight:600;
+  cursor:pointer;transition:.15s;
+  overflow:hidden;white-space:nowrap;
+  min-width:40px;
+}
+.tl-block.aktive{background:var(--moss-bg);color:var(--moss);border:1.5px solid var(--moss-br);}
+.tl-block.aktive:hover{background:rgba(61,107,58,.18);}
+.tl-block.perfunduar{background:var(--blue-bg);color:var(--blue);border:1.5px solid var(--blue-br);opacity:.7;}
+.tl-block .tl-name{overflow:hidden;text-overflow:ellipsis;}
+.tl-now-line{position:absolute;top:0;bottom:0;width:2px;background:var(--red);opacity:.6;pointer-events:none;z-index:5;}
+
+/* hour grid lines */
+.tl-grid-lines{position:absolute;inset:0;display:grid;pointer-events:none;}
+.tl-grid-line{border-left:1px dashed var(--border);}
+
+/* POPUP */
+.popup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:300;align-items:center;justify-content:center;}
+.popup-overlay.show{display:flex;}
+.popup-box{background:var(--surface);border-radius:16px;padding:1.8rem;max-width:400px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,.15);animation:fadeUp .25s ease;position:relative;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.popup-close{position:absolute;top:.9rem;right:1rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted);line-height:1;}
+.popup-close:hover{color:var(--red);}
+.popup-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400;margin-bottom:1rem;color:var(--text);}
+.popup-row{display:flex;gap:.5rem;margin-bottom:.5rem;font-size:.85rem;}
+.popup-row .lbl{color:var(--dim);min-width:90px;font-size:.75rem;letter-spacing:.05em;padding-top:1px;}
+.popup-row .val{color:var(--text);font-weight:500;}
+.popup-actions{display:flex;gap:.6rem;margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);}
+.popup-actions button{flex:1;padding:.6rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;transition:.2s;}
+
+/* NOTIF */
+.notif-item{padding:1rem 1.3rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:1rem;transition:.15s;}
+.notif-item:last-child{border-bottom:none;}
+.notif-item:hover{background:var(--bg);}
+.notif-item.is-new{border-left:3px solid var(--gold);}
+.notif-icon{width:38px;height:38px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.ni-tav{background:var(--gold-bg);}
+.ni-kab{background:var(--moss-bg);}
+.notif-body{flex:1;}
+.notif-title{font-size:.86rem;font-weight:500;color:var(--text);margin-bottom:3px;}
+.notif-detail{font-size:.76rem;color:var(--muted);line-height:1.5;}
+.notif-time{font-size:.69rem;color:var(--dim);margin-top:2px;}
+.new-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:5px;}
+
+/* LIVE */
+.live-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:.7rem;padding:1.2rem;}
+.live-item{background:var(--bg);border:1.5px solid var(--border2);border-radius:10px;padding:.8rem;text-align:center;transition:.2s;cursor:pointer;}
+.live-item.e-lire{background:var(--moss-bg);border-color:var(--moss-br);}
+.live-item.e-zene{background:var(--red-bg);border-color:var(--red-br);}
+.live-item:hover{transform:scale(1.03);}
+.live-num{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--text);line-height:1;}
+.live-item.e-lire .live-num{color:var(--moss);}
+.live-item.e-zene .live-num{color:var(--red);}
+.live-cap{font-size:.63rem;color:var(--dim);margin-top:3px;}
+.live-who{font-size:.66rem;color:var(--muted);margin-top:4px;line-height:1.3;}
+.live-zona{padding:.4rem 1.2rem;font-size:.67rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);border-top:1px solid var(--border);}
+
+/* MODAL (manual rezervim) */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;overflow-y:auto;padding:1rem;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:var(--surface);border-radius:18px;padding:2rem;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.15);animation:fadeUp .3s ease;margin:auto;}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
+.modal-head h3{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400;}
+.btn-close-modal{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted);}
+.fg{margin-bottom:.9rem;}
+.fg label{display:block;font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;font-weight:500;}
+.fg input,.fg select,.fg textarea{width:100%;background:var(--bg);border:1.5px solid var(--border2);border-radius:8px;color:var(--text);padding:.58rem .9rem;font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:.2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-bg);}
+.fg textarea{resize:vertical;min-height:60px;}
+.date-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.modal-footer{display:flex;gap:.7rem;justify-content:flex-end;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);}
+
+/* EXPORT */
+.export-section{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:.85rem 1.3rem;border-radius:10px;font-size:.87rem;z-index:9999;animation:toastIn .3s ease;max-width:300px;font-weight:500;}
+.toast.success{background:#1E4A28;color:#9AEFB0;border:1px solid var(--moss);}
+.toast.error{background:#fff;color:var(--red);border:1.5px solid var(--red);box-shadow:0 4px 20px rgba(0,0,0,.1);}
+.toast.loading{background:#fff;color:var(--text);border:1.5px solid var(--border2);box-shadow:0 4px 20px rgba(0,0,0,.08);}
+@keyframes toastIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+.empty{text-align:center;padding:3rem 1rem;color:var(--dim);}
+.empty .ei{font-size:2.5rem;margin-bottom:.8rem;opacity:.4;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+@media(max-width:900px){.sidebar{width:60px;}.sidebar .nav-item span,.sidebar-logo .sub,.sidebar-logo .name,.nav-sec,.clock{display:none;}.main{margin-left:60px;}.stats-grid{grid-template-columns:repeat(2,1fr);}.export-section{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">KROI</div>
+    <div class="login-sub">Panel Administrimi</div>
+    <input type="password" id="loginPass" placeholder="Fjalëkalimi" onkeydown="if(event.key==='Enter')doLogin()">
+    <button onclick="doLogin()">Hyr në Panel</button>
+    <div class="login-err" id="loginErr">Fjalëkalimi i gabuar.</div>
+  </div>
+</div>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="name">KROI</div>
+    <div class="sub"><span class="live-dot"></span> Live</div>
+  </div>
+  <nav class="snav">
+    <div class="nav-sec">Kryesorja</div>
+    <div class="nav-item active" onclick="showTab('dashboard')"><span class="icon">📊</span><span>Dashboard</span></div>
+    <div class="nav-item" onclick="showTab('notifikime')"><span class="icon">🔔</span><span>Njoftimet</span><span class="nav-badge" id="notifBadge" style="display:none">0</span></div>
+    <div class="nav-sec">Rezervimet</div>
+    <div class="nav-item" onclick="showTab('tavolina-tl')"><span class="icon">🪑</span><span>Tavolinat</span></div>
+    <div class="nav-item" onclick="showTab('kabina-cal')"><span class="icon">🌲</span><span>Kabinat</span></div>
+    <div class="nav-sec">Veprimet</div>
+    <div class="nav-item" onclick="showTab('live')"><span class="icon">🟢</span><span>Statusi Live</span></div>
+    <div class="nav-sec">Menaxhimi</div>
+    <div class="nav-item" onclick="showTab('cmime')"><span class="icon">💰</span><span>Çmimet</span></div>
+    <div class="nav-item" onclick="showTab('fotot')"><span class="icon">📷</span><span>Fotot</span></div>
+    <div class="nav-item" onclick="showTab('export')"><span class="icon">📥</span><span>Export Excel</span></div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="clock" id="clockEl">--:--</div>
+    <button class="btn-logout" onclick="doLogout()">⬅ Dil</button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <h1 id="pageTitle">Dashboard</h1>
+    <div class="topbar-right">
+      <span class="last-ref" id="lastRef">Duke ngarkuar...</span>
+      <button class="btn-icon" onclick="openManualModal('tavolina')">🪑 + Tavolinë</button>
+      <button class="btn-icon" onclick="openManualModal('kabina')">🌲 + Kabinë</button>
+      <button class="btn-icon" onclick="loadAll()">↻ Rifresko</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="tab-panel active" id="tab-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card sc-gold"><div class="stat-label">Rezervime Sot</div><div class="stat-value" id="stat-sot">—</div><div class="stat-sub">tavolina + kabina</div></div>
+        <div class="stat-card sc-green"><div class="stat-label">Këtë Javë</div><div class="stat-value" id="stat-jave">—</div><div class="stat-sub">rezervime aktive</div></div>
+        <div class="stat-card sc-blue"><div class="stat-label">Kabinat Aktive</div><div class="stat-value" id="stat-kabina">—</div><div class="stat-sub">të zëna tani</div></div>
+        <div class="stat-card sc-amber"><div class="stat-label">Të Ardhura Muaj</div><div class="stat-value" id="stat-revenue">—</div><div class="stat-sub">nga kabinat</div></div>
+      </div>
+      <div class="section">
+        <div class="sec-head"><h2>🕐 Rezervimet e Fundit</h2><span style="font-size:.77rem;color:var(--dim)">10 të fundit</span></div>
+        <table class="rez-table"><thead><tr><th>Klienti</th><th>Lloji</th><th>Detaje</th><th>Data/Ora</th><th>Burimi</th><th>Statusi</th><th>Veprime</th></tr></thead>
+        <tbody id="tbody-fundit"><tr><td colspan="7"><div class="empty"><p>Duke ngarkuar...</p></div></td></tr></tbody></table>
+      </div>
+    </div>
+
+    <!-- NOTIFIKIME -->
+    <div class="tab-panel" id="tab-notifikime">
+      <div class="section">
+        <div class="sec-head"><h2>🔔 Njoftimet</h2>
+          <button class="btn-sm btn-kryer" onclick="markAllRead()">✓ Shëno të lexuara</button>
+        </div>
+        <div id="notif-list"><div class="empty"><div class="ei">🔔</div><p>Duke ngarkuar...</p></div></div>
+      </div>
+    </div>
+
+    <!-- TAVOLINA TIMELINE -->
+    <div class="tab-panel" id="tab-tavolina-tl">
+      <div class="section">
+        <div class="sec-head">
+          <h2>🪑 Timeline — Tavolinat</h2>
+          <div class="sec-head-actions">
+            <button class="btn-gold" onclick="openManualModal('tavolina')">+ Rezervim Manual</button>
+            <a href="/api/admin/export/tavolina" class="btn-icon">📥 Excel</a>
+          </div>
+        </div>
+        <div class="timeline-wrap">
+          <div class="timeline-header">
+            <div class="timeline-date-nav">
+              <button class="tl-nav-btn" onclick="tlNavigate(-1)">‹</button>
+              <div class="tl-date-label" id="tlDateLabel">—</div>
+              <button class="tl-nav-btn" onclick="tlNavigate(1)">›</button>
+            </div>
+            <div class="filter-bar" style="border:none;padding:0;background:transparent;">
+              <label>Zona:</label>
+              <select id="tlZona" onchange="renderTimeline()">
+                <option value="">Të gjitha</option>
+                <option value="indoor">🏛 Salla</option>
+                <option value="outdoor">🌿 Terraca</option>
+              </select>
+            </div>
+            <button class="btn-icon" onclick="tlToday()">Sot</button>
+          </div>
+          <div id="timelineContainer">
+            <div class="empty"><div class="ei">📅</div><p>Duke ngarkuar...</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KABINAT CALENDAR -->
+    <div class="tab-panel" id="tab-kabina-cal">
+      <div class="section">
+        <div class="sec-head">
+          <h2>🌲 Kalendar — Kabinat</h2>
+          <div class="sec-head-actions">
+            <button class="btn-gold" onclick="openManualModal('kabina')">+ Rezervim Manual</button>
+            <a href="/api/admin/export/kabina" class="btn-icon">📥 Excel</a>
+          </div>
+        </div>
+        <!-- Tabs per kabinë -->
+        <div class="cabin-cal-tabs" id="cabinCalTabs">
+          <div class="empty" style="padding:.5rem"><p>Duke ngarkuar kabinat...</p></div>
+        </div>
+        <!-- Calendar -->
+        <div class="cabin-cal-wrap">
+          <div class="cabin-cal-nav">
+            <button class="ccal-btn" onclick="ccalNavigate(-1)">‹</button>
+            <h3 id="ccalTitle">—</h3>
+            <button class="ccal-btn" onclick="ccalNavigate(1)">›</button>
+          </div>
+          <div class="cabin-cal-grid" id="ccalGrid">
+            <div class="empty" style="grid-column:1/-1;padding:2rem"><p>Zgjidhni një kabinë</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVE STATUS -->
+    <div class="tab-panel" id="tab-live">
+      <div class="section" style="margin-bottom:1.5rem;">
+        <div class="sec-head">
+          <h2>🪑 Tavolinat — Statusi Tani</h2>
+          <div class="filter-bar" style="border:none;padding:0;background:transparent;">
+            <label>Data:</label><input type="date" id="live-date" onchange="loadLive()">
+            <label>Ora:</label><input type="time" id="live-ora" value="20:00" onchange="loadLive()">
+          </div>
+        </div>
+        <div class="live-zona">🏛 Salla e Brendshme</div><div class="live-grid" id="live-indoor"></div>
+        <div class="live-zona">🌿 Terraca</div><div class="live-grid" id="live-outdoor"></div>
+      </div>
+      <div class="section">
+        <div class="sec-head"><h2>🌲 Kabinat — Disponueshmëria</h2></div>
+        <div class="live-grid" id="live-kabina"></div>
+      </div>
+    </div>
+
+    <!-- ÇMIMET -->
+    <div class="tab-panel" id="tab-cmime">
+      <div class="section">
+        <div class="sec-head"><h2>💰 Menaxhimi i Çmimeve</h2></div>
+        <div style="padding:1.3rem;" id="cmime-content"><div class="empty"><p>Duke ngarkuar...</p></div></div>
+      </div>
+    </div>
+
+    <!-- FOTOT -->
+    <div class="tab-panel" id="tab-fotot">
+      <div class="section">
+        <div class="sec-head">
+          <h2>📷 Fotot e Kabinave</h2>
+          <select id="foto-kabina-sel" onchange="loadFotot()" style="background:var(--bg);border:1.5px solid var(--border2);border-radius:8px;color:var(--text);padding:.4rem .8rem;font-family:'DM Sans',sans-serif;font-size:.84rem;outline:none;">
+            <option value="">— Zgjidhni kabinën —</option>
+          </select>
+        </div>
+        <div style="padding:1.3rem;" id="fotot-content"><div class="empty"><div class="ei">📷</div><p>Zgjidhni një kabinë</p></div></div>
+      </div>
+    </div>
+
+    <!-- EXPORT -->
+    <div class="tab-panel" id="tab-export">
+      <div class="export-section">
+        <div class="section">
+          <div class="sec-head"><h2>🪑 Export Tavolinat</h2></div>
+          <div style="padding:1.3rem;">
+            <div class="fg"><label>Data Fillim</label><input type="date" id="exp-tav-start"></div>
+            <div class="fg"><label>Data Mbarim</label><input type="date" id="exp-tav-end"></div>
+            <button class="btn-primary" style="width:100%;padding:.7rem;" onclick="exportData('tavolina')">📥 Shkarko Excel</button>
+          </div>
+        </div>
+        <div class="section">
+          <div class="sec-head"><h2>🌲 Export Kabinat</h2></div>
+          <div style="padding:1.3rem;">
+            <div class="fg"><label>Data Fillim</label><input type="date" id="exp-kab-start"></div>
+            <div class="fg"><label>Data Mbarim</label><input type="date" id="exp-kab-end"></div>
+            <button class="btn-primary" style="width:100%;padding:.7rem;" onclick="exportData('kabina')">📥 Shkarko Excel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- POPUP — detaje rezervimi -->
+<div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+  <div class="popup-box" onclick="event.stopPropagation()">
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div class="popup-title" id="popupTitle">Detajet e Rezervimit</div>
+    <div id="popupContent"></div>
+    <div class="popup-actions" id="popupActions"></div>
+  </div>
+</div>
+
+<!-- MANUAL RESERVATION MODAL -->
+<div class="modal-overlay" id="manualModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="manualTitle">+ Rezervim Manual</h3>
+      <button class="btn-close-modal" onclick="closeManualModal()">✕</button>
+    </div>
+    <div id="manualForm"></div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-anulo" onclick="closeManualModal()">Anulo</button>
+      <button class="btn-primary" onclick="submitManual()">Konfirmo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_PASS='kroi2024';
+let isLoggedIn=sessionStorage.getItem('kroi_admin')==='1';
+function doLogin(){const p=document.getElementById('loginPass').value;if(p===ADMIN_PASS){sessionStorage.setItem('kroi_admin','1');document.getElementById('loginWrap').classList.add('hidden');isLoggedIn=true;initApp();}else{document.getElementById('loginErr').style.display='block';}}
+function doLogout(){sessionStorage.removeItem('kroi_admin');location.reload();}
+if(isLoggedIn)document.getElementById('loginWrap').classList.add('hidden');
+setInterval(()=>document.getElementById('clockEl').textContent=new Date().toLocaleTimeString('sq-AL',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),1000);
+
+const titles={dashboard:'Dashboard',notifikime:'Njoftimet','tavolina-tl':'Tavolinat — Timeline','kabina-cal':'Kabinat — Kalendar',live:'Statusi Live',cmime:'Çmimet',fotot:'Fotot',export:'Export Excel'};
+function showTab(name){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')?.includes(name))n.classList.add('active');});
+  document.getElementById('pageTitle').textContent=titles[name]||name;
+  if(name==='tavolina-tl')loadTimeline();
+  if(name==='kabina-cal')loadCabinCal();
+  if(name==='live')loadLive();
+  if(name==='notifikime')loadNotif();
+  if(name==='cmime')loadCmime();
+  if(name==='fotot')loadFototTab();
+}
+
+function toast(msg,type='success'){document.querySelectorAll('.toast').forEach(e=>e.remove());const el=document.createElement('div');el.className='toast '+type;el.textContent=msg;document.body.appendChild(el);setTimeout(()=>el.remove(),3500);}
+const fmtDate=d=>d?new Date(d).toLocaleDateString('sq-AL',{day:'2-digit',month:'2-digit',year:'numeric'}):'—';
+const fmtTime=t=>t?t.substring(0,5):'—';
+function timeAgo(dt){const s=Math.floor((Date.now()-new Date(dt))/1000);if(s<60)return 'Tani';if(s<3600)return Math.floor(s/60)+' min';if(s<86400)return Math.floor(s/3600)+' orë';return fmtDate(dt);}
+function statusBadge(s){const m={aktive:'b-aktive',anuluar:'b-anuluar',perfunduar:'b-perfunduar'};const l={aktive:'Aktive',anuluar:'Anuluar',perfunduar:'Perfunduar'};return `<span class="badge ${m[s]||''}">${l[s]||s}</span>`;}
+function burimBadge(b){return b==='admin'?'<span class="badge b-admin">👤 Admin</span>':'<span class="badge" style="background:var(--bg);color:var(--muted);border-color:var(--border2);">🌐 Online</span>';}
+
+let allTavRez=[],allKabRez=[],allKabinat=[];
+let seenIds=new Set(JSON.parse(localStorage.getItem('kroi_seen')||'[]'));
+
+async function loadAll(){
+  document.getElementById('lastRef').textContent='Rifreskuar: '+new Date().toLocaleTimeString('sq-AL');
+  await Promise.all([loadDashboard(),loadKabinatList()]);
+  checkNewNotif();
+}
+async function loadKabinatList(){
+  try{const r=await fetch('/api/kabinat');allKabinat=await r.json();}catch(e){}
+}
+
+// ── DASHBOARD ──────────────────────────────────
+async function loadDashboard(){
+  try{
+    const [rT,rK]=await Promise.all([fetch('/api/tavolina/rezervimet').then(r=>r.json()),fetch('/api/kabina/rezervimet').then(r=>r.json())]);
+    allTavRez=Array.isArray(rT)?rT:[];allKabRez=Array.isArray(rK)?rK:[];
+    const today=new Date().toISOString().split('T')[0];
+    const weekAgo=new Date(Date.now()-7*86400000).toISOString().split('T')[0];
+    const monthStart=today.substring(0,7)+'-01';
+    document.getElementById('stat-sot').textContent=allTavRez.filter(r=>r.data_rez===today&&r.statusi==='aktive').length+allKabRez.filter(r=>r.check_in<=today&&r.check_out>today&&r.statusi==='aktive').length;
+    document.getElementById('stat-jave').textContent=allTavRez.filter(r=>r.data_rez>=weekAgo&&r.statusi==='aktive').length+allKabRez.filter(r=>r.check_in>=weekAgo&&r.statusi==='aktive').length;
+    document.getElementById('stat-kabina').textContent=allKabRez.filter(r=>r.check_in<=today&&r.check_out>today&&r.statusi==='aktive').length;
+    const rev=allKabRez.filter(r=>r.statusi==='aktive'&&r.check_in>=monthStart).reduce((s,r)=>s+(parseFloat(r.totali)||0),0);
+    document.getElementById('stat-revenue').textContent=rev>0?Math.round(rev/1000)+'k L':'—';
+    const merged=[...allTavRez.map(r=>({...r,_type:'tav'})),...allKabRez.map(r=>({...r,_type:'kab'}))].sort((a,b)=>new Date(b.krijuar_me)-new Date(a.krijuar_me)).slice(0,10);
+    const tbody=document.getElementById('tbody-fundit');
+    if(!merged.length){tbody.innerHTML='<tr><td colspan="7"><div class="empty"><div class="ei">📋</div><p>Asnjë rezervim.</p></div></td></tr>';return;}
+    tbody.innerHTML=merged.map(r=>{const isTav=r._type==='tav';const det=isTav?`Nr.${r.numri} · ${r.zona==='indoor'?'Salla':'Terraca'}`:`${r.kabina_emri}`;const koha=isTav?`${fmtDate(r.data_rez)} ${fmtTime(r.ora_rez)}`:`${fmtDate(r.check_in)} → ${fmtDate(r.check_out)}`;return `<tr><td><div class="emri">${r.emri}</div><div class="detail">${r.telefon}</div></td><td><span class="badge ${isTav?'b-tav':'b-kab'}">${isTav?'🪑':'🌲'}</span></td><td><div class="emri">${det}</div><div class="detail">${r.persona} persona</div></td><td><div class="emri">${koha}</div><div class="detail">${timeAgo(r.krijuar_me)}</div></td><td>${burimBadge(r.burim)}</td><td>${statusBadge(r.statusi)}</td><td>${actionBtns(isTav?'tavolina':'kabina',r.id,r.statusi,r)}</td></tr>`;}).join('');
+  }catch(e){console.error(e);}
+}
+
+function actionBtns(type,id,status,r){
+  if(status==='anuluar')return '<span style="color:var(--dim);font-size:.73rem;">Anuluar</span>';
+  if(status==='perfunduar')return '<span style="color:var(--blue);font-size:.73rem;">Kryer</span>';
+  let btns=`<button class="btn-sm btn-kryer" onclick="chStatus('${type}',${id},'perfunduar')">✓ Kryer</button>`;
+  btns+=`<button class="btn-sm btn-anulo" onclick="chStatus('${type}',${id},'anuluar')">✕ Anulo</button>`;
+  if(type==='tavolina') btns+=`<button class="btn-sm btn-liro" onclick="liroTavolinë(${id})">⬆ Liro</button>`;
+  return btns;
+}
+
+async function chStatus(type,id,s){
+  if(!confirm(s==='anuluar'?'A e anulojmë?':'A e shënojmë si të kryer?'))return;
+  try{const res=await fetch(`/api/admin/${type}/rezervimet/${id}/status`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({statusi:s})});const d=await res.json();
+  if(d.sukses){toast(s==='anuluar'?'U anulua.':'U shënua si i kryer.');closePopup();loadAll();if(tlData)loadTimeline();if(ccalKabinaId)loadCabinCal();}else toast(d.gabim||'Gabim.','error');}
+  catch(e){toast('Gabim.','error');}
+}
+
+async function liroTavolinë(id){
+  if(!confirm('A e lirojmë tavolinën tani?'))return;
+  try{const res=await fetch(`/api/admin/tavolina/rezervimet/${id}/liro`,{method:'PATCH'});const d=await res.json();
+  if(d.sukses){toast(`Tavolina u lirua (ora ${d.ora_liruar}).`);closePopup();loadAll();loadTimeline();}else toast(d.gabim||'Gabim.','error');}
+  catch(e){toast('Gabim.','error');}
+}
+
+// ── POPUP ──────────────────────────────────────
+function showPopup(title, rows, actions=''){
+  document.getElementById('popupTitle').textContent=title;
+  document.getElementById('popupContent').innerHTML=rows.map(([l,v])=>`<div class="popup-row"><span class="lbl">${l}</span><span class="val">${v}</span></div>`).join('');
+  document.getElementById('popupActions').innerHTML=actions;
+  document.getElementById('popupOverlay').classList.add('show');
+}
+function closePopup(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('popupOverlay').classList.remove('show');}
+
+function showTavPopup(r){
+  showPopup(`🪑 Tavolina Nr. ${r.numri}`,[
+    ['Klienti',r.emri],['Telefon',r.telefon],['Email',r.email||'—'],
+    ['Data',fmtDate(r.data_rez)],['Ora',`${fmtTime(r.ora_rez)} – ${fmtTime(r.ora_mbarim)}`],
+    ['Persona',r.persona],['Zona',r.zona==='indoor'?'🏛 Salla':'🌿 Terraca'],
+    ['Burimi',r.burim==='admin'?'Admin':'Online'],['Statusi',r.statusi],
+    ['Kërkesa',r.kerkesa||'—'],['Krijuar',timeAgo(r.krijuar_me)]
+  ],r.statusi==='aktive'?`
+    <button class="btn-sm btn-kryer" style="flex:1" onclick="chStatus('tavolina',${r.id},'perfunduar')">✓ Kryer</button>
+    <button class="btn-sm btn-liro" style="flex:1" onclick="liroTavolinë(${r.id})">⬆ Liro Tani</button>
+    <button class="btn-sm btn-anulo" style="flex:1" onclick="chStatus('tavolina',${r.id},'anuluar')">✕ Anulo</button>`:'');
+}
+
+// Stores for popup access (avoids JSON in onclick)
+const tavStore = {};
+const rezStore2 = {};
+function showTavFromStore(id){ const r=tavStore[id]; if(r) showTavPopup(r); }
+function showKabFromStore2(id){ const r=rezStore2[id]; if(r) showKabPopup(r); }
+
+// Store for kabina rezervime (avoids JSON in onclick attributes)
+const rezStore = {};
+function showKabFromStore(id){ const r = rezStore[id]; if(r) showKabPopup(r); }
+
+function showKabPopup(r){
+  showPopup(`🌲 ${r.kabina_emri||'Kabinë'}`,[
+    ['Klienti',r.emri],['Telefon',r.telefon],['Email',r.email||'—'],
+    ['Check-in',fmtDate(r.check_in)],['Check-out',fmtDate(r.check_out)],
+    ['Netë',r.netet],['Totali',r.totali?Math.round(r.totali).toLocaleString()+' L':'—'],
+    ['Persona',r.persona],['Burimi',r.burim==='admin'?'Admin':'Online'],
+    ['Statusi',r.statusi],['Kërkesa',r.kerkesa||'—'],['Krijuar',timeAgo(r.krijuar_me)]
+  ],r.statusi==='aktive'?`
+    <button class="btn-sm btn-kryer" style="flex:1" onclick="chStatus('kabina',${r.id},'perfunduar')">✓ Kryer</button>
+    <button class="btn-sm btn-anulo" style="flex:1" onclick="chStatus('kabina',${r.id},'anuluar')">✕ Anulo</button>`:'');
+}
+
+// ── TIMELINE TAVOLINA ─────────────────────────
+let tlDate = new Date().toISOString().split('T')[0];
+let tlData = null;
+const TL_START = 11; // 11:00
+const TL_END   = 24; // 24:00
+const TL_HOURS = TL_END - TL_START;
+const months=['Janar','Shkurt','Mars','Prill','Maj','Qershor','Korrik','Gusht','Shtator','Tetor','Nëntor','Dhjetor'];
+const days=['E Diel','E Hënë','E Martë','E Mërkurë','E Enjte','E Premte','E Shtunë'];
+
+function tlNavigate(dir){const d=new Date(tlDate);d.setDate(d.getDate()+dir);tlDate=d.toISOString().split('T')[0];loadTimeline();}
+function tlToday(){tlDate=new Date().toISOString().split('T')[0];loadTimeline();}
+
+async function loadTimeline(){
+  try{
+    const res=await fetch(`/api/admin/tavolina/timeline?data=${tlDate}`);
+    tlData=await res.json();
+    renderTimeline();
+  }catch(e){console.error(e);}
+}
+
+function renderTimeline(){
+  if(!tlData)return;
+  const d=new Date(tlDate);
+  document.getElementById('tlDateLabel').textContent=`${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  const zona=document.getElementById('tlZona').value;
+  let tavs=tlData.tavolinat;
+  if(zona)tavs=tavs.filter(t=>t.zona===zona);
+
+  // Hours header
+  const hours=[];
+  for(let h=TL_START;h<=TL_END;h++) hours.push(h===24?'00:00':h+':00');
+
+  const colTemplate=`80px repeat(${TL_HOURS*2},1fr)`;
+  let html=`<div style="display:grid;grid-template-columns:${colTemplate};min-width:700px;">`;
+
+  // Header row
+  html+=`<div style="background:var(--bg);border-bottom:1px solid var(--border);border-right:1px solid var(--border);padding:.4rem .5rem;font-size:.62rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;">Tavolina</div>`;
+  for(let h=TL_START;h<TL_END;h++){
+    html+=`<div style="grid-column:span 2;text-align:center;font-size:.65rem;color:var(--dim);border-bottom:1px solid var(--border);border-left:1px dashed var(--border);padding:.3rem 0;">${h}:00</div>`;
+  }
+
+  // Now line calculation
+  const now=new Date();
+  const isToday=tlDate===now.toISOString().split('T')[0];
+  const nowPct=isToday?((now.getHours()+now.getMinutes()/60-TL_START)/TL_HOURS*100):null;
+
+  // Rows per tavolinë
+  tavs.forEach(t=>{
+    const rezs=tlData.rezervimet.filter(r=>r.tavolina_id===t.id);
+    html+=`<div style="background:var(--bg);border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:.4rem .6rem;display:flex;flex-direction:column;justify-content:center;min-height:52px;">
+      <div style="font-size:.8rem;font-weight:500;color:var(--text)">Nr.${t.numri}</div>
+      <div style="font-size:.62rem;color:var(--dim)">${t.zona==='indoor'?'Salla':'Terraca'}</div>
+    </div>`;
+    // Track cell
+    html+=`<div style="grid-column:span ${TL_HOURS*2};position:relative;border-bottom:1px solid var(--border);min-height:52px;background:var(--surface);">`;
+    // Grid lines
+    for(let h=0;h<TL_HOURS;h++){
+      html+=`<div style="position:absolute;top:0;bottom:0;left:${h/TL_HOURS*100}%;width:1px;background:var(--border);pointer-events:none;"></div>`;
+    }
+    // Now line
+    if(nowPct!==null&&nowPct>=0&&nowPct<=100){
+      html+=`<div style="position:absolute;top:0;bottom:0;left:${nowPct}%;width:2px;background:var(--red);opacity:.5;z-index:5;pointer-events:none;"></div>`;
+    }
+    // Reservation blocks
+    rezs.forEach(r=>{
+      const [rh,rm]=r.ora_rez.split(':').map(Number);
+      const [mh,mm]=r.ora_mbarim.split(':').map(Number);
+      const startPct=Math.max(0,(rh+rm/60-TL_START)/TL_HOURS*100);
+      const endPct=Math.min(100,(mh+mm/60-TL_START)/TL_HOURS*100);
+      const width=Math.max(1,endPct-startPct);
+      const cls=r.statusi==='aktive'?'aktive':'perfunduar';
+      const bg=r.statusi==='aktive'?'var(--moss-bg)':'var(--blue-bg)';
+      const clr=r.statusi==='aktive'?'var(--moss)':'var(--blue)';
+      const br=r.statusi==='aktive'?'var(--moss-br)':'var(--blue-br)';
+      html+=`<div onclick='showTavPopup(${JSON.stringify(r)})' style="position:absolute;top:6px;bottom:6px;left:${startPct}%;width:${width}%;background:${bg};color:${clr};border:1.5px solid ${br};border-radius:8px;padding:0 8px;display:flex;align-items:center;font-size:.72rem;font-weight:600;cursor:pointer;overflow:hidden;white-space:nowrap;z-index:2;transition:.15s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+        <span style="overflow:hidden;text-overflow:ellipsis">${r.emri}${r.statusi==='perfunduar'?' ✓':''}</span>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+
+  if(tavs.length===0){
+    html+=`<div style="grid-column:1/-1"><div class="empty"><div class="ei">🪑</div><p>Asnjë tavolinë për këtë filtrim.</p></div></div>`;
+  }
+
+  html+=`</div>`;
+  document.getElementById('timelineContainer').innerHTML=html;
+}
+
+// ── CABIN CALENDAR ────────────────────────────
+let ccalKabinaId=null, ccalOffset=0, ccalRez=[];
+
+async function loadCabinCal(){
+  if(!allKabinat.length)await loadKabinatList();
+  // Build tabs
+  const tabs=document.getElementById('cabinCalTabs');
+  tabs.innerHTML=allKabinat.map(k=>`<div class="cab-tab ${ccalKabinaId===k.id?'active':''}" onclick="selectCabinCal(${k.id})">${k.emri}</div>`).join('');
+  if(!ccalKabinaId && allKabinat.length) selectCabinCal(allKabinat[0].id);
+  else if(ccalKabinaId) await renderCabinCal();
+}
+
+async function selectCabinCal(id){
+  ccalKabinaId=id;
+  ccalOffset=0;
+  document.querySelectorAll('.cab-tab').forEach(t=>{
+    t.classList.toggle('active',parseInt(t.getAttribute('onclick').match(/\d+/)[0])===id);
+  });
+  await renderCabinCal();
+}
+
+async function ccalNavigate(dir){ccalOffset+=dir;await renderCabinCal();}
+
+async function renderCabinCal(){
+  const now=new Date();
+  const year=now.getFullYear();
+  const month=now.getMonth()+ccalOffset;
+  const d=new Date(year,month,1);
+  const muaji=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  document.getElementById('ccalTitle').textContent=months[d.getMonth()]+' '+d.getFullYear();
+
+  try{
+    const res=await fetch(`/api/admin/kabina/${ccalKabinaId}/kalendar-rezervime?muaji=${muaji}`);
+    ccalRez=await res.json();
+  }catch(e){ccalRez=[];}
+
+  const grid=document.getElementById('ccalGrid');
+  const today=new Date().toISOString().split('T')[0];
+  const dnames=['Hë','Ma','Më','En','Pr','Sh','Di'];
+  let sd=d.getDay();sd=sd===0?6:sd-1;
+  const lastDay=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+
+  // Build a map: date -> reservation(s)
+  const rezByDate={};
+  ccalRez.forEach(r=>{
+    let cur=new Date(r.check_in);
+    const end=new Date(r.check_out);
+    while(cur<end){
+      const ds=cur.toISOString().split('T')[0];
+      if(!rezByDate[ds])rezByDate[ds]=[];
+      rezByDate[ds].push(r);
+      cur.setDate(cur.getDate()+1);
+    }
+  });
+
+  grid.innerHTML=dnames.map(dn=>`<div class="ccal-dname">${dn}</div>`).join('');
+
+  // Prev month padding
+  const prevLast=new Date(d.getFullYear(),d.getMonth(),0).getDate();
+  for(let i=sd-1;i>=0;i--) grid.innerHTML+=`<div class="ccal-day other-m"><div class="day-num">${prevLast-i}</div></div>`;
+
+  for(let day=1;day<=lastDay;day++){
+    const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const isToday=ds===today;
+    const rez=rezByDate[ds]||[];
+
+    let rezHtml='';
+    rez.forEach(r=>{
+      const isStart=r.check_in===ds;
+      const isEnd=new Date(r.check_out).toISOString().split('T')[0]===ds?false:new Date(r.check_out)-new Date(ds)===86400000;
+      const kabEmri = allKabinat.find(k=>k.id===ccalKabinaId)?.emri||'Kabinë';
+      rezStore[r.id] = {...r, kabina_emri: kabEmri};
+      rezHtml+=`<div class="rez-block ${r.statusi}" onclick="showKabFromStore(${r.id})" title="${r.emri}: ${fmtDate(r.check_in)} → ${fmtDate(r.check_out)}">${isStart?r.emri:'&nbsp;'}</div>`;
+    });
+
+    grid.innerHTML+=`<div class="ccal-day ${isToday?'today':''}"><div class="day-num">${day}</div>${rezHtml}</div>`;
+  }
+
+  // Next month padding
+  const rem=(sd+lastDay)%7===0?0:7-(sd+lastDay)%7;
+  for(let i=1;i<=rem;i++) grid.innerHTML+=`<div class="ccal-day other-m"><div class="day-num">${i}</div></div>`;
+}
+
+// ── NOTIFICATIONS ──────────────────────────────
+function checkNewNotif(){const all=[...allTavRez.map(r=>'tav'+r.id),...allKabRez.map(r=>'kab'+r.id)];const n=all.filter(k=>!seenIds.has(k));const b=document.getElementById('notifBadge');if(n.length){b.textContent=n.length;b.style.display='inline';}else b.style.display='none';}
+function loadNotif(){
+  const all=[...allTavRez.map(r=>({...r,_type:'tav'})),...allKabRez.map(r=>({...r,_type:'kab'}))].sort((a,b)=>new Date(b.krijuar_me)-new Date(a.krijuar_me));
+  const el=document.getElementById('notif-list');
+  if(!all.length){el.innerHTML='<div class="empty"><div class="ei">🔔</div><p>Asnjë rezervim.</p></div>';return;}
+  // Store all notif items for popup access
+all.forEach(r=>{ const isTav=r._type==='tav'; if(isTav) tavStore[r.id]=r; else rezStore2[r.id]={...r}; });
+el.innerHTML=all.map(r=>{const isTav=r._type==='tav';const isNew=!seenIds.has(r._type+r.id);const det=isTav?`Nr.${r.numri} · ${r.zona==='indoor'?'Salla':'Terraca'} · ${r.persona} persona · ${fmtDate(r.data_rez)} ${fmtTime(r.ora_rez)}`:`${r.kabina_emri} · ${fmtDate(r.check_in)} → ${fmtDate(r.check_out)}${r.totali?' · '+Math.round(r.totali).toLocaleString()+' L':''}`;return `<div class="notif-item ${isNew?'is-new':''}" onclick="${isTav?'showTavFromStore('+r.id+')':'showKabFromStore2('+r.id+')'}">
+    <div class="${isNew?'new-dot':''}"></div>
+    <div class="notif-icon ${isTav?'ni-tav':'ni-kab'}">${isTav?'🪑':'🌲'}</div>
+    <div class="notif-body"><div class="notif-title">${r.emri} ${burimBadge(r.burim)} ${statusBadge(r.statusi)}</div><div class="notif-detail">${det}${r.kerkesa?'<br>📝 '+r.kerkesa:''}</div><div class="notif-time">${r.telefon} · ${timeAgo(r.krijuar_me)}</div></div>
+  </div>`;}).join('');}
+function markAllRead(){[...allTavRez.map(r=>'tav'+r.id),...allKabRez.map(r=>'kab'+r.id)].forEach(k=>seenIds.add(k));localStorage.setItem('kroi_seen',JSON.stringify([...seenIds]));document.getElementById('notifBadge').style.display='none';loadNotif();toast('Të gjitha të lexuara.');}
+
+// ── LIVE ──────────────────────────────────────
+async function loadLive(){const date=document.getElementById('live-date').value;const ora=document.getElementById('live-ora').value;try{const [tav,kab]=await Promise.all([fetch(`/api/tavolina/disponueshme?data=${date}&ora=${ora}`).then(r=>r.json()),fetch(`/api/kabina/disponueshme?check_in=${date}&check_out=${date}`).then(r=>r.json())]);const rezToday=allTavRez.filter(r=>r.data_rez===date&&r.statusi==='aktive');['indoor','outdoor'].forEach(zona=>{const el=document.getElementById('live-'+zona);const items=Array.isArray(tav)?tav.filter(t=>t.zona===zona):[];el.innerHTML=items.map(t=>{const rez=rezToday.find(r=>r.tavolina_id===t.id);return `<div class="live-item ${t.e_zene?'e-zene':'e-lire'}" onclick="${t.e_zene&&rez?(()=>{tavStore[rez.id]=rez;return 'showTavFromStore('+rez.id+')';})():''}"><div class="live-num">${t.numri}</div><div class="live-cap">${t.kapaciteti} vende</div>${t.e_zene&&rez?`<div class="live-who">${rez.emri}<br>${fmtTime(rez.ora_rez)}–${fmtTime(rez.ora_mbarim)}</div>`:''}</div>`;}).join('')||'<div style="padding:1rem;color:var(--dim)">—</div>';});if(Array.isArray(kab)){const rezKab=allKabRez.filter(r=>r.check_in<=date&&r.check_out>date&&r.statusi==='aktive');document.getElementById('live-kabina').innerHTML=kab.map(k=>{const rez=rezKab.find(r=>r.kabina_id===k.id);if(rez)rezStore2[rez.id]={...rez,kabina_emri:k.emri};return `<div class="live-item ${k.e_zene?'e-zene':'e-lire'}" onclick="${k.e_zene&&rez?'showKabFromStore2('+rez.id+')':''}"><div class="live-num" style="font-size:1rem;">${k.emri.replace('Kabina ','')}</div><div class="live-cap">${k.lloji}</div>${k.e_zene&&rez?`<div class="live-who">${rez.emri}<br>${fmtDate(rez.check_in)}→${fmtDate(rez.check_out)}</div>`:''}</div>`;}).join('');}}catch(e){console.error(e);}}
+
+// ── ÇMIMET ─────────────────────────────────────
+async function loadCmime(){if(!allKabinat.length)await loadKabinatList();const el=document.getElementById('cmime-content');el.innerHTML=allKabinat.map(k=>`<div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:1rem;"><h4 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:400;margin-bottom:.8rem;">${k.emri}</h4><div style="display:grid;grid-template-columns:auto 1fr auto 1fr auto;gap:.7rem;align-items:center;font-size:.85rem;"><label style="color:var(--muted)">Ditë pune:</label><input type="number" id="wd-${k.id}" value="${Math.round(k.cmimi_nate)}" style="background:var(--bg);border:1.5px solid var(--border2);border-radius:6px;padding:.4rem .7rem;color:var(--text);font-family:'DM Sans';font-size:.85rem;outline:none;"><label style="color:var(--muted)">Fundjavë:</label><input type="number" id="we-${k.id}" value="${k['cmimi_fundjavë']?Math.round(k['cmimi_fundjavë']):''}" placeholder="—" style="background:var(--bg);border:1.5px solid var(--border2);border-radius:6px;padding:.4rem .7rem;color:var(--text);font-family:'DM Sans';font-size:.85rem;outline:none;"><button class="btn-gold" onclick="saveCmim(${k.id})">Ruaj</button></div></div>`).join('');}
+async function saveCmim(id){const wd=document.getElementById('wd-'+id).value;const we=document.getElementById('we-'+id).value;try{const res=await fetch(`/api/kabinat/${id}/cmime`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({cmimi_nate:parseFloat(wd),'cmimi_fundjavë':we?parseFloat(we):null})});const d=await res.json();if(d.sukses){toast('Çmimet u ruajtën.');loadKabinatList();}else toast(d.gabim||'Gabim.','error');}catch(e){toast('Gabim.','error');}}
+
+// ── FOTOT ──────────────────────────────────────
+function loadFototTab(){if(!allKabinat.length){loadKabinatList().then(()=>populateFotaSelect());}else populateFotaSelect();}
+function populateFotaSelect(){const sel=document.getElementById('foto-kabina-sel');const cur=sel.value;sel.innerHTML='<option value="">— Zgjidhni kabinën —</option>'+allKabinat.map(k=>`<option value="${k.id}">${k.emri}</option>`).join('');if(cur)sel.value=cur;}
+async function loadFotot(){const id=document.getElementById('foto-kabina-sel').value;const el=document.getElementById('fotot-content');if(!id){el.innerHTML='<div class="empty"><div class="ei">📷</div><p>Zgjidhni një kabinë.</p></div>';return;}const k=allKabinat.find(x=>x.id==id);const fotot=k?.fotot||[];el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:1rem;">${fotot.map((f,i)=>`<div style="position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;"><img src="${f}" style="width:100%;height:100%;object-fit:cover;" alt="foto ${i+1}"><button onclick="delFoto(${id},${i+1})" style="position:absolute;top:4px;right:4px;background:rgba(192,57,43,.85);border:none;border-radius:50%;width:22px;height:22px;color:#fff;font-size:.75rem;cursor:pointer;">✕</button></div>`).join('')}</div><div style="border:2px dashed var(--border2);border-radius:12px;padding:2rem;text-align:center;cursor:pointer;transition:.2s;" onclick="document.getElementById('fotoInput-${id}').click()" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border2)'"><input type="file" id="fotoInput-${id}" multiple accept="image/*" style="display:none" onchange="uploadFoto(${id},this)"><div style="font-size:2rem;margin-bottom:.5rem">📷</div><p style="font-size:.87rem;color:var(--muted)">Kliko për të ngarkuar foto të reja</p></div>`;}
+async function uploadFoto(id,input){if(!input.files.length)return;const t=toast('Duke ngarkuar...','loading');const fd=new FormData();Array.from(input.files).forEach(f=>fd.append('fotot',f));try{const res=await fetch(`/api/admin/kabina/${id}/foto`,{method:'POST',body:fd});const d=await res.json();if(d.sukses){toast('Fotot u ngarkuan!');await loadKabinatList();loadFotot();}else toast(d.gabim||'Gabim.','error');}catch(e){toast('Gabim.','error');}}
+async function delFoto(kabinaId,fotoId){if(!confirm('A e fshijmë?'))return;try{const res=await fetch(`/api/admin/kabina/${kabinaId}/foto/${fotoId}`,{method:'DELETE'});const d=await res.json();if(d.sukses){toast('U fshi.');await loadKabinatList();loadFotot();}else toast(d.gabim||'Gabim.','error');}catch(e){toast('Gabim.','error');}}
+
+// ── EXPORT ─────────────────────────────────────
+function exportData(type){const start=document.getElementById(`exp-${type==='tavolina'?'tav':'kab'}-start`).value;const end=document.getElementById(`exp-${type==='tavolina'?'tav':'kab'}-end`).value;let url=`/api/admin/export/${type}`;if(start&&end)url+=`?data_fillim=${start}&data_mbarim=${end}`;window.location.href=url;}
+
+// ── MANUAL REZERVIM ────────────────────────────
+let manualType='tavolina';
+function openManualModal(type){
+  manualType=type;
+  document.getElementById('manualTitle').textContent=`+ Rezervim Manual — ${type==='tavolina'?'🪑 Tavolinë':'🌲 Kabinë'}`;
+  const form=document.getElementById('manualForm');
+  if(type==='tavolina'){
+    form.innerHTML=`<div class="fg"><label>Emri & Mbiemri</label><input type="text" id="m-emri" placeholder="Emri i klientit"></div><div class="fg"><label>Telefon</label><input type="tel" id="m-tel" placeholder="+355 6X XXX XXXX"></div><div class="fg"><label>Tavolina</label><select id="m-tav">${Array.from({length:14},(_,i)=>`<option value="${i+1}">Nr. ${i+1}</option>`).join('')}</select></div><div class="date-row"><div class="fg"><label>Data</label><input type="date" id="m-date" value="${new Date().toISOString().split('T')[0]}"></div><div class="fg"><label>Ora</label><select id="m-ora"><option>12:00</option><option>13:00</option><option>14:00</option><option>19:00</option><option>19:30</option><option selected>20:00</option><option>20:30</option><option>21:00</option><option>21:30</option></select></div></div><div class="fg"><label>Persona</label><input type="number" id="m-persona" value="2" min="1" max="20"></div><div class="fg"><label>Kërkesa</label><textarea id="m-kerkesa" placeholder="Shënime..."></textarea></div>`;
+  }else{
+    const today=new Date().toISOString().split('T')[0];const tom=new Date();tom.setDate(tom.getDate()+1);
+    form.innerHTML=`<div class="fg"><label>Emri & Mbiemri</label><input type="text" id="m-emri" placeholder="Emri i klientit"></div><div class="fg"><label>Telefon</label><input type="tel" id="m-tel" placeholder="+355 6X XXX XXXX"></div><div class="fg"><label>Kabina</label><select id="m-kab">${allKabinat.map(k=>`<option value="${k.id}">${k.emri}</option>`).join('')}</select></div><div class="date-row"><div class="fg"><label>Check-in</label><input type="date" id="m-checkin" value="${today}"></div><div class="fg"><label>Check-out</label><input type="date" id="m-checkout" value="${tom.toISOString().split('T')[0]}"></div></div><div class="fg"><label>Persona</label><input type="number" id="m-persona" value="2" min="1" max="20"></div><div class="fg"><label>Kërkesa</label><textarea id="m-kerkesa" placeholder="Shënime..."></textarea></div>`;
+  }
+  document.getElementById('manualModal').classList.add('show');
+}
+function closeManualModal(){document.getElementById('manualModal').classList.remove('show');}
+async function submitManual(){
+  const emri=document.getElementById('m-emri').value.trim();
+  if(!emri){toast('Plotëso emrin.','error');return;}
+  try{
+    let body,url;
+    if(manualType==='tavolina'){url='/api/admin/tavolina/rezervo';body={tavolina_id:parseInt(document.getElementById('m-tav').value),emri,telefon:document.getElementById('m-tel').value||'—',persona:parseInt(document.getElementById('m-persona').value)||2,data_rez:document.getElementById('m-date').value,ora_rez:document.getElementById('m-ora').value,kerkesa:document.getElementById('m-kerkesa').value||null};}
+    else{url='/api/admin/kabina/rezervo';body={kabina_id:parseInt(document.getElementById('m-kab').value),emri,telefon:document.getElementById('m-tel').value||'—',persona:parseInt(document.getElementById('m-persona').value)||2,check_in:document.getElementById('m-checkin').value,check_out:document.getElementById('m-checkout').value,kerkesa:document.getElementById('m-kerkesa').value||null};}
+    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const d=await res.json();
+    if(!res.ok){toast(d.gabim||'Gabim.','error');return;}
+    toast('Rezervimi u krijua!');closeManualModal();loadAll();if(tlData)loadTimeline();if(ccalKabinaId)renderCabinCal();
+  }catch(e){toast('Gabim.','error');}
+}
+
+// ── INIT ───────────────────────────────────────
+function initApp(){
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('live-date').value=today;
+  tlDate=today;
+  loadAll();
+  setInterval(()=>{loadAll();if(document.getElementById('tab-tavolina-tl').classList.contains('active'))loadTimeline();},30000);
+}
+if(isLoggedIn)initApp();
+</script>
+</body>
+</html>

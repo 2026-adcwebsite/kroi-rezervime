@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="sq" data-lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KROI — Rezervo Tavolinën</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── HEADER UNIFIED (consistent across all pages) ── */
+header {
+  background:rgba(255,255,255,.96); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border); padding:.9rem 1.5rem;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:100;
+}
+.logo { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--gold); letter-spacing:.1em; line-height:1; }
+.logo span { font-size:.68rem; display:block; letter-spacing:.2em; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:300; margin-top:1px; }
+.header-right { display:flex; align-items:center; gap:1rem; }
+nav { display:flex; gap:1.2rem; }
+nav a { color:var(--muted); font-size:.8rem; letter-spacing:.12em; text-transform:uppercase; font-weight:500; transition:.2s; text-decoration:none; padding-bottom:2px; }
+nav a:hover { color:var(--gold); }
+nav a.active { color:var(--gold); border-bottom:2px solid var(--gold); }
+.tel-header { font-size:.8rem; color:var(--moss); font-weight:500; text-decoration:none; white-space:nowrap; }
+.lang-toggle { display:flex; border:1.5px solid var(--border2); border-radius:20px; overflow:hidden; font-size:.74rem; flex-shrink:0; }
+.lang-btn { padding:.26rem .65rem; cursor:pointer; font-weight:500; background:transparent; border:none; color:var(--muted); }
+.lang-btn.active { background:var(--gold); color:#fff; }
+.menu-toggle {
+  display:none; align-items:center; justify-content:center;
+  width:40px; height:40px; border:1.5px solid var(--border2); border-radius:9px;
+  background:var(--surface); color:var(--text); font-size:1.2rem; cursor:pointer; transition:.2s; flex-shrink:0;
+}
+.menu-toggle:hover { border-color:var(--gold); color:var(--gold); }
+.mobile-menu-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,.38); z-index:250;
+}
+.mobile-menu-overlay.show { display:block; }
+.mobile-menu {
+  position:fixed; top:0; right:0; bottom:0; width:280px; max-width:85vw;
+  background:var(--surface); padding:1.5rem 1.2rem;
+  box-shadow:-4px 0 30px rgba(0,0,0,.12);
+  transform:translateX(100%); transition:transform .3s ease; z-index:251;
+}
+.mobile-menu-overlay.show .mobile-menu { transform:translateX(0); }
+.mobile-menu-head { display:flex; align-items:center; justify-content:space-between; gap:.8rem; padding-bottom:.9rem; border-bottom:1px solid var(--border); margin-bottom:1rem; }
+.mobile-menu-title { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--gold); letter-spacing:.08em; }
+.mobile-menu-close { background:none; border:none; color:var(--muted); font-size:1.8rem; line-height:1; cursor:pointer; }
+.mobile-nav { display:flex; flex-direction:column; gap:.4rem; margin-bottom:1.2rem; }
+.mobile-nav a { padding:.85rem 1rem; border-radius:12px; background:var(--bg); border:1.5px solid transparent; color:var(--text); font-size:.92rem; font-weight:500; text-decoration:none; transition:.15s; }
+.mobile-nav a:hover { border-color:var(--border2); }
+.mobile-nav a.active { border-color:var(--gold-br); background:var(--gold-bg); color:var(--gold); }
+.mobile-menu .tel-header { display:block; margin-bottom:.8rem; font-size:.88rem; }
+/* Breakpoint: <=768px hides desktop nav, shows hamburger */
+@media (max-width: 768px) {
+  .header-right nav { display:none; }
+  .tel-header { display:none; }
+  .menu-toggle { display:flex; }
+}
+@media (max-width: 480px) {
+  header { padding:.75rem 1rem; }
+  .logo { font-size:1.35rem; }
+}
+:root {
+  --bg:#F7F4EF; --surface:#FFF; --surface2:#F0EBE3;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.14);
+  --gold:#8B6914; --gold-l:#A67C1E; --gold-bg:rgba(139,105,20,0.08); --gold-br:rgba(139,105,20,0.28);
+  --moss:#3D6B3A; --moss-l:#4E8A4A; --moss-bg:rgba(61,107,58,0.08); --moss-br:rgba(61,107,58,0.25);
+  --red:#C0392B; --red-bg:rgba(192,57,43,0.08); --red-br:rgba(192,57,43,0.3);
+  --text:#1A1A18; --muted:#6B6558; --dim:#9E9488;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* ── HERO ── */
+.hero { position:relative; height:200px; overflow:hidden; }
+.hero img { width:100%; height:100%; object-fit:cover; object-position:center 50%; filter:brightness(.65); }
+.hero-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(to bottom, rgba(0,0,0,.05), rgba(0,0,0,.6));
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:.8rem;
+}
+.hero h1 { font-family:'Playfair Display',serif; font-size:clamp(1.3rem,3vw,1.9rem); color:#fff; font-weight:400; line-height:1.2; }
+.hero h1 em { display:block; font-size:.45em; letter-spacing:.35em; color:rgba(255,255,255,.7); font-style:normal; font-family:'DM Sans',sans-serif; font-weight:300; margin-bottom:.4em; text-transform:uppercase; }
+.hero p { color:rgba(255,255,255,.8); font-size:.88rem; margin-top:.4rem; }
+
+/* ── DATE BAR ── */
+.date-bar {
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:.9rem 1.5rem; display:flex; flex-wrap:wrap; gap:.8rem;
+  align-items:flex-end; justify-content:center;
+  box-shadow:0 2px 10px rgba(0,0,0,.05); position:sticky; top:64px; z-index:90;
+}
+.sf label { display:block; font-size:.62rem; letter-spacing:.18em; text-transform:uppercase; color:var(--dim); margin-bottom:4px; font-weight:500; }
+.sf input, .sf select {
+  background:var(--bg); border:1.5px solid var(--border2); border-radius:8px;
+  color:var(--text); padding:.48rem .85rem; font-family:'DM Sans',sans-serif; font-size:.86rem; outline:none; transition:.2s;
+}
+.sf input:focus, .sf select:focus { border-color:var(--gold); box-shadow:0 0 0 3px var(--gold-bg); }
+.btn-search {
+  background:var(--gold); color:#fff; border:none; border-radius:8px;
+  padding:.55rem 1.4rem; font-family:'DM Sans',sans-serif; font-weight:500;
+  font-size:.84rem; letter-spacing:.07em; text-transform:uppercase; cursor:pointer; transition:.2s;
+}
+.btn-search:hover { background:var(--gold-l); }
+.btn-search:active { transform:scale(.97); }
+
+/* ── MAIN LAYOUT ── */
+.main-layout {
+  display:grid; grid-template-columns:1fr 360px; gap:1.5rem;
+  max-width:1300px; margin:0 auto; padding:.8rem; align-items:start;
+}
+
+/* ── LEGEND ── */
+.legend { display:flex; gap:1.2rem; margin-bottom:1rem; flex-wrap:wrap; }
+.legend-item { display:flex; align-items:center; gap:7px; font-size:.78rem; color:var(--muted); }
+.ldot { width:13px; height:13px; border-radius:3px; flex-shrink:0; }
+.dot-free { background:var(--gold-bg); border:1.5px solid var(--gold-br); }
+.dot-taken { background:var(--red-bg); border:1.5px solid var(--red-br); }
+.dot-sel { background:var(--gold); }
+
+/* ── FLOOR SECTIONS ── */
+.floor-section {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:16px; padding:1.2rem; margin-bottom:1.2rem;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+.floor-title {
+  font-family:'Playfair Display',serif; font-size:1.05rem; color:var(--text);
+  margin-bottom:1rem; padding-bottom:.6rem; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:7px; font-weight:400;
+}
+.room-map {
+  background:var(--bg); border-radius:10px; padding:1.2rem;
+  border:1px dashed var(--border2); position:relative; overflow-x:auto;
+}
+.room-label { position:absolute; top:7px; left:10px; font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; color:var(--dim); }
+.tables-grid { display:flex; flex-wrap:wrap; gap:.8rem; padding-top:.3rem; min-width:200px; }
+
+/* ── TABLES ── */
+.table-slot { cursor:pointer; transition:transform .15s; position:relative; display:flex; align-items:center; justify-content:center; }
+.table-slot:hover:not(.taken) { transform:scale(1.06); }
+.table-slot.taken { cursor:not-allowed; opacity:.55; }
+.table-shape {
+  border-radius:8px; border:2px solid var(--gold-br); background:var(--gold-bg);
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  position:relative; transition:.2s;
+}
+.table-shape.round { border-radius:50%; }
+.table-slot.taken .table-shape { border-color:var(--red-br); background:var(--red-bg); }
+.table-slot.selected .table-shape { background:var(--gold)!important; border-color:var(--gold-l)!important; }
+.table-slot.selected .table-num { color:#fff!important; }
+.table-slot.selected .table-caps { color:rgba(255,255,255,.8)!important; }
+.table-num { font-family:'Playfair Display',serif; font-size:1.05rem; color:var(--gold); font-weight:600; line-height:1; }
+.table-slot.taken .table-num { color:var(--red); }
+.table-caps { font-size:.6rem; letter-spacing:.07em; color:var(--dim); margin-top:2px; }
+.chairs { position:absolute; width:100%; height:100%; top:0; left:0; pointer-events:none; }
+.chair { position:absolute; width:7px; height:7px; border-radius:50%; background:var(--gold-bg); border:1.5px solid var(--gold-br); }
+.table-slot.taken .chair { background:var(--red-bg); border-color:var(--red-br); }
+.table-slot.selected .chair { background:rgba(255,255,255,.4); border-color:rgba(255,255,255,.7); }
+
+/* ── PANEL ── */
+.res-panel {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:16px; padding:.8rem; position:sticky; top:130px;
+  box-shadow:0 4px 20px rgba(0,0,0,.06);
+}
+.res-panel h3 { font-family:'Playfair Display',serif; color:var(--text); font-size:1.25rem; margin-bottom:1.2rem; font-weight:400; border-bottom:1px solid var(--border); padding-bottom:.75rem; }
+.sel-info {
+  background:var(--gold-bg); border:1px solid var(--gold-br);
+  border-radius:10px; padding:.9rem; margin-bottom:1.2rem;
+  text-align:center; min-height:76px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+.sel-big-num { font-family:'Playfair Display',serif; font-size:2.3rem; color:var(--gold); line-height:1; }
+.sel-detail { font-size:.78rem; color:var(--muted); margin-top:3px; letter-spacing:.07em; }
+.ph { color:var(--dim); font-size:.84rem; font-style:italic; }
+.fg { margin-bottom:.85rem; }
+.fg label { display:block; font-size:.66rem; letter-spacing:.15em; text-transform:uppercase; color:var(--dim); margin-bottom:4px; font-weight:500; }
+.fg input, .fg select, .fg textarea {
+  width:100%; background:var(--bg); border:1.5px solid var(--border2);
+  border-radius:8px; color:var(--text); padding:.58rem .88rem;
+  font-family:'DM Sans',sans-serif; font-size:.88rem; outline:none; transition:.2s;
+}
+.fg input:focus, .fg select:focus, .fg textarea:focus { border-color:var(--gold); box-shadow:0 0 0 3px var(--gold-bg); }
+.fg textarea { resize:vertical; min-height:62px; }
+.btn-reserve {
+  width:100%; background:var(--gold); color:#fff; border:none; border-radius:10px;
+  padding:.95rem; font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:600;
+  letter-spacing:.05em; cursor:pointer; transition:.2s; margin-top:.4rem;
+}
+.btn-reserve:hover { background:var(--gold-l); transform:translateY(-1px); }
+.btn-reserve:active { transform:scale(.98); }
+.btn-reserve:disabled { background:#ccc; color:#999; cursor:not-allowed; transform:none; }
+.pol { text-align:center; font-size:.7rem; color:var(--dim); margin-top:.7rem; line-height:1.6; }
+
+/* ── TOAST ── */
+.toast { position:fixed; bottom:1.2rem; right:1.2rem; left:1.2rem; padding:.82rem 1.2rem; border-radius:10px; font-size:.86rem; z-index:9999; animation:slideIn .3s ease; line-height:1.5; font-weight:500; text-align:center; }
+.toast.success { background:#1E4A28; color:#9AEFB0; border:1px solid var(--moss); }
+.toast.error { background:#fff; color:var(--red); border:1.5px solid var(--red); box-shadow:0 4px 20px rgba(0,0,0,.1); }
+.toast.loading { background:#fff; color:var(--text); border:1.5px solid var(--border2); box-shadow:0 4px 20px rgba(0,0,0,.08); }
+@keyframes slideIn { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+/* ── MODAL ── */
+.moverlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:999; align-items:center; justify-content:center; padding:1rem; }
+.moverlay.show { display:flex; }
+.mbox { background:var(--surface); border-radius:20px; padding:2rem 1.5rem; max-width:400px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.15); animation:fadeUp .3s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.micon { width:60px; height:60px; border-radius:50%; background:var(--moss-bg); border:2px solid var(--moss); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; font-size:1.5rem; }
+.mbox h2 { font-family:'Playfair Display',serif; color:var(--text); font-weight:400; margin-bottom:.4rem; font-size:1.4rem; }
+.mbox p { color:var(--muted); font-size:.86rem; line-height:1.6; }
+.mdet { background:var(--bg); border-radius:10px; padding:.9rem; margin:1rem 0; font-size:.83rem; text-align:left; color:var(--text); line-height:1.9; border:1px solid var(--border); }
+.mdet strong { color:var(--gold); }
+.btn-mclose { background:var(--gold); color:#fff; border:none; border-radius:8px; padding:.65rem 1.8rem; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; font-size:.86rem; letter-spacing:.07em; text-transform:uppercase; }
+
+/* ── MOBILE PANEL DRAWER ── */
+.panel-toggle {
+  display:none; position:fixed; bottom:1.2rem; right:1.2rem;
+  background:var(--gold); color:#fff; border:none; border-radius:50%;
+  width:56px; height:56px; font-size:1.4rem; cursor:pointer; z-index:80;
+  box-shadow:0 4px 16px rgba(139,105,20,.4); align-items:center; justify-content:center;
+}
+.panel-drawer {
+  display:none; position:fixed; bottom:0; left:0; right:0;
+  background:var(--surface); border-radius:20px 20px 0 0;
+  box-shadow:0 -8px 40px rgba(0,0,0,.15); z-index:85; padding:1.2rem 1.2rem 2rem;
+  max-height:90vh; overflow-y:auto;
+  transform:translateY(100%); transition:transform .3s ease;
+}
+.panel-drawer.open { transform:translateY(0); }
+.drawer-handle { width:40px; height:4px; background:var(--border2); border-radius:2px; margin:0 auto .8rem; }
+
+/* Skeleton */
+.skel { background:linear-gradient(90deg,#e8e0d5 25%,#f0e8de 50%,#e8e0d5 75%); background-size:200% 100%; animation:shim 1.5s infinite; border-radius:10px; }
+@keyframes shim { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+
+/* ── MOBILE MENU ── */
+body.menu-open{overflow:hidden;}
+
+/* FOOTER */
+footer { background:var(--surface); border-top:1px solid var(--border); padding:.8rem; text-align:center; margin-top:2rem; }
+footer p { font-size:.8rem; color:var(--muted); line-height:1.8; }
+footer a { color:var(--gold); text-decoration:none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .main-layout { grid-template-columns:1fr; }
+  .res-panel { display:none; } /* hidden on mobile, shown in drawer */
+  .panel-toggle { display:flex; }
+  .panel-drawer { display:block; }
+}
+@media (max-width: 600px) {
+      .hero { height:180px; }
+  .date-bar { padding:.75rem 1rem; gap:.6rem; top:58px; }
+  .sf input, .sf select { padding:.42rem .7rem; font-size:.82rem; }
+  .btn-search { padding:.48rem 1rem; font-size:.8rem; }
+  .main-layout { padding:1rem; }
+  .tables-grid { gap:.6rem; }
+  .toast { right:.75rem; left:.75rem; bottom:.75rem; }
+}
+@media (max-width: 400px) {
+      .floor-section { padding:1rem; }
+  .room-map { padding:.9rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">KROI<span>Agroturizëm & Restorant</span></div>
+  <div class="header-right">
+    <nav>
+      <a href="/" class="active" data-sq="Tavolinat" data-en="Tables">Tavolinat</a>
+      <a href="/kabina" data-sq="Kabina" data-en="Cabins">Kabina</a>
+      <a href="/rreth-nesh" data-sq="Rreth Nesh" data-en="About">Rreth Nesh</a>
+    </nav>
+    <a href="tel:+355691234567" class="tel-header">📞 +355 69 123 4567</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('sq')">SQ</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+
+    <button class="menu-toggle" type="button" aria-label="Open menu" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</header>
+
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu(event)">
+  <div class="mobile-menu" onclick="event.stopPropagation()">
+    <div class="mobile-menu-head">
+      <div class="mobile-menu-title">KROI</div>
+      <button class="mobile-menu-close" type="button" aria-label="Close menu" onclick="closeMobileMenu()">×</button>
+    </div>
+    <nav class="mobile-nav">
+      <a href="/" class="mobile-link active" data-sq="Tavolinat" data-en="Tables">Tavolinat</a>
+      <a href="/kabina" class="mobile-link" data-sq="Kabina" data-en="Cabins">Kabina</a>
+      <a href="/rreth-nesh" class="mobile-link" data-sq="Rreth Nesh" data-en="About">Rreth Nesh</a>
+    </nav>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('sq')">SQ</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <img src="/img/kabina-salle.webp" alt="Restorant KROI">
+  <div class="hero-overlay">
+    <h1>
+      <em data-sq="Rezervo online" data-en="Book online">Rezervo online</em>
+      <span data-sq="Tavolinat KROI" data-en="KROI Tables">Tavolinat KROI</span>
+    </h1>
+    <p data-sq="Zgjidhni datën, orën dhe tavolinën e preferuar" data-en="Choose your date, time and preferred table">Zgjidhni datën, orën dhe tavolinën e preferuar</p>
+  </div>
+</div>
+
+<div class="date-bar">
+  <div class="sf">
+    <label data-sq="Data" data-en="Date">Data</label>
+    <input type="date" id="resDate">
+  </div>
+  <div class="sf">
+    <label data-sq="Ora" data-en="Time">Ora</label>
+    <select id="resTime">
+      <option>12:00</option><option>12:30</option><option>13:00</option><option>13:30</option>
+      <option>14:00</option><option>19:00</option><option>19:30</option>
+      <option selected>20:00</option><option>20:30</option><option>21:00</option><option>21:30</option>
+    </select>
+  </div>
+  <div class="sf">
+    <label data-sq="Persona" data-en="Guests">Persona</label>
+    <select id="resGuests">
+      <option>1</option><option>2</option><option>3</option><option>4</option>
+      <option>5</option><option>6</option><option>7</option><option>8+</option>
+    </select>
+  </div>
+  <button class="btn-search" onclick="loadTavolina()">
+    🔍 <span data-sq="Kërko" data-en="Search">Kërko</span>
+  </button>
+</div>
+
+<div class="main-layout">
+  <!-- LEFT: MAP -->
+  <div>
+    <div class="legend">
+      <div class="legend-item"><div class="ldot dot-free"></div><span data-sq="E lirë" data-en="Available">E lirë</span></div>
+      <div class="legend-item"><div class="ldot dot-taken"></div><span data-sq="E zënë" data-en="Taken">E zënë</span></div>
+      <div class="legend-item"><div class="ldot dot-sel"></div><span data-sq="E zgjedhur" data-en="Selected">E zgjedhur</span></div>
+    </div>
+
+    <div class="floor-section">
+      <div class="floor-title">🏛 <span data-sq="Salla e Brendshme" data-en="Indoor Hall">Salla e Brendshme</span></div>
+      <div class="room-map">
+        <div class="room-label" data-sq="Salla kryesore" data-en="Main hall">Salla kryesore</div>
+        <div class="tables-grid" id="indoor-tables">
+          <div class="skel" style="width:100px;height:88px;"></div>
+          <div class="skel" style="width:100px;height:88px;"></div>
+          <div class="skel" style="width:110px;height:88px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="floor-section">
+      <div class="floor-title">🌿 <span data-sq="Terraca" data-en="Terrace">Terraca</span></div>
+      <div class="room-map">
+        <div class="room-label" data-sq="Terraca e jashtme" data-en="Outdoor terrace">Terraca e jashtme</div>
+        <div class="tables-grid" id="outdoor-tables">
+          <div class="skel" style="width:90px;height:88px;"></div>
+          <div class="skel" style="width:90px;height:88px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orari + kontakt (vetëm mobile) -->
+    <div class="floor-section" style="display:none" id="info-mobile">
+      <div class="floor-title">ℹ️ <span data-sq="Informacion" data-en="Information">Informacion</span></div>
+      <div style="font-size:.87rem;color:var(--muted);line-height:2;">
+        <div>🕐 <span data-sq="E Hënë–E Diel: 12:00–23:00" data-en="Mon–Sun: 12:00–23:00">E Hënë–E Diel: 12:00–23:00</span></div>
+        <div>📞 <a href="tel:+355691234567" style="color:var(--moss);font-weight:500;">+355 69 123 4567</a></div>
+        <div>📍 <a href="https://maps.app.goo.gl/mR53Q1tFYp3m3W6C7" target="_blank" style="color:var(--gold);" data-sq="Hap në hartë" data-en="Open on map">Hap në hartë</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: PANEL (desktop) -->
+  <div class="res-panel" id="desktopPanel">
+    <h3 data-sq="Detajet e Rezervimit" data-en="Reservation Details">Detajet e Rezervimit</h3>
+    <div class="sel-info" id="tableInfo-desk">
+      <div class="ph" data-sq="Kliko një tavolinë të lirë" data-en="Click an available table">Kliko një tavolinë të lirë</div>
+    </div>
+    <div class="fg">
+      <label data-sq="Emri & Mbiemri" data-en="Full Name">Emri & Mbiemri</label>
+      <input type="text" id="guestName" data-sq-ph="p.sh. Artan Hoxha" data-en-ph="e.g. John Smith" placeholder="p.sh. Artan Hoxha">
+    </div>
+    <div class="fg">
+      <label data-sq="Numri i Telefonit" data-en="Phone Number">Numri i Telefonit</label>
+      <input type="tel" id="guestPhone" placeholder="+355 6X XXX XXXX">
+    </div>
+    <div class="fg">
+      <label data-sq="Email (opsional)" data-en="Email (optional)">Email (opsional)</label>
+      <input type="email" id="guestEmail" placeholder="email@example.com">
+    </div>
+    <div class="fg">
+      <label data-sq="Persona" data-en="Guests">Persona</label>
+      <select id="panelGuests">
+        <option>1</option><option>2</option><option>3</option>
+        <option selected>4</option><option>5</option><option>6</option><option>7</option><option>8+</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label data-sq="Kërkesa Speciale" data-en="Special Requests">Kërkesa Speciale</label>
+      <textarea id="guestNote" data-sq-ph="Ditëlindje, alergji, etj..." data-en-ph="Birthday, allergies, etc..." placeholder="Ditëlindje, alergji, etj..."></textarea>
+    </div>
+    <button class="btn-reserve" id="btnReserve" onclick="submitReservation()" disabled
+      data-sq="Konfirmo Rezervimin" data-en="Confirm Reservation">Konfirmo Rezervimin</button>
+    <div class="pol" data-sq="Rezervimi mbahet · Pagesa në restorant" data-en="Reservation held · Pay at restaurant">Rezervimi mbahet · Pagesa në restorant</div>
+  </div>
+</div>
+
+<!-- MOBILE: Floating button -->
+<button class="panel-toggle" id="panelToggle" onclick="toggleDrawer()" title="Rezervo">
+  📋
+</button>
+
+<!-- MOBILE: Drawer panel -->
+<div class="panel-drawer" id="panelDrawer">
+  <div class="drawer-handle"></div>
+  <div class="sel-info" id="tableInfo-mobile" style="margin-bottom:1rem;">
+    <div class="ph" data-sq="Kliko një tavolinë të lirë" data-en="Click an available table">Kliko një tavolinë të lirë</div>
+  </div>
+  <div class="fg">
+    <label data-sq="Emri & Mbiemri" data-en="Full Name">Emri & Mbiemri</label>
+    <input type="text" id="guestNameM" data-sq-ph="p.sh. Artan Hoxha" data-en-ph="e.g. John Smith" placeholder="p.sh. Artan Hoxha">
+  </div>
+  <div class="fg">
+    <label data-sq="Numri i Telefonit" data-en="Phone Number">Numri i Telefonit</label>
+    <input type="tel" id="guestPhoneM" placeholder="+355 6X XXX XXXX">
+  </div>
+  <div class="fg">
+    <label data-sq="Persona" data-en="Guests">Persona</label>
+    <select id="panelGuestsM">
+      <option>1</option><option>2</option><option>3</option>
+      <option selected>4</option><option>5</option><option>6</option><option>7</option><option>8+</option>
+    </select>
+  </div>
+  <div class="fg">
+    <label data-sq="Kërkesa Speciale" data-en="Special Requests">Kërkesa Speciale</label>
+    <textarea id="guestNoteM" data-sq-ph="Ditëlindje, alergji, etj..." data-en-ph="Birthday, allergies, etc..." placeholder="Ditëlindje, alergji, etj..."></textarea>
+  </div>
+  <button class="btn-reserve" id="btnReserveM" onclick="submitReservation(true)" disabled
+    data-sq="Konfirmo Rezervimin" data-en="Confirm Reservation">Konfirmo Rezervimin</button>
+  <div class="pol" data-sq="Pagesa bëhet në restorant" data-en="Pay at restaurant">Pagesa bëhet në restorant</div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="moverlay" id="successModal">
+  <div class="mbox">
+    <div class="micon">✓</div>
+    <h2 data-sq="Rezervimi u Konfirmua!" data-en="Reservation Confirmed!">Rezervimi u Konfirmua!</h2>
+    <p data-sq="Faleminderit! Do t'ju kontaktojmë për konfirmim." data-en="Thank you! We will contact you to confirm.">Faleminderit! Do t'ju kontaktojmë për konfirmim.</p>
+    <div class="mdet" id="modalDetails"></div>
+    <button class="btn-mclose" onclick="closeModal()" data-sq="Mbyll" data-en="Close">Mbyll</button>
+  </div>
+</div>
+
+<footer>
+  <p>📍 Agroturizëm KROI &nbsp;|&nbsp; 📞 <a href="tel:+355691234567">+355 69 123 4567</a> &nbsp;|&nbsp; 🕐 E Hënë–E Diel, 12:00–23:00</p>
+  <p style="margin-top:.4rem"><a href="/rreth-nesh" style="color:var(--moss)" data-sq="Rreth Nesh & Harta →" data-en="About Us & Map →">Rreth Nesh & Harta →</a></p>
+</footer>
+
+<script>
+// ── LANG ──────────────────────────────────────
+let lang = localStorage.getItem('kroi_lang') || 'sq';
+function setLang(l) {
+  lang = l;
+  localStorage.setItem('kroi_lang', l);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === l));
+  document.querySelectorAll('[data-sq]').forEach(el => {
+    const txt = el.getAttribute('data-' + l);
+    if (!txt) return;
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = txt;
+    else el.textContent = txt;
+  });
+  // Placeholder specifik
+  document.querySelectorAll('[data-sq-ph]').forEach(el => {
+    el.placeholder = el.getAttribute('data-' + l + '-ph') || el.getAttribute('data-sq-ph');
+  });
+}
+setLang(lang);
+
+// ── MOBILE DRAWER ──────────────────────────────
+let drawerOpen = false;
+function toggleDrawer() {
+  drawerOpen = !drawerOpen;
+  document.getElementById('panelDrawer').classList.toggle('open', drawerOpen);
+  document.getElementById('panelToggle').textContent = drawerOpen ? '✕' : '📋';
+}
+// Close drawer on outside click
+document.addEventListener('click', e => {
+  const drawer = document.getElementById('panelDrawer');
+  const toggle = document.getElementById('panelToggle');
+  if (drawerOpen && !drawer.contains(e.target) && !toggle.contains(e.target)) {
+    drawerOpen = false;
+    drawer.classList.remove('open');
+    toggle.textContent = '📋';
+  }
+});
+
+// Show info-mobile only on mobile
+function checkMobile() {
+  const isMobile = window.innerWidth <= 900;
+  document.getElementById('info-mobile').style.display = isMobile ? 'block' : 'none';
+}
+checkMobile();
+window.addEventListener('resize', checkMobile);
+
+// ── DATA ───────────────────────────────────────
+let allTavolina = [], selectedId = null;
+
+function toast(msg, type = 'loading', ms = 3500) {
+  document.querySelectorAll('.toast').forEach(e => e.remove());
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  if (ms) setTimeout(() => el.remove(), ms);
+  return el;
+}
+
+async function loadTavolina() {
+  const data = document.getElementById('resDate').value;
+  const ora  = document.getElementById('resTime').value;
+  const t = toast(lang === 'sq' ? 'Duke ngarkuar...' : 'Loading...', 'loading', 0);
+  try {
+    const res = await fetch(`/api/tavolina/disponueshme?data=${data}&ora=${ora}`);
+    allTavolina = await res.json();
+    if (allTavolina.gabim) throw new Error(allTavolina.gabim);
+    t.remove();
+    renderTavolina();
+    if (selectedId) {
+      const sel = allTavolina.find(x => x.id === selectedId);
+      if (sel?.e_zene) {
+        selectedId = null;
+        updateSelInfo(null);
+        setReserveDisabled(true);
+        toast(lang === 'sq' ? 'Tavolina u zu nga dikush tjetër.' : 'Table was just taken.', 'error');
+      }
+    }
+  } catch(err) {
+    t.remove();
+    toast('Gabim: ' + err.message, 'error');
+  }
+}
+
+function getChairPos(count, isRound, w, h) {
+  const pos = [];
+  if (isRound) {
+    const r = w / 2 + 6;
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * 2 * Math.PI - Math.PI / 2;
+      pos.push({ left: (w/2 + r*Math.cos(a) - 3.5) + 'px', top: (h/2 + r*Math.sin(a) - 3.5) + 'px' });
+    }
+  } else {
+    const half = Math.floor(count / 2), rem = count - half;
+    for (let i = 0; i < half; i++) pos.push({ left: (8 + i*(w-16)/Math.max(1,half-1)) + 'px', top: '-10px' });
+    for (let i = 0; i < rem; i++)  pos.push({ left: (8 + i*(w-16)/Math.max(1,rem-1))  + 'px', top: (h+3)  + 'px' });
+  }
+  return pos;
+}
+
+function renderTavolina() {
+  ['indoor', 'outdoor'].forEach(zona => {
+    const cont = document.getElementById(zona + '-tables');
+    cont.innerHTML = '';
+    allTavolina.filter(t => t.zona === zona).forEach(t => {
+      const isRound = t.forma === 'round';
+      const w = isRound ? (t.kapaciteti <= 2 ? 65 : 82) : (t.kapaciteti <= 4 ? 85 : 115);
+      const h = isRound ? w : 65;
+      const isSel = selectedId === t.id;
+      const isTaken = !!t.e_zene;
+
+      const slot = document.createElement('div');
+      slot.className = 'table-slot' + (isTaken ? ' taken' : '') + (isSel ? ' selected' : '');
+      slot.style.cssText = `width:${w+18}px;height:${h+18}px;`;
+      if (!isTaken) slot.onclick = () => selectTable(t.id);
+
+      const shape = document.createElement('div');
+      shape.className = 'table-shape' + (isRound ? ' round' : '');
+      shape.style.cssText = `width:${w}px;height:${h}px;`;
+      shape.innerHTML = `<div class="table-num">${t.numri}</div><div class="table-caps">${t.kapaciteti} ${lang==='sq'?'vende':'seats'}</div>`;
+
+      const chairs = document.createElement('div');
+      chairs.className = 'chairs';
+      getChairPos(t.kapaciteti, isRound, w, h).forEach(p => {
+        const c = document.createElement('div');
+        c.className = 'chair'; c.style.left = p.left; c.style.top = p.top;
+        chairs.appendChild(c);
+      });
+      slot.appendChild(chairs);
+      slot.appendChild(shape);
+      cont.appendChild(slot);
+    });
+  });
+}
+
+function updateSelInfo(t) {
+  const deskEl  = document.getElementById('tableInfo-desk');
+  const mobEl   = document.getElementById('tableInfo-mobile');
+  if (!t) {
+    const ph = lang === 'sq' ? 'Kliko një tavolinë të lirë' : 'Click an available table';
+    deskEl.innerHTML = `<div class="ph">${ph}</div>`;
+    mobEl.innerHTML  = `<div class="ph">${ph}</div>`;
+    return;
+  }
+  const zonaStr = t.zona === 'indoor' ? (lang==='sq'?'🏛 Salla':'🏛 Hall') : (lang==='sq'?'🌿 Terraca':'🌿 Terrace');
+  const html = `<div class="sel-big-num">${t.numri}</div><div class="sel-detail">${zonaStr} · ${t.kapaciteti} ${lang==='sq'?'vende':'seats'}</div>`;
+  deskEl.innerHTML = html;
+  mobEl.innerHTML  = html;
+}
+
+function setReserveDisabled(disabled) {
+  document.getElementById('btnReserve').disabled  = disabled;
+  document.getElementById('btnReserveM').disabled = disabled;
+}
+
+function selectTable(id) {
+  selectedId = id;
+  const t = allTavolina.find(x => x.id === id);
+  updateSelInfo(t);
+  setReserveDisabled(false);
+  renderTavolina();
+  // On mobile, open drawer automatically
+  if (window.innerWidth <= 900 && !drawerOpen) toggleDrawer();
+}
+
+// Get values from whichever form is visible
+function getFormValues(fromMobile) {
+  if (fromMobile) {
+    return {
+      emri:     document.getElementById('guestNameM').value.trim(),
+      telefon:  document.getElementById('guestPhoneM').value.trim(),
+      email:    '',
+      persona:  document.getElementById('panelGuestsM').value,
+      kerkesa:  document.getElementById('guestNoteM').value.trim(),
+    };
+  }
+  return {
+    emri:     document.getElementById('guestName').value.trim(),
+    telefon:  document.getElementById('guestPhone').value.trim(),
+    email:    document.getElementById('guestEmail').value.trim(),
+    persona:  document.getElementById('panelGuests').value,
+    kerkesa:  document.getElementById('guestNote').value.trim(),
+  };
+}
+
+async function submitReservation(fromMobile = false) {
+  const { emri, telefon, email, persona, kerkesa } = getFormValues(fromMobile);
+  if (!emri || !telefon) {
+    toast(lang === 'sq' ? 'Plotëso emrin dhe telefonin.' : 'Fill in name and phone.', 'error');
+    return;
+  }
+  const t = allTavolina.find(x => x.id === selectedId);
+  const btn  = document.getElementById(fromMobile ? 'btnReserveM' : 'btnReserve');
+  const btn2 = document.getElementById(fromMobile ? 'btnReserve' : 'btnReserveM');
+  btn.disabled = btn2.disabled = true;
+  btn.textContent = lang === 'sq' ? 'Duke dërguar...' : 'Sending...';
+  const load = toast(lang === 'sq' ? 'Duke ruajtur rezervimin...' : 'Saving reservation...', 'loading', 0);
+
+  try {
+    const res = await fetch('/api/tavolina/rezervo', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tavolina_id: selectedId, emri, telefon, email: email || null,
+        persona: parseInt(persona) || 2,
+        data_rez: document.getElementById('resDate').value,
+        ora_rez:  document.getElementById('resTime').value,
+        kerkesa: kerkesa || null,
+      })
+    });
+    const data = await res.json();
+    load.remove();
+    if (!res.ok) {
+      toast(data.gabim || 'Gabim gjatë rezervimit.', 'error');
+      btn.disabled = btn2.disabled = false;
+      btn.textContent = lang === 'sq' ? 'Konfirmo Rezervimin' : 'Confirm Reservation';
+      return;
+    }
+    document.getElementById('modalDetails').innerHTML = `
+      <div><strong>${lang==='sq'?'Emri':'Name'}:</strong> ${emri}</div>
+      <div><strong>${lang==='sq'?'Telefon':'Phone'}:</strong> ${telefon}</div>
+      <div><strong>${lang==='sq'?'Tavolina':'Table'}:</strong> Nr. ${t.numri} — ${t.zona==='indoor'?(lang==='sq'?'Salla':'Hall'):(lang==='sq'?'Terraca':'Terrace')}</div>
+      <div><strong>${lang==='sq'?'Data':'Date'}:</strong> ${document.getElementById('resDate').value} ${lang==='sq'?'ora':'at'} ${document.getElementById('resTime').value}</div>
+      <div><strong>ID:</strong> #${data.id}</div>`;
+    document.getElementById('successModal').classList.add('show');
+    if (drawerOpen) toggleDrawer();
+    selectedId = null;
+    updateSelInfo(null);
+    btn.textContent = btn2.textContent = lang === 'sq' ? 'Konfirmo Rezervimin' : 'Confirm Reservation';
+    loadTavolina();
+  } catch(err) {
+    load.remove();
+    toast('Gabim lidhjeje me serverin.', 'error');
+    btn.disabled = btn2.disabled = false;
+    btn.textContent = lang === 'sq' ? 'Konfirmo Rezervimin' : 'Confirm Reservation';
+  }
+}
+
+function closeModal() { document.getElementById('successModal').classList.remove('show'); }
+
+// ── INIT ───────────────────────────────────────
+document.getElementById('resDate').value = new Date().toISOString().split('T')[0];
+loadTavolina();
+setInterval(loadTavolina, 30000);
+
+
+function toggleMobileMenu(){
+  const overlay = document.getElementById('mobileMenuOverlay');
+  if(!overlay) return;
+  overlay.classList.toggle('show');
+  document.body.classList.toggle('menu-open', overlay.classList.contains('show'));
+}
+function closeMobileMenu(e){
+  if(e && e.target && e.target !== e.currentTarget) return;
+  const overlay = document.getElementById('mobileMenuOverlay');
+  if(!overlay) return;
+  overlay.classList.remove('show');
+  document.body.classList.remove('menu-open');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeMobileMenu();
+});
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 600) closeMobileMenu();
+});
+document.querySelectorAll('.mobile-nav a').forEach(a => a.addEventListener('click', () => closeMobileMenu()));
+
+</script>
+</body>
+</html>

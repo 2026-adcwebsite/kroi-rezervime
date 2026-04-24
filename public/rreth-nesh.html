@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="sq" data-lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KROI — Rreth Nesh</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── HEADER UNIFIED (consistent across all pages) ── */
+header {
+  background:rgba(255,255,255,.96); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border); padding:.9rem 1.5rem;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:100;
+}
+.logo { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--gold); letter-spacing:.1em; line-height:1; }
+.logo span { font-size:.68rem; display:block; letter-spacing:.2em; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:300; margin-top:1px; }
+.header-right { display:flex; align-items:center; gap:1rem; }
+nav { display:flex; gap:1.2rem; }
+nav a { color:var(--muted); font-size:.8rem; letter-spacing:.12em; text-transform:uppercase; font-weight:500; transition:.2s; text-decoration:none; padding-bottom:2px; }
+nav a:hover { color:var(--gold); }
+nav a.active { color:var(--gold); border-bottom:2px solid var(--gold); }
+.tel-header { font-size:.8rem; color:var(--moss); font-weight:500; text-decoration:none; white-space:nowrap; }
+.lang-toggle { display:flex; border:1.5px solid var(--border2); border-radius:20px; overflow:hidden; font-size:.74rem; flex-shrink:0; }
+.lang-btn { padding:.26rem .65rem; cursor:pointer; font-weight:500; background:transparent; border:none; color:var(--muted); }
+.lang-btn.active { background:var(--gold); color:#fff; }
+.menu-toggle {
+  display:none; align-items:center; justify-content:center;
+  width:40px; height:40px; border:1.5px solid var(--border2); border-radius:9px;
+  background:var(--surface); color:var(--text); font-size:1.2rem; cursor:pointer; transition:.2s; flex-shrink:0;
+}
+.menu-toggle:hover { border-color:var(--gold); color:var(--gold); }
+.mobile-menu-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,.38); z-index:250;
+}
+.mobile-menu-overlay.show { display:block; }
+.mobile-menu {
+  position:fixed; top:0; right:0; bottom:0; width:280px; max-width:85vw;
+  background:var(--surface); padding:1.5rem 1.2rem;
+  box-shadow:-4px 0 30px rgba(0,0,0,.12);
+  transform:translateX(100%); transition:transform .3s ease; z-index:251;
+}
+.mobile-menu-overlay.show .mobile-menu { transform:translateX(0); }
+.mobile-menu-head { display:flex; align-items:center; justify-content:space-between; gap:.8rem; padding-bottom:.9rem; border-bottom:1px solid var(--border); margin-bottom:1rem; }
+.mobile-menu-title { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--gold); letter-spacing:.08em; }
+.mobile-menu-close { background:none; border:none; color:var(--muted); font-size:1.8rem; line-height:1; cursor:pointer; }
+.mobile-nav { display:flex; flex-direction:column; gap:.4rem; margin-bottom:1.2rem; }
+.mobile-nav a { padding:.85rem 1rem; border-radius:12px; background:var(--bg); border:1.5px solid transparent; color:var(--text); font-size:.92rem; font-weight:500; text-decoration:none; transition:.15s; }
+.mobile-nav a:hover { border-color:var(--border2); }
+.mobile-nav a.active { border-color:var(--gold-br); background:var(--gold-bg); color:var(--gold); }
+.mobile-menu .tel-header { display:block; margin-bottom:.8rem; font-size:.88rem; }
+/* Breakpoint: <=768px hides desktop nav, shows hamburger */
+@media (max-width: 768px) {
+  .header-right nav { display:none; }
+  .tel-header { display:none; }
+  .menu-toggle { display:flex; }
+}
+@media (max-width: 480px) {
+  header { padding:.75rem 1rem; }
+  .logo { font-size:1.35rem; }
+}
+:root{--bg:#F7F4EF;--surface:#FFF;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);--gold:#8B6914;--gold-l:#A67C1E;--gold-bg:rgba(139,105,20,0.08);--gold-br:rgba(139,105,20,0.28);--moss:#3D6B3A;--moss-l:#4E8A4A;--moss-bg:rgba(61,107,58,0.08);--moss-br:rgba(61,107,58,0.25);--text:#1A1A18;--muted:#6B6558;--dim:#9E9488;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+.hero{position:relative;height:200px;overflow:hidden;}
+.hero img{width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:brightness(.65);}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.05),rgba(0,0,0,.6));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1rem;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3.5vw,2rem);color:#fff;font-weight:400;line-height:1.2;}
+.hero h1 em{display:block;font-size:.45em;letter-spacing:.4em;color:rgba(255,255,255,.7);font-style:normal;font-family:'DM Sans',sans-serif;font-weight:300;margin-bottom:.5em;text-transform:uppercase;}
+.hero p{color:rgba(255,255,255,.8);font-size:.9rem;margin-top:.5rem;}
+
+.wrap{max-width:1100px;margin:0 auto;padding:3rem 2rem;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin:3rem 0;}
+
+.section-label{font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--moss);font-weight:500;margin-bottom:.7rem;}
+.section-title{font-family:'Playfair Display',serif;font-size:2rem;color:var(--text);font-weight:400;line-height:1.3;margin-bottom:1.2rem;}
+.section-body{font-size:.95rem;color:var(--muted);line-height:1.9;}
+.section-body p{margin-bottom:1rem;}
+
+.info-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:.8rem;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.info-card .icon{font-size:1.8rem;margin-bottom:.8rem;}
+.info-card h3{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;margin-bottom:.5rem;}
+.info-card p{font-size:.87rem;color:var(--muted);line-height:1.7;}
+.info-card a{color:var(--gold);}
+
+.divider{border:none;border-top:1px solid var(--border);margin:3rem 0;}
+
+/* MAP */
+.map-section{margin:3rem 0;}
+.map-frame{width:100%;height:200px;border-radius:16px;overflow:hidden;border:1.5px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.08);}
+.map-frame iframe{width:100%;height:100%;border:none;}
+.directions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.dir-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:1.2rem;display:flex;gap:.8rem;align-items:flex-start;}
+.dir-icon{font-size:1.4rem;flex-shrink:0;}
+.dir-body h4{font-size:.9rem;font-weight:500;margin-bottom:.25rem;}
+.dir-body p{font-size:.8rem;color:var(--muted);line-height:1.5;}
+
+.gallery-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin:2rem 0;}
+.gallery-row img{width:100%;height:160px;object-fit:cover;border-radius:10px;cursor:pointer;transition:transform .2s,box-shadow .2s;}
+.gallery-row img:hover{transform:scale(1.03);box-shadow:0 8px 24px rgba(0,0,0,.12);}
+
+.cta-box{background:linear-gradient(135deg,#1A3020,#2A4A2A);border-radius:16px;padding:3rem;text-align:center;color:#fff;margin:3rem 0;}
+.cta-box h2{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;margin-bottom:.8rem;}
+.cta-box p{opacity:.8;margin-bottom:1.5rem;font-size:.95rem;}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.btn-cta{padding:.8rem 2rem;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:.9rem;cursor:pointer;transition:.2s;text-decoration:none;display:inline-block;}
+.btn-cta.primary{background:var(--gold);color:#fff;border:none;}
+.btn-cta.primary:hover{background:var(--gold-l);}
+.btn-cta.outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5);}
+.btn-cta.outline:hover{border-color:#fff;}
+
+/* Gallery modal */
+.gal-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:999;align-items:center;justify-content:center;}
+.gal-modal.show{display:flex;}
+.gal-img{max-width:88vw;max-height:84vh;border-radius:10px;object-fit:contain;}
+.gal-close{position:absolute;top:1rem;right:1.5rem;background:none;border:none;color:#fff;font-size:2.2rem;cursor:pointer;opacity:.75;}
+.gal-close:hover{opacity:1;}
+.gal-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;border-radius:50%;width:46px;height:46px;color:#fff;font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.gal-prev{left:1rem;}.gal-next{right:1rem;}
+
+
+/* ── MOBILE MENU ── */
+.mobile-menu-overlay.show .mobile-.mobile-.mobile-.mobile-menu body.menu-open{overflow:hidden;}
+
+footer{background:var(--surface);border-top:1px solid var(--border);padding:1rem;text-align:center;}
+footer p{font-size:.82rem;color:var(--muted);line-height:1.8;}
+footer a{color:var(--gold);}
+
+@media(max-width:768px){.grid-2,.grid-3,.directions-grid{grid-template-columns:1fr}.gallery-row{grid-template-columns:repeat(2,1fr)}.wrap{padding:1.5rem 1rem}}
+@media(max-width:600px){header{padding:1rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">KROI<span>Agroturizëm & Restorant</span></div>
+  <div class="header-right">
+    <nav>
+      <a href="/" data-sq="Tavolinat" data-en="Tables">Tavolinat</a>
+      <a href="/kabina" data-sq="Kabina" data-en="Cabins">Kabina</a>
+      <a href="/rreth-nesh" class="active" data-sq="Rreth Nesh" data-en="About">Rreth Nesh</a>
+    </nav>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('sq')">SQ</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+
+    <button class="menu-toggle" type="button" aria-label="Open menu" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</header>
+
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu(event)">
+  <div class="mobile-menu" onclick="event.stopPropagation()">
+    <div class="mobile-menu-head">
+      <div class="mobile-menu-title">KROI</div>
+      <button class="mobile-menu-close" type="button" aria-label="Close menu" onclick="closeMobileMenu()">×</button>
+    </div>
+    <nav class="mobile-nav">
+      <a href="/" class="mobile-link" data-sq="Tavolinat" data-en="Tables">Tavolinat</a>
+      <a href="/kabina" class="mobile-link" data-sq="Kabina" data-en="Cabins">Kabina</a>
+      <a href="/rreth-nesh" class="mobile-link active" data-sq="Rreth Nesh" data-en="About">Rreth Nesh</a>
+    </nav>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('sq')">SQ</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <img src="/img/kabina-nate.webp" alt="KROI natën">
+  <div class="hero-overlay">
+    <h1><em data-sq="Historia jonë" data-en="Our Story">Historia jonë</em><span data-sq="Rreth Agroturizmit KROI" data-en="About Agrotourism KROI">Rreth Agroturizmit KROI</span></h1>
+    <p data-sq="Natyrë, autenticitet dhe mikpritje shqiptare" data-en="Nature, authenticity and Albanian hospitality">Natyrë, autenticitet dhe mikpritje shqiptare</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- STORY -->
+  <div class="grid-2" style="margin-bottom:3rem;">
+    <div>
+      <div class="section-label" data-sq="Historia jonë" data-en="Our story">Historia jonë</div>
+      <h2 class="section-title" data-sq="Një vend ku natyra takon traditën" data-en="A place where nature meets tradition">Një vend ku natyra takon traditën</h2>
+      <div class="section-body">
+        <p data-sq="Agroturizmi KROI lindi nga dashuria për natyrën shqiptare dhe dëshira për të ruajtur traditat e mikpritjes. E vendosur në zemër të maleve, KROI ofron një eksperiencë unike që kombinon komoditetin modern me autenticitetin e jetës rurale." data-en="Agrotourism KROI was born from a love of Albanian nature and the desire to preserve the traditions of hospitality. Located in the heart of the mountains, KROI offers a unique experience that combines modern comfort with the authenticity of rural life.">Agroturizmi KROI lindi nga dashuria për natyrën shqiptare dhe dëshira për të ruajtur traditat e mikpritjes. E vendosur në zemër të maleve, KROI ofron një eksperiencë unike që kombinon komoditetin modern me autenticitetin e jetës rurale.</p>
+        <p data-sq="Kabinat tona të ndërtuara me dru natyral, restorantin me produkte nga ferma jonë, dhe pamjet mahnitëse të malit dhe liqenit — të gjitha janë pjesë e eksperiencës KROI." data-en="Our cabins built with natural wood, the restaurant with products from our farm, and the stunning views of the mountain and lake — all are part of the KROI experience.">Kabinat tona të ndërtuara me dru natyral, restorantin me produkte nga ferma jonë, dhe pamjet mahnitëse të malit dhe liqenit — të gjitha janë pjesë e eksperiencës KROI.</p>
+      </div>
+    </div>
+    <div>
+      <img src="/img/kabina-salle.webp" alt="Salla e KROI" style="width:100%;height:180px;object-fit:cover;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.1);">
+    </div>
+  </div>
+
+  <!-- INFO CARDS -->
+  <div class="grid-3">
+    <div class="info-card">
+      <div class="icon">🕐</div>
+      <h3 data-sq="Orari i Restorantit" data-en="Restaurant Hours">Orari i Restorantit</h3>
+      <p data-sq="E Hënë – E Diel<br>12:00 – 23:00<br>I hapur gjithë vitin" data-en="Monday – Sunday<br>12:00 – 23:00<br>Open all year">E Hënë – E Diel<br>12:00 – 23:00<br>I hapur gjithë vitin</p>
+    </div>
+    <div class="info-card">
+      <div class="icon">📞</div>
+      <h3 data-sq="Na Kontaktoni" data-en="Contact Us">Na Kontaktoni</h3>
+      <p><a href="tel:+355691234567" style="color:var(--gold);font-weight:500;">+355 69 123 4567</a><br>
+      <a href="mailto:info@kroi.al" style="color:var(--moss);">info@kroi.al</a><br>
+      <span data-sq="Disponibël 09:00–21:00" data-en="Available 09:00–21:00">Disponibël 09:00–21:00</span></p>
+    </div>
+    <div class="info-card">
+      <div class="icon">🌲</div>
+      <h3 data-sq="Check-in / Check-out" data-en="Check-in / Check-out">Check-in / Check-out</h3>
+      <p><span data-sq="Check-in: nga ora 14:00<br>Check-out: deri ora 12:00<br>Late check-out me kërkesë" data-en="Check-in: from 14:00<br>Check-out: until 12:00<br>Late check-out on request">Check-in: nga ora 14:00<br>Check-out: deri ora 12:00<br>Late check-out me kërkesë</span></p>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <hr class="divider">
+  <div class="section-label" data-sq="Galeria" data-en="Gallery">Galeria</div>
+  <div class="gallery-row">
+    <img src="/img/kabina-nate.webp"  alt="Kabina natën"   onclick="openGal(0)">
+    <img src="/img/kabina-salle.webp" alt="Salla"          onclick="openGal(1)">
+    <img src="/img/kabina-dhome.webp" alt="Dhoma gjumi"    onclick="openGal(2)">
+    <img src="/img/kabina-salle2.avif" alt="Salla e brendshme"        onclick="openGal(3)">
+  </div>
+
+  <!-- MAP -->
+  <hr class="divider">
+  <div class="map-section">
+    <div class="section-label" data-sq="Si të Arrini" data-en="How to Get Here">Si të Arrini</div>
+    <h2 class="section-title" data-sq="Na gjeni lehtë" data-en="Find us easily">Na gjeni lehtë</h2>
+    <div class="map-frame">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2997.456!2d19.8039799!3d41.4101502!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1350330062770e3f%3A0x437ac4e26b0bc947!2sAgroturizem%20Kroi!5e0!3m2!1ssq!2sal!4v1"
+        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+    <div class="directions-grid">
+      <div class="dir-card">
+        <div class="dir-icon">🚗</div>
+        <div class="dir-body">
+          <h4 data-sq="Me Makinë" data-en="By Car">Me Makinë</h4>
+          <p data-sq="Nga Tirana: ~45 min. Nga Durrësi: ~40 min. Navigoni te 'Agroturizem Kroi' në Google Maps." data-en="From Tirana: ~45 min. From Durrës: ~40 min. Navigate to 'Agroturizem Kroi' on Google Maps.">Nga Tirana: ~45 min. Nga Durrësi: ~40 min. Navigoni te 'Agroturizem Kroi' në Google Maps.</p>
+        </div>
+      </div>
+      <div class="dir-card">
+        <div class="dir-icon">📍</div>
+        <div class="dir-body">
+          <h4 data-sq="Adresa" data-en="Address">Adresa</h4>
+          <p>Agroturizëm KROI<br>41.4101°N, 19.8066°E<br>
+          <a href="https://maps.app.goo.gl/mR53Q1tFYp3m3W6C7" target="_blank" style="color:var(--gold)" data-sq="Hap në Google Maps →" data-en="Open in Google Maps →">Hap në Google Maps →</a></p>
+        </div>
+      </div>
+      <div class="dir-card">
+        <div class="dir-icon">📞</div>
+        <div class="dir-body">
+          <h4 data-sq="Keni pyetje?" data-en="Have questions?">Keni pyetje?</h4>
+          <p data-sq="Na telefononi dhe ju udhëzojmë drejtpërdrejt deri te porta jonë." data-en="Call us and we will guide you directly to our gate.">Na telefononi dhe ju udhëzojmë drejtpërdrejt deri te porta jonë.</p>
+          <a href="tel:+355691234567" style="color:var(--gold);font-weight:500;">+355 69 123 4567</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-box">
+    <h2 data-sq="Gati për aventurën?" data-en="Ready for the adventure?">Gati për aventurën?</h2>
+    <p data-sq="Rezervoni kabinat tuaj tani dhe siguroni datën e preferuar." data-en="Book your cabin now and secure your preferred date.">Rezervoni kabinat tuaj tani dhe siguroni datën e preferuar.</p>
+    <div class="cta-btns">
+      <a href="/kabina" class="btn-cta primary" data-sq="Rezervo Kabinë" data-en="Book a Cabin">Rezervo Kabinë</a>
+      <a href="/" class="btn-cta outline" data-sq="Rezervo Tavolinë" data-en="Book a Table">Rezervo Tavolinë</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- GALLERY MODAL -->
+<div class="gal-modal" id="galModal">
+  <button class="gal-close" onclick="closeGal()">✕</button>
+  <button class="gal-btn gal-prev" onclick="galNav(-1)">‹</button>
+  <img class="gal-img" id="galImg" src="" alt="">
+  <button class="gal-btn gal-next" onclick="galNav(1)">›</button>
+</div>
+
+<footer>
+  <p>📍 Agroturizëm KROI &nbsp;|&nbsp; 📞 <a href="tel:+355691234567">+355 69 123 4567</a> &nbsp;|&nbsp; 🕐 E Hënë–E Diel, 12:00–23:00</p>
+</footer>
+
+<script>
+let lang = localStorage.getItem('kroi_lang')||'sq';
+function setLang(l){lang=l;localStorage.setItem('kroi_lang',l);document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===l));document.querySelectorAll('[data-sq]').forEach(el=>{const txt=el.getAttribute('data-'+l);if(txt){if(el.tagName==='INPUT')el.placeholder=txt;else el.innerHTML=txt;}});}
+setLang(lang);
+
+const allPhotos=['/img/kabina-nate.webp','/img/kabina-salle.webp','/img/kabina-dhome.webp','/img/kabina-salle2.avif','/img/kabina-dhome2.webp'];
+let galIdx=0;
+function openGal(i){galIdx=i;document.getElementById('galImg').src=allPhotos[i];document.getElementById('galModal').classList.add('show');}
+function closeGal(){document.getElementById('galModal').classList.remove('show');}
+function galNav(d){galIdx=(galIdx+d+allPhotos.length)%allPhotos.length;document.getElementById('galImg').src=allPhotos[galIdx];}
+document.getElementById('galModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeGal();});
+document.addEventListener('keydown',e=>{if(document.getElementById('galModal').classList.contains('show')){if(e.key==='ArrowLeft')galNav(-1);if(e.key==='ArrowRight')galNav(1);if(e.key==='Escape')closeGal();}});
+
+
+function toggleMobileMenu(){
+  const overlay = document.getElementById('mobileMenuOverlay');
+  if(!overlay) return;
+  overlay.classList.toggle('show');
+  document.body.classList.toggle('menu-open', overlay.classList.contains('show'));
+}
+function closeMobileMenu(e){
+  if(e && e.target && e.target !== e.currentTarget) return;
+  const overlay = document.getElementById('mobileMenuOverlay');
+  if(!overlay) return;
+  overlay.classList.remove('show');
+  document.body.classList.remove('menu-open');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeMobileMenu();
+});
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 600) closeMobileMenu();
+});
+document.querySelectorAll('.mobile-nav a').forEach(a => a.addEventListener('click', () => closeMobileMenu()));
+
+</script>
+</body>
+</html>

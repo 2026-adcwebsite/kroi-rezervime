@@ -6,60 +6,7 @@
 <title>KROI — Rezervo Kabinat</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-/* ── HEADER UNIFIED (consistent across all pages) ── */
-header {
-  background:rgba(255,255,255,.96); backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border); padding:.9rem 1.5rem;
-  display:flex; align-items:center; justify-content:space-between;
-  position:sticky; top:0; z-index:100;
-}
-.logo { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--gold); letter-spacing:.1em; line-height:1; }
-.logo span { font-size:.68rem; display:block; letter-spacing:.2em; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:300; margin-top:1px; }
-.header-right { display:flex; align-items:center; gap:1rem; }
-nav { display:flex; gap:1.2rem; }
-nav a { color:var(--muted); font-size:.8rem; letter-spacing:.12em; text-transform:uppercase; font-weight:500; transition:.2s; text-decoration:none; padding-bottom:2px; }
-nav a:hover { color:var(--gold); }
-nav a.active { color:var(--gold); border-bottom:2px solid var(--gold); }
-.tel-header { font-size:.8rem; color:var(--moss); font-weight:500; text-decoration:none; white-space:nowrap; }
-.lang-toggle { display:flex; border:1.5px solid var(--border2); border-radius:20px; overflow:hidden; font-size:.74rem; flex-shrink:0; }
-.lang-btn { padding:.26rem .65rem; cursor:pointer; font-weight:500; background:transparent; border:none; color:var(--muted); }
-.lang-btn.active { background:var(--gold); color:#fff; }
-.menu-toggle {
-  display:none; align-items:center; justify-content:center;
-  width:40px; height:40px; border:1.5px solid var(--border2); border-radius:9px;
-  background:var(--surface); color:var(--text); font-size:1.2rem; cursor:pointer; transition:.2s; flex-shrink:0;
-}
-.menu-toggle:hover { border-color:var(--gold); color:var(--gold); }
-.mobile-menu-overlay {
-  display:none; position:fixed; inset:0; background:rgba(0,0,0,.38); z-index:250;
-}
-.mobile-menu-overlay.show { display:block; }
-.mobile-menu {
-  position:fixed; top:0; right:0; bottom:0; width:280px; max-width:85vw;
-  background:var(--surface); padding:1.5rem 1.2rem;
-  box-shadow:-4px 0 30px rgba(0,0,0,.12);
-  transform:translateX(100%); transition:transform .3s ease; z-index:251;
-}
-.mobile-menu-overlay.show .mobile-menu { transform:translateX(0); }
-.mobile-menu-head { display:flex; align-items:center; justify-content:space-between; gap:.8rem; padding-bottom:.9rem; border-bottom:1px solid var(--border); margin-bottom:1rem; }
-.mobile-menu-title { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--gold); letter-spacing:.08em; }
-.mobile-menu-close { background:none; border:none; color:var(--muted); font-size:1.8rem; line-height:1; cursor:pointer; }
-.mobile-nav { display:flex; flex-direction:column; gap:.4rem; margin-bottom:1.2rem; }
-.mobile-nav a { padding:.85rem 1rem; border-radius:12px; background:var(--bg); border:1.5px solid transparent; color:var(--text); font-size:.92rem; font-weight:500; text-decoration:none; transition:.15s; }
-.mobile-nav a:hover { border-color:var(--border2); }
-.mobile-nav a.active { border-color:var(--gold-br); background:var(--gold-bg); color:var(--gold); }
-.mobile-menu .tel-header { display:block; margin-bottom:.8rem; font-size:.88rem; }
-/* Breakpoint: <=768px hides desktop nav, shows hamburger */
-@media (max-width: 768px) {
-  .header-right nav { display:none; }
-  .tel-header { display:none; }
-  .menu-toggle { display:flex; }
-}
-@media (max-width: 480px) {
-  header { padding:.75rem 1rem; }
-  .logo { font-size:1.35rem; }
-}
-:root {
+:root{
   --bg:#F7F4EF;--surface:#FFF;--surface2:#F0EBE3;
   --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
   --gold:#8B6914;--gold-l:#A67C1E;--gold-bg:rgba(139,105,20,0.08);--gold-br:rgba(139,105,20,0.28);
@@ -67,9 +14,37 @@ nav a.active { color:var(--gold); border-bottom:2px solid var(--gold); }
   --red:#C0392B;--red-bg:rgba(192,57,43,0.08);--red-br:rgba(192,57,43,0.3);
   --text:#1A1A18;--muted:#6B6558;--dim:#9E9488;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 a{color:inherit;text-decoration:none;}
+
+/* HEADER */
+header{background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--gold);letter-spacing:.1em;line-height:1;}
+.logo span{font-size:.68rem;display:block;letter-spacing:.2em;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:300;margin-top:1px;}
+.header-right{display:flex;align-items:center;gap:1rem;}
+nav{display:flex;gap:1.2rem;}
+nav a{color:var(--muted);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500;transition:.2s;padding-bottom:2px;}
+nav a:hover{color:var(--gold);}
+nav a.active{color:var(--gold);border-bottom:2px solid var(--gold);}
+.tel-header{font-size:.8rem;color:var(--moss);font-weight:500;white-space:nowrap;}
+.lang-toggle{display:flex;border:1.5px solid var(--border2);border-radius:20px;overflow:hidden;font-size:.74rem;}
+.lang-btn{padding:.26rem .65rem;cursor:pointer;font-weight:500;background:transparent;border:none;color:var(--muted);}
+.lang-btn.active{background:var(--gold);color:#fff;}
+.menu-toggle{display:none;align-items:center;justify-content:center;width:40px;height:40px;border:1.5px solid var(--border2);border-radius:9px;background:var(--surface);color:var(--text);font-size:1.2rem;cursor:pointer;transition:.2s;flex-shrink:0;}
+.menu-toggle:hover{border-color:var(--gold);color:var(--gold);}
+.mobile-menu-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:250;}
+.mobile-menu-overlay.show{display:block;}
+.mobile-menu{position:fixed;top:0;right:0;bottom:0;width:280px;max-width:85vw;background:var(--surface);padding:1.5rem 1.2rem;box-shadow:-4px 0 30px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .3s ease;z-index:251;}
+.mobile-menu-overlay.show .mobile-menu{transform:translateX(0);}
+.mobile-menu-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:.9rem;border-bottom:1px solid var(--border);margin-bottom:1rem;}
+.mobile-menu-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);}
+.mobile-menu-close{background:none;border:none;color:var(--muted);font-size:1.8rem;cursor:pointer;}
+.mobile-nav{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1.2rem;}
+.mobile-nav a{padding:.85rem 1rem;border-radius:12px;background:var(--bg);border:1.5px solid transparent;color:var(--text);font-size:.92rem;font-weight:500;}
+.mobile-nav a.active{border-color:var(--gold-br);background:var(--gold-bg);color:var(--gold);}
+@media(max-width:768px){.header-right nav{display:none;}.tel-header{display:none;}.menu-toggle{display:flex;}}
+@media(max-width:480px){header{padding:.75rem 1rem;}.logo{font-size:1.35rem;}}
 
 /* HERO */
 .hero{position:relative;height:200px;overflow:hidden;}
@@ -77,13 +52,14 @@ a{color:inherit;text-decoration:none;}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.05),rgba(0,0,0,.6));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1rem;}
 .hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3.5vw,2rem);color:#fff;font-weight:400;line-height:1.2;}
 .hero h1 em{display:block;font-size:.48em;letter-spacing:.35em;color:rgba(255,255,255,.7);font-style:normal;font-family:'DM Sans',sans-serif;font-weight:300;margin-bottom:.5em;text-transform:uppercase;}
-.hero p{color:rgba(255,255,255,.82);font-size:.92rem;letter-spacing:.07em;margin-top:.5rem;}
-.hero-info{display:none;justify-content:center;gap:2rem;margin-top:1.2rem;flex-wrap:wrap;}
-.hinfo{background:rgba(255,255,255,.12);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:.5rem 1.2rem;font-size:.8rem;color:#fff;text-align:center;}
-.hinfo strong{display:block;font-size:1rem;font-family:'Playfair Display',serif;}
+.hero p{color:rgba(255,255,255,.82);font-size:.88rem;margin-top:.4rem;}
 
-/* SEARCH BAR */
-.search-wrap{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.05);position:sticky;top:68px;z-index:90;}
+/* NOTICE BANNER */
+.notice-banner{background:var(--gold-bg);border-bottom:1px solid var(--gold-br);padding:.7rem 1.5rem;text-align:center;font-size:.82rem;color:var(--gold);}
+.notice-banner strong{font-weight:600;}
+
+/* SEARCH */
+.search-wrap{background:var(--surface);border-bottom:1px solid var(--border);padding:.9rem 1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;align-items:flex-end;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.05);position:sticky;top:64px;z-index:90;}
 .sf label{display:block;font-size:.63rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;font-weight:500;}
 .sf input,.sf select{background:var(--bg);border:1.5px solid var(--border2);border-radius:8px;color:var(--text);padding:.5rem .9rem;font-family:'DM Sans',sans-serif;font-size:.87rem;outline:none;transition:.2s;}
 .sf input:focus,.sf select:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-bg);}
@@ -91,7 +67,7 @@ a{color:inherit;text-decoration:none;}
 .btn-search:hover{background:var(--moss-l);}
 
 /* LAYOUT */
-.content-wrap{max-width:1320px;margin:0 auto;padding:1rem;display:grid;grid-template-columns:1fr 390px;gap:2rem;align-items:start;}
+.content-wrap{max-width:1320px;margin:0 auto;padding:1.5rem;display:grid;grid-template-columns:1fr 390px;gap:2rem;align-items:start;}
 .sec-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text);font-weight:400;margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;}
 .cnt-badge{background:var(--moss-bg);border:1px solid var(--moss-br);border-radius:20px;padding:2px 10px;font-size:.73rem;color:var(--moss);font-weight:500;}
 
@@ -99,7 +75,7 @@ a{color:inherit;text-decoration:none;}
 .cabins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.3rem;}
 .cabin-card{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s;box-shadow:0 2px 8px rgba(0,0,0,.05);}
 .cabin-card:hover:not(.unavailable){transform:translateY(-4px);border-color:var(--gold-br);box-shadow:0 12px 36px rgba(0,0,0,.1);}
-.cabin-card.selected{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-bg),0 8px 24px rgba(0,0,0,.1);}
+.cabin-card.selected{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-bg);}
 .cabin-card.unavailable{opacity:.5;cursor:not-allowed;pointer-events:none;filter:grayscale(25%);}
 .cabin-img{height:200px;position:relative;overflow:hidden;background:#e8e0d5;}
 .cabin-img img{width:100%;height:100%;object-fit:cover;transition:transform .45s;}
@@ -113,27 +89,27 @@ a{color:inherit;text-decoration:none;}
 .thumb img{width:100%;height:100%;object-fit:cover;}
 .cabin-body{padding:1.2rem;}
 .cabin-name{font-family:'Playfair Display',serif;font-size:1.12rem;color:var(--text);margin-bottom:.2rem;font-weight:400;}
-.cabin-type{font-size:.71rem;color:var(--moss);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.7rem;font-weight:500;}
+.cabin-type{font-size:.71rem;color:var(--moss);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem;font-weight:500;}
+.cabin-desc{font-size:.8rem;color:var(--muted);line-height:1.6;margin-bottom:.8rem;}
 .cabin-features{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem;}
 .fp{background:var(--bg);border:1px solid var(--border2);border-radius:5px;padding:3px 9px;font-size:.71rem;color:var(--muted);}
 .cabin-footer{display:flex;align-items:flex-end;justify-content:space-between;padding-top:.9rem;border-top:1px solid var(--border);}
-.cabin-price-box{}
 .cabin-price{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold);}
 .cabin-price span{font-size:.73rem;color:var(--dim);font-family:'DM Sans',sans-serif;font-weight:400;}
-.cabin-price-we{font-size:.75rem;color:var(--muted);margin-top:2px;}
+.cabin-price-we{font-size:.73rem;color:var(--muted);margin-top:2px;}
+.cabin-price-inc{font-size:.7rem;color:var(--moss);font-weight:500;margin-top:2px;}
 .cabin-guests{font-size:.79rem;color:var(--dim);}
 .btn-cal{background:var(--gold-bg);border:1px solid var(--gold-br);border-radius:8px;padding:.35rem .8rem;font-size:.73rem;color:var(--gold);font-weight:500;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:5px;}
 .btn-cal:hover{background:var(--gold-br);}
 
-/* CABIN CALENDAR MODAL */
+/* CALENDAR MODAL */
 .cal-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:flex-start;justify-content:center;padding-top:60px;overflow-y:auto;}
 .cal-modal-overlay.show{display:flex;}
-.cal-modal{background:var(--surface);border-radius:20px;padding:1rem;max-width:700px;width:95%;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:fadeUp .3s ease;margin-bottom:2rem;}
-.cal-modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
-.cal-modal-head h2{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:400;}
-.btn-close-cal{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted);line-height:1;}
+.cal-modal{background:var(--surface);border-radius:20px;padding:1.5rem;max-width:700px;width:95%;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:fadeUp .3s ease;margin-bottom:2rem;}
+.cal-modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;}
+.cal-modal-head h2{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400;}
+.btn-close-cal{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted);}
 .cal-months{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
-.cal-month{}
 .cal-month-nav{display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem;}
 .cal-month-nav h3{font-family:'Playfair Display',serif;font-size:1rem;font-weight:400;color:var(--gold);flex:1;text-align:center;}
 .cal-nav-btn{background:var(--bg);border:1.5px solid var(--border2);border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:.9rem;color:var(--muted);transition:.2s;display:flex;align-items:center;justify-content:center;}
@@ -148,12 +124,9 @@ a{color:inherit;text-decoration:none;}
 .cal-day.today{border-color:var(--gold);font-weight:600;color:var(--gold);}
 .cal-day.in-range{background:var(--gold-bg);}
 .cal-day.check-in,.cal-day.check-out{background:var(--gold);color:#fff;font-weight:700;}
-.cal-day.check-in{border-radius:8px 0 0 8px;}
-.cal-day.check-out{border-radius:0 8px 8px 0;}
 .cal-day.other-m{opacity:.2;cursor:not-allowed;}
 .cal-day .day-price{font-size:.52rem;color:var(--muted);margin-top:1px;}
 .cal-day.check-in .day-price,.cal-day.check-out .day-price{color:rgba(255,255,255,.8);}
-.cal-day.in-range .day-price{color:var(--gold);}
 .cal-legend{display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap;}
 .cal-leg-item{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--muted);}
 .cal-leg-dot{width:12px;height:12px;border-radius:3px;}
@@ -168,16 +141,15 @@ a{color:inherit;text-decoration:none;}
 .gal-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:999;align-items:center;justify-content:center;}
 .gal-modal.show{display:flex;}
 .gal-img{max-width:88vw;max-height:84vh;border-radius:10px;object-fit:contain;}
-.gal-close{position:absolute;top:1rem;right:1.5rem;background:none;border:none;color:#fff;font-size:2.2rem;cursor:pointer;opacity:.75;line-height:1;}
-.gal-close:hover{opacity:1;}
-.gal-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;border-radius:50%;width:46px;height:46px;color:#fff;font-size:1.5rem;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;}
-.gal-btn:hover{background:rgba(255,255,255,.28);}
+.gal-close{position:absolute;top:1rem;right:1.5rem;background:none;border:none;color:#fff;font-size:2.2rem;cursor:pointer;opacity:.75;}
+.gal-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;border-radius:50%;width:46px;height:46px;color:#fff;font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .gal-prev{left:1rem;}.gal-next{right:1rem;}
 .gal-count{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.7);font-size:.82rem;background:rgba(0,0,0,.5);padding:.3rem .9rem;border-radius:20px;}
 
 /* BOOKING PANEL */
 .booking-panel{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:1.8rem 1.5rem;position:sticky;top:140px;box-shadow:0 4px 20px rgba(0,0,0,.06);}
-.booking-panel h3{font-family:'Playfair Display',serif;color:var(--text);font-size:1.3rem;margin-bottom:1.4rem;font-weight:400;border-bottom:1px solid var(--border);padding-bottom:.8rem;}
+.booking-panel h3{font-family:'Playfair Display',serif;color:var(--text);font-size:1.3rem;margin-bottom:.5rem;font-weight:400;}
+.booking-panel .subtitle{font-size:.78rem;color:var(--muted);margin-bottom:1.2rem;padding-bottom:.8rem;border-bottom:1px solid var(--border);}
 .sel-info{background:var(--moss-bg);border:1px solid var(--moss-br);border-radius:10px;padding:1rem;margin-bottom:1.4rem;min-height:80px;display:flex;align-items:center;justify-content:center;}
 .sel-name{font-family:'Playfair Display',serif;font-size:1.12rem;color:var(--text);}
 .sel-type{font-size:.7rem;color:var(--moss);margin-top:3px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;}
@@ -188,15 +160,33 @@ a{color:inherit;text-decoration:none;}
 .fg label{display:block;font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;font-weight:500;}
 .fg input,.fg select,.fg textarea{width:100%;background:var(--bg);border:1.5px solid var(--border2);border-radius:8px;color:var(--text);padding:.58rem .9rem;font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:.2s;}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-bg);}
-.fg textarea{resize:vertical;min-height:58px;}
+.fg textarea{resize:vertical;min-height:70px;}
 .date-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
 .price-sum{background:var(--bg);border-radius:10px;border:1px solid var(--border);padding:1rem;margin:1rem 0;font-size:.87rem;}
 .pr{display:flex;justify-content:space-between;margin-bottom:4px;color:var(--muted);}
 .pr.total{border-top:1px solid var(--border2);padding-top:8px;margin-top:8px;color:var(--gold);font-weight:600;font-size:1.02rem;font-family:'Playfair Display',serif;}
-.btn-book{width:100%;background:var(--moss);color:#fff;border:none;border-radius:10px;padding:1rem;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;cursor:pointer;transition:.2s;letter-spacing:.05em;}
-.btn-book:hover{background:var(--moss-l);transform:translateY(-1px);}
-.btn-book:disabled{background:#ccc;color:#999;cursor:not-allowed;transform:none;}
-.pol{text-align:center;font-size:.71rem;color:var(--dim);margin-top:.8rem;line-height:1.6;}
+.btn-kerkese{width:100%;background:var(--gold);color:#fff;border:none;border-radius:10px;padding:1rem;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;cursor:pointer;transition:.2s;letter-spacing:.05em;}
+.btn-kerkese:hover{background:var(--gold-l);transform:translateY(-1px);}
+.btn-kerkese:disabled{background:#ccc;color:#999;cursor:not-allowed;transform:none;}
+.pol{text-align:center;font-size:.71rem;color:var(--dim);margin-top:.8rem;line-height:1.7;}
+
+/* FAQ */
+.faq-section{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:2rem;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.faq-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;margin-bottom:1rem;color:var(--text);}
+.faq-item{border-bottom:1px solid var(--border);padding:.8rem 0;}
+.faq-item:last-child{border-bottom:none;}
+.faq-q{font-size:.87rem;font-weight:500;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:.5rem;}
+.faq-q::after{content:'＋';color:var(--gold);flex-shrink:0;transition:.2s;}
+.faq-item.open .faq-q::after{content:'－';}
+.faq-a{font-size:.82rem;color:var(--muted);line-height:1.7;margin-top:.6rem;display:none;}
+.faq-item.open .faq-a{display:block;}
+
+/* POLITIKAT */
+.policies{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem;}
+.policy-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:1.2rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.policy-icon{font-size:1.5rem;margin-bottom:.5rem;}
+.policy-title{font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:.3rem;letter-spacing:.05em;text-transform:uppercase;}
+.policy-val{font-size:.82rem;color:var(--muted);line-height:1.5;}
 
 /* TOAST / MODAL */
 .toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:.85rem 1.3rem;border-radius:10px;font-size:.87rem;z-index:9999;animation:slideIn .3s ease;max-width:300px;line-height:1.5;font-weight:500;}
@@ -204,30 +194,23 @@ a{color:inherit;text-decoration:none;}
 .toast.error{background:#fff;color:var(--red);border:1.5px solid var(--red);box-shadow:0 4px 20px rgba(0,0,0,.1);}
 .toast.loading{background:#fff;color:var(--text);border:1.5px solid var(--border2);box-shadow:0 4px 20px rgba(0,0,0,.08);}
 @keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
-.moverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:998;align-items:center;justify-content:center;}
-.moverlay.show{display:flex;}
-.mbox{background:var(--surface);border-radius:20px;padding:2.5rem 2rem;max-width:420px;width:92%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.15);animation:fadeUp .3s ease;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.micon{width:64px;height:64px;border-radius:50%;background:var(--moss-bg);border:2px solid var(--moss);display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;font-size:1.6rem;}
+.moverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:998;align-items:center;justify-content:center;padding:1rem;}
+.moverlay.show{display:flex;}
+.mbox{background:var(--surface);border-radius:20px;padding:2rem 1.5rem;max-width:440px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.15);animation:fadeUp .3s ease;}
+.micon{width:64px;height:64px;border-radius:50%;background:var(--gold-bg);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;font-size:1.6rem;}
 .mbox h2{font-family:'Playfair Display',serif;color:var(--text);font-weight:400;margin-bottom:.5rem;font-size:1.5rem;}
-.mbox p{color:var(--muted);font-size:.87rem;line-height:1.6;}
+.mbox p{color:var(--muted);font-size:.87rem;line-height:1.7;}
 .mdet{background:var(--bg);border-radius:10px;padding:1rem;margin:1.2rem 0;font-size:.84rem;text-align:left;color:var(--text);line-height:1.9;border:1px solid var(--border);}
 .mdet strong{color:var(--gold);}
-.btn-mclose{background:var(--gold);color:#fff;border:none;border-radius:8px;padding:.7rem 2rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;font-size:.87rem;letter-spacing:.07em;text-transform:uppercase;}
+.btn-mclose{background:var(--gold);color:#fff;border:none;border-radius:8px;padding:.7rem 2rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;font-size:.87rem;}
 .skel{background:linear-gradient(90deg,#e8e0d5 25%,#f0e8de 50%,#e8e0d5 75%);background-size:200% 100%;animation:shim 1.5s infinite;border-radius:16px;}
 @keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-
-/* ── MOBILE MENU ── */
-body.menu-open{overflow:hidden;}
-
-/* FOOTER */
-footer{background:var(--surface);border-top:1px solid var(--border);padding:1rem;text-align:center;margin-top:3rem;}
-footer p{font-size:.82rem;color:var(--muted);line-height:1.8;}
+footer{background:var(--surface);border-top:1px solid var(--border);padding:1.5rem;text-align:center;margin-top:2rem;}
+footer p{font-size:.8rem;color:var(--muted);line-height:1.8;}
 footer a{color:var(--gold);}
-
-@media(max-width:960px){.content-wrap{grid-template-columns:1fr}.booking-panel{position:static}.cal-months{grid-template-columns:1fr}}
-@media(max-width:600px){header{padding:1rem}.content-wrap{padding:1rem}.search-wrap{top:60px}.hero{height:200px}}
+@media(max-width:960px){.content-wrap{grid-template-columns:1fr}.booking-panel{position:static}.cal-months{grid-template-columns:1fr}.policies{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.content-wrap{padding:1rem}.search-wrap{top:60px}.hero{height:180px}.policies{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -236,17 +219,15 @@ footer a{color:var(--gold);}
   <div class="logo">KROI<span>Agroturizëm & Restorant</span></div>
   <div class="header-right">
     <nav>
-      <a href="/" data-sq="Tavolinat" data-en="Tables">Tavolinat</a>
-      <a href="/kabina" class="active" data-sq="Kabina" data-en="Cabins">Kabina</a>
+      <a href="/kabina" class="active" data-sq="Kabinat" data-en="Cabins">Kabinat</a>
       <a href="/rreth-nesh" data-sq="Rreth Nesh" data-en="About">Rreth Nesh</a>
     </nav>
-    <a href="tel:+355691234567" class="tel-header">📞 +355 69 123 4567</a>
+    <a href="tel:+355692223412" class="tel-header">📞 +355 69 222 3412</a>
     <div class="lang-toggle">
       <button class="lang-btn active" onclick="setLang('sq')">SQ</button>
       <button class="lang-btn" onclick="setLang('en')">EN</button>
     </div>
-
-    <button class="menu-toggle" type="button" aria-label="Open menu" onclick="toggleMobileMenu()">☰</button>
+    <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
   </div>
 </header>
 
@@ -254,13 +235,13 @@ footer a{color:var(--gold);}
   <div class="mobile-menu" onclick="event.stopPropagation()">
     <div class="mobile-menu-head">
       <div class="mobile-menu-title">KROI</div>
-      <button class="mobile-menu-close" type="button" aria-label="Close menu" onclick="closeMobileMenu()">×</button>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
     </div>
     <nav class="mobile-nav">
-      <a href="/" class="mobile-link" data-sq="Tavolinat" data-en="Tables">Tavolinat</a>
-      <a href="/kabina" class="mobile-link active" data-sq="Kabina" data-en="Cabins">Kabina</a>
-      <a href="/rreth-nesh" class="mobile-link" data-sq="Rreth Nesh" data-en="About">Rreth Nesh</a>
+      <a href="/kabina" class="active" data-sq="Kabinat" data-en="Cabins">Kabinat</a>
+      <a href="/rreth-nesh" data-sq="Rreth Nesh" data-en="About">Rreth Nesh</a>
     </nav>
+    <a href="tel:+355692223412" style="display:block;color:var(--moss);font-weight:500;font-size:.9rem;margin-bottom:.8rem;">📞 +355 69 222 3412</a>
     <div class="lang-toggle">
       <button class="lang-btn active" onclick="setLang('sq')">SQ</button>
       <button class="lang-btn" onclick="setLang('en')">EN</button>
@@ -271,14 +252,16 @@ footer a{color:var(--gold);}
 <div class="hero">
   <img src="/img/kabina-nate.webp" alt="Kabina KROI">
   <div class="hero-overlay">
-    <h1><em data-sq="Natë mes natyrës" data-en="A night in nature">Natë mes natyrës</em><span data-sq="Kabinat KROI" data-en="KROI Cabins">Kabinat KROI</span></h1>
+    <h1><em data-sq="Natë mes natyrës" data-en="A night in nature">Natë mes natyrës</em>
+    <span data-sq="Kabinat KROI" data-en="KROI Cabins">Kabinat KROI</span></h1>
     <p data-sq="Pushim autentik në zemër të malit" data-en="Authentic retreat in the heart of the mountain">Pushim autentik në zemër të malit</p>
-    <div class="hero-info">
-      <div class="hinfo"><strong>E Hënë – E Diel</strong><span data-sq="Gjithë vitin" data-en="All year round">Gjithë vitin</span></div>
-      <div class="hinfo"><strong>12:00 – 23:00</strong><span data-sq="Orari i Restorantit" data-en="Restaurant Hours">Orari i Restorantit</span></div>
-      <div class="hinfo"><strong>📞 +355 69 123 4567</strong><span data-sq="Na kontaktoni" data-en="Contact us">Na kontaktoni</span></div>
-    </div>
   </div>
+</div>
+
+<div class="notice-banner">
+  <strong data-sq="Si funksionon rezervimi:" data-en="How booking works:">Si funksionon rezervimi:</strong>
+  <span data-sq="Plotëso formën → Dërgon kërkesën → Ne konfirmojmë brenda 2 orësh" data-en="Fill the form → Send request → We confirm within 2 hours">Plotëso formën → Dërgon kërkesën → Ne konfirmojmë brenda 2 orësh</span>
+  &nbsp;|&nbsp; 📞 <a href="tel:+355692223412" style="color:var(--gold);font-weight:600;">+355 69 222 3412</a>
 </div>
 
 <div class="search-wrap">
@@ -287,7 +270,7 @@ footer a{color:var(--gold);}
   <div class="sf"><label data-sq="Persona" data-en="Guests">Persona</label>
     <select id="guestsSearch">
       <option value="1">1</option><option value="2" selected>2</option>
-      <option value="3">3</option><option value="4">4</option><option value="5">5+</option>
+      <option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6+</option>
     </select>
   </div>
   <div class="sf"><label data-sq="Lloji" data-en="Type">Lloji</label>
@@ -309,14 +292,83 @@ footer a{color:var(--gold);}
       <span class="cnt-badge" id="availCount">...</span>
     </div>
     <div class="cabins-grid" id="cabinsGrid">
-      <div class="skel" style="height:330px;"></div>
-      <div class="skel" style="height:330px;"></div>
-      <div class="skel" style="height:330px;"></div>
+      <div class="skel" style="height:360px;"></div>
+      <div class="skel" style="height:360px;"></div>
+      <div class="skel" style="height:360px;"></div>
+    </div>
+
+    <!-- POLITIKAT -->
+    <div class="policies">
+      <div class="policy-card">
+        <div class="policy-icon">🕐</div>
+        <div class="policy-title" data-sq="Check-in" data-en="Check-in">Check-in</div>
+        <div class="policy-val" data-sq="Nga ora 15:00" data-en="From 15:00">Nga ora 15:00</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon">🚪</div>
+        <div class="policy-title" data-sq="Check-out" data-en="Check-out">Check-out</div>
+        <div class="policy-val" data-sq="Deri ora 11:00" data-en="Until 11:00">Deri ora 11:00</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon">✅</div>
+        <div class="policy-title" data-sq="Anulimi" data-en="Cancellation">Anulimi</div>
+        <div class="policy-val" data-sq="Falas — pa kufizim kohe" data-en="Free — no time limit">Falas — pa kufizim kohe</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon">🍳</div>
+        <div class="policy-title" data-sq="Mëngjesi" data-en="Breakfast">Mëngjesi</div>
+        <div class="policy-val" data-sq="I përfshirë në çmim" data-en="Included in price">I përfshirë në çmim</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon">💳</div>
+        <div class="policy-title" data-sq="Pagesa" data-en="Payment">Pagesa</div>
+        <div class="policy-val" data-sq="Në ardhje (cash)" data-en="On arrival (cash)">Në ardhje (cash)</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon">📞</div>
+        <div class="policy-title" data-sq="Kontakt" data-en="Contact">Kontakt</div>
+        <div class="policy-val"><a href="tel:+355692223412" style="color:var(--gold);">+355 69 222 3412</a></div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq-section">
+      <div class="faq-title">❓ <span data-sq="Pyetje të Shpeshta" data-en="Frequently Asked Questions">Pyetje të Shpeshta</span></div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-sq="Si shkohet deri te Agroturizëm KROI?" data-en="How to get to Agrotourism KROI?">Si shkohet deri te Agroturizëm KROI?</div>
+        <div class="faq-a" data-sq="Nga Tirana rreth 45 minuta me makinë. Koordinatat GPS: 41.4101°N, 19.8066°E. Nuk ka transport publik direkt — rekomandojmë makinë ose taksi. Për udhëzime të detajuara kontaktoni +355 69 222 3412." data-en="About 45 minutes by car from Tirana. GPS coordinates: 41.4101°N, 19.8066°E. No direct public transport — we recommend car or taxi. For detailed directions contact +355 69 222 3412.">Nga Tirana rreth 45 minuta me makinë. Koordinatat GPS: 41.4101°N, 19.8066°E. Nuk ka transport publik direkt — rekomandojmë makinë ose taksi. Për udhëzime të detajuara kontaktoni +355 69 222 3412.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-sq="Çfarë përfshin çmimi i kabinës?" data-en="What does the cabin price include?">Çfarë përfshin çmimi i kabinës?</div>
+        <div class="faq-a" data-sq="Çmimi përfshin fjetjen dhe mëngjesin. Darka dhe pijet janë me pagesë shtesë sipas menysë së restorantit." data-en="The price includes accommodation and breakfast. Dinner and drinks are extra as per the restaurant menu.">Çmimi përfshin fjetjen dhe mëngjesin. Darka dhe pijet janë me pagesë shtesë sipas menysë së restorantit.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-sq="A mund të kërkoj late check-out?" data-en="Can I request late check-out?">A mund të kërkoj late check-out?</div>
+        <div class="faq-a" data-sq="Late check-out mund të kërkohet dhe aprovohet sipas disponueshmërisë. Kontaktoni stafin gjatë qëndrimit tuaj. Mund të jetë me pagesë shtesë." data-en="Late check-out can be requested and approved based on availability. Contact staff during your stay. May incur an additional fee.">Late check-out mund të kërkohet dhe aprovohet sipas disponueshmërisë. Kontaktoni stafin gjatë qëndrimit tuaj. Mund të jetë me pagesë shtesë.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-sq="A ndahen krevatet për dy miq?" data-en="Can beds be separated for two friends?">A ndahen krevatet për dy miq?</div>
+        <div class="faq-a" data-sq="Ju lutem specifikoni këtë kërkesë te fusha 'Kërkesa Speciale' gjatë rezervimit. Do të bëjmë të mundur sipas konfigurimit të kabinës." data-en="Please specify this in the 'Special Requests' field during booking. We will accommodate based on cabin configuration.">Ju lutem specifikoni këtë kërkesë te fusha 'Kërkesa Speciale' gjatë rezervimit. Do të bëjmë të mundur sipas konfigurimit të kabinës.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-sq="A ka krevat bebesh/fëmijësh?" data-en="Is a baby/child cot available?">A ka krevat bebesh/fëmijësh?</div>
+        <div class="faq-a" data-sq="Po, krevat bebesh disponohet me kërkesë. Specifikoni numrin e fëmijëve dhe moshën te 'Kërkesa Speciale'. Shërbimi mund të jetë me pagesë shtesë." data-en="Yes, baby cots are available on request. Specify the number of children and ages in 'Special Requests'. This service may incur an additional fee.">Po, krevat bebesh disponohet me kërkesë. Specifikoni numrin e fëmijëve dhe moshën te 'Kërkesa Speciale'. Shërbimi mund të jetë me pagesë shtesë.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-sq="Çfarë aktivitetesh ofrohen?" data-en="What activities are available?">Çfarë aktivitetesh ofrohen?</div>
+        <div class="faq-a" data-sq="Shëtitje në natyrë, pamje panoramike, restorant me produkte tradicionale, muzikë live (sipas programit). Pyesni stafin për aktivitetet e planifikuara gjatë qëndrimit tuaj." data-en="Nature walks, panoramic views, restaurant with traditional products, live music (per schedule). Ask staff about planned activities during your stay.">Shëtitje në natyrë, pamje panoramike, restorant me produkte tradicionale, muzikë live (sipas programit). Pyesni stafin për aktivitetet e planifikuara gjatë qëndrimit tuaj.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-sq="Si bëhet pagesa?" data-en="How is payment made?">Si bëhet pagesa?</div>
+        <div class="faq-a" data-sq="Pagesa bëhet në ardhje (cash). Nuk kërkohet parapagim për rezervimet online. Anulimi është falas pa kufizim kohe." data-en="Payment is made on arrival (cash). No prepayment required for online bookings. Cancellation is free with no time limit.">Pagesa bëhet në ardhje (cash). Nuk kërkohet parapagim për rezervimet online. Anulimi është falas pa kufizim kohe.</div>
+      </div>
     </div>
   </div>
 
+  <!-- BOOKING PANEL -->
   <div class="booking-panel">
-    <h3 data-sq="Rezervo Kabinat" data-en="Book a Cabin">Rezervo Kabinat</h3>
+    <h3 data-sq="Dërgo Kërkesë" data-en="Send Request">Dërgo Kërkesë</h3>
+    <div class="subtitle" data-sq="Do t'ju konfirmojmë brenda 2 orësh" data-en="We will confirm within 2 hours">Do t'ju konfirmojmë brenda 2 orësh</div>
     <div class="sel-info" id="cabinInfo"><div class="ph" data-sq="Zgjidhni një kabinë" data-en="Select a cabin">Zgjidhni një kabinë</div></div>
     <div class="date-row">
       <div class="fg"><label>Check-in</label><input type="date" id="panelIn" onchange="updatePrice()"></div>
@@ -326,31 +378,32 @@ footer a{color:var(--gold);}
     <div class="fg"><label data-sq="Numri i Telefonit" data-en="Phone Number">Numri i Telefonit</label><input type="tel" id="guestPhone" placeholder="+355 6X XXX XXXX"></div>
     <div class="fg"><label data-sq="Email (opsional)" data-en="Email (optional)">Email (opsional)</label><input type="email" id="guestEmail"></div>
     <div class="fg"><label data-sq="Persona" data-en="Guests">Persona</label>
-      <select id="panelGuests">
-        <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option>
-      </select>
+      <select id="panelGuests"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select>
     </div>
-    <div class="fg"><label data-sq="Kërkesa Speciale" data-en="Special Requests">Kërkesa Speciale</label><textarea id="guestNote" placeholder="Ditëlindje, dasëm..."></textarea></div>
+    <div class="fg"><label data-sq="Kërkesa Speciale" data-en="Special Requests">Kërkesa Speciale</label>
+      <textarea id="guestNote" data-sq-ph="Krevat bebesh, ndarja e krevateve, alergji, ushqim special..." data-en-ph="Baby cot, bed separation, allergies, special meals..." placeholder="Krevat bebesh, ndarja e krevateve, alergji..."></textarea>
+    </div>
     <div class="price-sum" id="priceSummary" style="display:none">
       <div class="pr"><span data-sq="Ditë pune" data-en="Weekdays">Ditë pune</span><span id="prWd">—</span></div>
       <div class="pr"><span data-sq="Fundjavë" data-en="Weekends">Fundjavë</span><span id="prWe">—</span></div>
       <div class="pr"><span data-sq="Netë" data-en="Nights">Netë</span><span id="prNights">—</span></div>
+      <div class="pr" style="font-size:.75rem;color:var(--moss)"><span data-sq="✓ Mëngjesi i përfshirë" data-en="✓ Breakfast included">✓ Mëngjesi i përfshirë</span><span></span></div>
       <div class="pr total"><span data-sq="Totali" data-en="Total">Totali</span><span id="prTotal">—</span></div>
     </div>
-    <button class="btn-book" id="btnBook" onclick="submitBooking()" disabled data-sq="Konfirmo Rezervimin" data-en="Confirm Booking">Konfirmo Rezervimin</button>
-    <div class="pol" data-sq="Anulim falas deri 48 orë para check-in · Pagesa në ardhje" data-en="Free cancellation up to 48h before check-in · Pay on arrival">Anulim falas deri 48 orë para check-in · Pagesa në ardhje</div>
+    <button class="btn-kerkese" id="btnKerkese" onclick="submitKerkese()" disabled data-sq="📨 Dërgo Kërkesën" data-en="📨 Send Request">📨 Dërgo Kërkesën</button>
+    <div class="pol" data-sq="Pagesa bëhet në ardhje · Anulim falas · Konfirmim brenda 2 orësh" data-en="Pay on arrival · Free cancellation · Confirmation within 2 hours">Pagesa bëhet në ardhje · Anulim falas · Konfirmim brenda 2 orësh</div>
   </div>
 </div>
 
-<!-- CABIN CALENDAR MODAL -->
+<!-- CALENDAR MODAL -->
 <div class="cal-modal-overlay" id="calModal">
   <div class="cal-modal">
     <div class="cal-modal-head">
-      <h2 id="calModalTitle">Kalendari — Kabina Lisi</h2>
+      <h2 id="calModalTitle">Kalendari</h2>
       <button class="btn-close-cal" onclick="closeCalModal()">✕</button>
     </div>
     <div class="cal-months">
-      <div class="cal-month">
+      <div>
         <div class="cal-month-nav">
           <button class="cal-nav-btn" id="calPrevBtn" onclick="calNavigate(-1)">‹</button>
           <h3 id="calM1Title"></h3>
@@ -358,7 +411,7 @@ footer a{color:var(--gold);}
         </div>
         <div class="cal-grid" id="calGridM1"></div>
       </div>
-      <div class="cal-month">
+      <div>
         <div class="cal-month-nav">
           <button class="cal-nav-btn" style="opacity:0;pointer-events:none">‹</button>
           <h3 id="calM2Title"></h3>
@@ -370,10 +423,10 @@ footer a{color:var(--gold);}
     <div class="cal-legend">
       <div class="cal-leg-item"><div class="cal-leg-dot" style="background:var(--red-bg);border:1px solid var(--red-br)"></div><span data-sq="E rezervuar" data-en="Reserved">E rezervuar</span></div>
       <div class="cal-leg-item"><div class="cal-leg-dot" style="background:var(--gold);border-radius:50%"></div><span data-sq="Data juaj" data-en="Your dates">Data juaj</span></div>
-      <div class="cal-leg-item"><div class="cal-leg-dot" style="background:var(--gold-bg);border:1px solid var(--gold-br)"></div><span data-sq="Periudha" data-en="Period">Periudha</span></div>
     </div>
     <div class="cal-price-summary" id="calPriceSummary" style="display:none">
       <div class="cal-price-row"><span id="cpNights">—</span><span id="cpBreakdown">—</span></div>
+      <div class="cal-price-row" style="font-size:.75rem;color:var(--moss)"><span data-sq="✓ Mëngjesi i përfshirë" data-en="✓ Breakfast included">✓ Mëngjesi i përfshirë</span></div>
       <div class="cal-price-row total"><span data-sq="Totali" data-en="Total">Totali</span><span id="cpTotal">—</span></div>
     </div>
     <button class="btn-zgjedh" id="btnZgjedh" onclick="confirmCalDates()" disabled data-sq="Zgjedh këto data" data-en="Select these dates">Zgjedh këto data</button>
@@ -392,355 +445,235 @@ footer a{color:var(--gold);}
 <!-- SUCCESS MODAL -->
 <div class="moverlay" id="successModal">
   <div class="mbox">
-    <div class="micon">🌲</div>
-    <h2 data-sq="Rezervimi u Konfirmua!" data-en="Booking Confirmed!">Rezervimi u Konfirmua!</h2>
-    <p data-sq="Faleminderit! Do t'ju kontaktojmë brenda 2 orësh." data-en="Thank you! We will contact you within 2 hours.">Faleminderit! Do t'ju kontaktojmë brenda 2 orësh.</p>
+    <div class="micon">📨</div>
+    <h2 data-sq="Kërkesa u Dërgua!" data-en="Request Sent!">Kërkesa u Dërgua!</h2>
+    <p data-sq="Faleminderit! Do t'ju konfirmojmë brenda 2 orësh në numrin e telefonit të dhënë." data-en="Thank you! We will confirm within 2 hours at the phone number provided.">Faleminderit! Do t'ju konfirmojmë brenda 2 orësh në numrin e telefonit të dhënë.</p>
     <div class="mdet" id="modalDetails"></div>
     <button class="btn-mclose" onclick="closeModal()" data-sq="Mbyll" data-en="Close">Mbyll</button>
   </div>
 </div>
 
 <footer>
-  <p>📍 Agroturizëm KROI, Shqipëri &nbsp;|&nbsp; 📞 <a href="tel:+355691234567">+355 69 123 4567</a> &nbsp;|&nbsp; 🕐 E Hënë–E Diel, 12:00–23:00</p>
-  <p style="margin-top:.5rem"><a href="/rreth-nesh" style="color:var(--moss)">Rreth Nesh & Si të Arrini</a></p>
+  <p>📍 Agroturizëm KROI &nbsp;|&nbsp; 📞 <a href="tel:+355692223412">+355 69 222 3412</a> &nbsp;|&nbsp; 🕐 E Hënë–E Diel, 12:00–23:00</p>
+  <p style="margin-top:.4rem"><a href="/rreth-nesh" style="color:var(--moss)" data-sq="Rreth Nesh & Harta →" data-en="About Us & Map →">Rreth Nesh & Harta →</a></p>
 </footer>
 
 <script>
-// ── LANG ─────────────────────────────────────
-let lang = localStorage.getItem('kroi_lang') || 'sq';
-function setLang(l) {
-  lang = l;
-  localStorage.setItem('kroi_lang', l);
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === l));
-  document.querySelectorAll('[data-sq]').forEach(el => {
-    const txt = el.getAttribute('data-' + l);
-    if (txt) {
-      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = txt;
-      else el.textContent = txt;
-    }
-  });
-}
+let lang=localStorage.getItem('kroi_lang')||'sq';
+function setLang(l){lang=l;localStorage.setItem('kroi_lang',l);document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===l));document.querySelectorAll('[data-sq]').forEach(el=>{const txt=el.getAttribute('data-'+l);if(!txt)return;if(el.tagName==='INPUT'||el.tagName==='TEXTAREA')el.placeholder=txt;else el.textContent=txt;});document.querySelectorAll('[data-sq-ph]').forEach(el=>{el.placeholder=el.getAttribute('data-'+l+'-ph')||el.getAttribute('data-sq-ph');});}
 setLang(lang);
 
-// ── FEATURES / PHOTOS ─────────────────────────
-const cabinFeatures = {
-  K1:{sq:['Oxhak','Terracë','Dush','Wi-Fi'],en:['Fireplace','Terrace','Shower','Wi-Fi']},
-  K2:{sq:['Oxhak','Terracë','Dush','Wi-Fi'],en:['Fireplace','Terrace','Shower','Wi-Fi']},
-  K3:{sq:['Oxhak','Sauna','Jacuzzi','Kuzhinë','Wi-Fi'],en:['Fireplace','Sauna','Jacuzzi','Kitchen','Wi-Fi']},
-  K4:{sq:['2 dhoma','Kuzhinë','Oxhak','Parking'],en:['2 bedrooms','Kitchen','Fireplace','Parking']},
-  K5:{sq:['Jacuzzi','Oxhak','Krevat 180cm','Dekore speciale'],en:['Jacuzzi','Fireplace','180cm Bed','Special decor']},
-  K6:{sq:['Oxhak','Terracë panoramike','Dush','Wi-Fi'],en:['Fireplace','Panoramic terrace','Shower','Wi-Fi']},
-};
-const defaultPhotos = {
-  K1:['/img/kabina-salle.webp','/img/kabina-dhome.webp','/img/kabina-salle2.avif','/img/kabina-nate.webp'],
-  K2:['/img/kabina-dhome.webp','/img/kabina-salle.webp','/img/kabina-nate.webp','/img/kabina-dhome2.webp'],
-  K3:['/img/kabina-nate.webp','/img/kabina-salle2.avif','/img/kabina-dhome.webp','/img/kabina-dhome2.webp'],
-  K4:['/img/kabina-salle.webp','/img/kabina-nate.webp','/img/kabina-dhome.webp','/img/kabina-dhome2.webp'],
-  K5:['/img/kabina-dhome2.webp','/img/kabina-nate.webp','/img/kabina-salle2.avif','/img/kabina-dhome.webp'],
-  K6:['/img/kabina-salle2.avif','/img/kabina-salle.webp','/img/kabina-dhome2.webp','/img/kabina-nate.webp'],
-};
-const typeLabel = (t,l) => ({standard:{sq:'Kabinë Standard',en:'Standard Cabin'},deluxe:{sq:'Kabinë Deluxe',en:'Deluxe Cabin'},familje:{sq:'Familje',en:'Family'},honeymoon:{sq:'Honeymoon Suite',en:'Honeymoon Suite'}}[t]?.[l]||t);
-const months = {sq:['Janar','Shkurt','Mars','Prill','Maj','Qershor','Korrik','Gusht','Shtator','Tetor','Nëntor','Dhjetor'],en:['January','February','March','April','May','June','July','August','September','October','November','December']};
+function toggleMobileMenu(){const o=document.getElementById('mobileMenuOverlay');o.classList.toggle('show');document.body.style.overflow=o.classList.contains('show')?'hidden':'';}
+function closeMobileMenu(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('mobileMenuOverlay').classList.remove('show');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMobileMenu();});
 
-let allKabina = [], selectedKabinaId = null, selectedDates = { in: null, out: null };
+// FAQ
+function toggleFaq(el){const item=el.parentElement;item.classList.toggle('open');}
 
-// ── GALLERY ───────────────────────────────────
-let galImages = [], galIdx = 0;
-function openGal(imgs, idx) { galImages=imgs; galIdx=idx; document.getElementById('galImg').src=imgs[idx]; document.getElementById('galCount').textContent=(idx+1)+' / '+imgs.length; document.getElementById('galModal').classList.add('show'); }
-function closeGal() { document.getElementById('galModal').classList.remove('show'); }
-function galNav(d) { galIdx=(galIdx+d+galImages.length)%galImages.length; document.getElementById('galImg').src=galImages[galIdx]; document.getElementById('galCount').textContent=(galIdx+1)+' / '+galImages.length; }
-document.getElementById('galModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeGal(); });
-document.addEventListener('keydown', e => { if(document.getElementById('galModal').classList.contains('show')){if(e.key==='ArrowLeft')galNav(-1);if(e.key==='ArrowRight')galNav(1);if(e.key==='Escape')closeGal();} });
+// Gallery
+let galImages=[],galIdx=0;
+function openGal(imgs,idx){galImages=imgs;galIdx=idx;document.getElementById('galImg').src=imgs[idx];document.getElementById('galCount').textContent=(idx+1)+' / '+imgs.length;document.getElementById('galModal').classList.add('show');}
+function closeGal(){document.getElementById('galModal').classList.remove('show');}
+function galNav(d){galIdx=(galIdx+d+galImages.length)%galImages.length;document.getElementById('galImg').src=galImages[galIdx];document.getElementById('galCount').textContent=(galIdx+1)+' / '+galImages.length;}
+document.getElementById('galModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeGal();});
+document.addEventListener('keydown',e=>{if(document.getElementById('galModal').classList.contains('show')){if(e.key==='ArrowLeft')galNav(-1);if(e.key==='ArrowRight')galNav(1);}});
 
-// ── TOAST ─────────────────────────────────────
-function toast(msg, type='loading', ms=3500) { document.querySelectorAll('.toast').forEach(e=>e.remove()); const el=document.createElement('div'); el.className='toast '+type; el.textContent=msg; document.body.appendChild(el); if(ms)setTimeout(()=>el.remove(),ms); return el; }
+function toast(msg,type='loading',ms=3500){document.querySelectorAll('.toast').forEach(e=>e.remove());const el=document.createElement('div');el.className='toast '+type;el.textContent=msg;document.body.appendChild(el);if(ms)setTimeout(()=>el.remove(),ms);return el;}
 
-// ── LOAD KABINA ───────────────────────────────
-async function loadKabina() {
-  const ci = document.getElementById('checkIn').value;
-  const co = document.getElementById('checkOut').value;
-  const typeF = document.getElementById('typeFilter').value;
-  const t = toast(lang==='sq'?'Duke ngarkuar...':'Loading...', 'loading', 0);
-  try {
-    const res = await fetch(`/api/kabina/disponueshme?check_in=${ci}&check_out=${co}`);
-    allKabina = await res.json();
-    if (allKabina.gabim) throw new Error(allKabina.gabim);
+const typeLabel=(t,l)=>({standard:{sq:'Kabinë Standard',en:'Standard Cabin'},deluxe:{sq:'Kabinë Deluxe',en:'Deluxe Cabin'},familje:{sq:'Familje',en:'Family'},honeymoon:{sq:'Honeymoon Suite',en:'Honeymoon Suite'}}[t]?.[l]||t);
+const months={sq:['Janar','Shkurt','Mars','Prill','Maj','Qershor','Korrik','Gusht','Shtator','Tetor','Nëntor','Dhjetor'],en:['January','February','March','April','May','June','July','August','September','October','November','December']};
+const defaultPhotos={K1:['/img/kabina-salle.webp','/img/kabina-dhome.webp','/img/kabina-salle2.avif','/img/kabina-nate.webp'],K2:['/img/kabina-dhome.webp','/img/kabina-salle.webp','/img/kabina-nate.webp','/img/kabina-dhome2.webp']};
+function getPhotos(k){return(k.fotot&&k.fotot.length)?k.fotot:(defaultPhotos[k.kodi]||['/img/kabina-nate.webp']);}
+
+let allKabina=[],selectedKabinaId=null,selectedDates={in:null,out:null};
+
+async function loadKabina(){
+  const ci=document.getElementById('checkIn').value;
+  const co=document.getElementById('checkOut').value;
+  const typeF=document.getElementById('typeFilter').value;
+  const t=toast(lang==='sq'?'Duke ngarkuar...':'Loading...','loading',0);
+  try{
+    const res=await fetch(`/api/kabina/disponueshme?check_in=${ci}&check_out=${co}`);
+    allKabina=await res.json();
+    if(allKabina.gabim)throw new Error(allKabina.gabim);
     t.remove();
-    if (ci) { document.getElementById('panelIn').value=ci; selectedDates.in=ci; }
-    if (co) { document.getElementById('panelOut').value=co; selectedDates.out=co; }
-    renderKabina(typeF);
-    updatePrice();
-  } catch(err) { t.remove(); toast('Gabim: '+err.message, 'error'); }
+    if(ci){document.getElementById('panelIn').value=ci;selectedDates.in=ci;}
+    if(co){document.getElementById('panelOut').value=co;selectedDates.out=co;}
+    renderKabina(typeF);updatePrice();
+  }catch(err){t.remove();toast('Gabim: '+err.message,'error');}
 }
 
-function renderKabina(typeF='') {
-  const grid = document.getElementById('cabinsGrid');
-  grid.innerHTML = '';
-  let count = 0;
-  allKabina.filter(k => !typeF || k.lloji===typeF).forEach(k => {
-    const avail = !k.e_zene;
-    if (avail) count++;
-    const isSel = selectedKabinaId===k.id;
-    const photos = (k.fotot && k.fotot.length) ? k.fotot : (defaultPhotos[k.kodi]||['/img/kabina-salle.webp']);
-    const feats = (cabinFeatures[k.kodi]?.[lang]||[]).map(f=>`<span class="fp">${f}</span>`).join('');
-    const thumbs = photos.slice(0,3).map((p,i)=>`<div class="thumb" onclick="event.stopPropagation();openGal(${JSON.stringify(photos)},${i})"><img src="${p}" loading="lazy" alt=""></div>`).join('');
-    const nm = lang==='en' && k.emri_en ? k.emri_en : k.emri;
-    const we = k['cmimi_fundjavë'] ? `<div class="cabin-price-we">${lang==='sq'?'Fundjavë':'Weekend'}: ${parseInt(k['cmimi_fundjavë']).toLocaleString()} L</div>` : '';
-    const totalTxt = (k.total_periudha && selectedDates.in && selectedDates.out)
-      ? `<div style="margin-top:4px;font-size:.75rem;color:var(--moss);font-weight:500">${lang==='sq'?'Totali':'Total'}: ${parseInt(k.total_periudha).toLocaleString()} L</div>` : '';
-    const card = document.createElement('div');
-    card.className = 'cabin-card'+(avail?'':' unavailable')+(isSel?' selected':'');
-    card.innerHTML = `
+function renderKabina(typeF=''){
+  const grid=document.getElementById('cabinsGrid');
+  grid.innerHTML='';let count=0;
+  allKabina.filter(k=>!typeF||k.lloji===typeF).forEach(k=>{
+    const avail=!k.e_zene;if(avail)count++;
+    const isSel=selectedKabinaId===k.id;
+    const photos=getPhotos(k);
+    const nm=lang==='en'&&k.emri_en?k.emri_en:k.emri;
+    const desc=lang==='en'&&k.pershkrimi_en?k.pershkrimi_en:(k.pershkrimi||'');
+    const thumbs=photos.slice(0,3).map((p,i)=>`<div class="thumb" onclick="event.stopPropagation();openGal(${JSON.stringify(photos)},${i})"><img src="${p}" loading="lazy" alt=""></div>`).join('');
+    const we=k['cmimi_fundjavë']?`<div class="cabin-price-we">${lang==='sq'?'Fundjavë':'Weekend'}: ${parseInt(k['cmimi_fundjavë']).toLocaleString()} L</div>`:'';
+    const totalTxt=(k.total_periudha&&selectedDates.in&&selectedDates.out)?`<div style="margin-top:4px;font-size:.75rem;color:var(--moss);font-weight:500">${lang==='sq'?'Totali':'Total'}: ${parseInt(k.total_periudha).toLocaleString()} L</div>`:'';
+    const card=document.createElement('div');
+    card.className='cabin-card'+(avail?'':' unavailable')+(isSel?' selected':'');
+    card.innerHTML=`
       <div class="cabin-img">
         <img src="${photos[0]}" alt="${nm}" loading="lazy">
         <div class="thumb-strip">${thumbs}</div>
-        <span class="cabin-tag ${avail?'tag-free':'tag-taken'}">${avail?(lang==='sq'?'E lirë':'Available'):(lang==='sq'?'E zënë':'Booked')}</span>
+        <span class="cabin-tag ${avail?'tag-free':'tag-taken'}">${avail?(lang==='sq'?'E disponueshme':'Available'):(lang==='sq'?'E rezervuar':'Reserved')}</span>
       </div>
       <div class="cabin-body">
         <div class="cabin-name">${nm}</div>
-        <div class="cabin-type">${typeLabel(k.lloji,lang)}</div>
-        <div class="cabin-features">${feats}</div>
+        <div class="cabin-type">${typeLabel(k.lloji,lang)} · ${lang==='sq'?'deri':'up to'} ${k.kapaciteti} ${lang==='sq'?'persona':'guests'}</div>
+        ${desc?`<div class="cabin-desc">${desc}</div>`:''}
         <div class="cabin-footer">
-          <div class="cabin-price-box">
+          <div>
             <div class="cabin-price">${parseInt(k.cmimi_nate).toLocaleString()} L <span>/ ${lang==='sq'?'natë':'night'}</span></div>
-            ${we}${totalTxt}
+            ${we}
+            <div class="cabin-price-inc">✓ ${lang==='sq'?'Mëngjesi i përfshirë':'Breakfast included'}</div>
+            ${totalTxt}
           </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-            <div class="cabin-guests">👤 ${lang==='sq'?'deri':'up to'} ${k.kapaciteti}</div>
-            <button class="btn-cal" onclick="event.stopPropagation();openCalModal(${k.id},'${nm}')">📅 ${lang==='sq'?'Kalendar':'Calendar'}</button>
-          </div>
+          <button class="btn-cal" onclick="event.stopPropagation();openCalModal(${k.id},'${nm}')">📅 ${lang==='sq'?'Kalendar':'Calendar'}</button>
         </div>
       </div>`;
-    if (avail) card.onclick = () => selectKabina(k.id);
+    if(avail)card.onclick=()=>selectKabina(k.id);
     grid.appendChild(card);
   });
-  document.getElementById('availCount').textContent = count + (lang==='sq'?' kabina':' cabins');
+  document.getElementById('availCount').textContent=count+(lang==='sq'?' kabina':' cabins');
 }
 
-function selectKabina(id) {
-  selectedKabinaId = id;
-  const k = allKabina.find(x=>x.id===id);
-  const nm = lang==='en' && k.emri_en ? k.emri_en : k.emri;
-  const ci = selectedDates.in || document.getElementById('panelIn').value;
-  const co = selectedDates.out || document.getElementById('panelOut').value;
-  document.getElementById('cabinInfo').innerHTML = `
-    <div style="width:100%">
-      <div class="sel-name">${nm}</div>
-      <div class="sel-type">${typeLabel(k.lloji,lang)} · ${lang==='sq'?'deri':'up to'} ${k.kapaciteti} ${lang==='sq'?'persona':'guests'}</div>
-      ${ci&&co ? `<div class="sel-dates">📅 ${ci} → ${co}</div>` : ''}
-      <div class="sel-price">${parseInt(k.cmimi_nate).toLocaleString()} L / ${lang==='sq'?'natë':'night'}</div>
-    </div>`;
-  document.getElementById('btnBook').disabled = false;
-  if (ci) document.getElementById('panelIn').value = ci;
-  if (co) document.getElementById('panelOut').value = co;
-  updatePrice();
-  renderKabina(document.getElementById('typeFilter').value);
+function selectKabina(id){
+  selectedKabinaId=id;
+  const k=allKabina.find(x=>x.id===id);
+  const nm=lang==='en'&&k.emri_en?k.emri_en:k.emri;
+  const ci=selectedDates.in||document.getElementById('panelIn').value;
+  const co=selectedDates.out||document.getElementById('panelOut').value;
+  document.getElementById('cabinInfo').innerHTML=`<div style="width:100%"><div class="sel-name">${nm}</div><div class="sel-type">${typeLabel(k.lloji,lang)} · deri ${k.kapaciteti} ${lang==='sq'?'persona':'guests'}</div>${ci&&co?`<div class="sel-dates">📅 ${ci} → ${co}</div>`:''}<div class="sel-price">${parseInt(k.cmimi_nate).toLocaleString()} L / ${lang==='sq'?'natë':'night'} · <span style="color:var(--moss);font-size:.78rem;">✓ ${lang==='sq'?'mëngjes':'breakfast'}</span></div></div>`;
+  document.getElementById('btnKerkese').disabled=false;
+  if(ci)document.getElementById('panelIn').value=ci;
+  if(co)document.getElementById('panelOut').value=co;
+  updatePrice();renderKabina(document.getElementById('typeFilter').value);
   document.querySelector('.booking-panel').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-// ── CALENDAR MODAL (per-cabin, Airbnb style) ──
-let calKabinaId = null, calOffset = 0;
-let calData = {}; // { 'YYYY-MM': { ditet: [...] } }
-let calPickIn = null, calPickOut = null, calPickStep = 0;
-
-async function openCalModal(kabinaId, name) {
-  calKabinaId = kabinaId;
-  calOffset = 0;
-  calPickIn = null; calPickOut = null; calPickStep = 0;
-  document.getElementById('calModalTitle').textContent = '📅 ' + name;
-  document.getElementById('btnZgjedh').disabled = true;
-  document.getElementById('calPriceSummary').style.display = 'none';
-  document.getElementById('calModal').classList.add('show');
-  await renderCalMonths();
+// Calendar
+let calKabinaId=null,calOffset=0,calData={},calPickIn=null,calPickOut=null,calPickStep=0;
+async function openCalModal(id,name){calKabinaId=id;calOffset=0;calPickIn=null;calPickOut=null;calPickStep=0;document.getElementById('calModalTitle').textContent='📅 '+name;document.getElementById('btnZgjedh').disabled=true;document.getElementById('calPriceSummary').style.display='none';document.getElementById('calModal').classList.add('show');await renderCalMonths();}
+function closeCalModal(){document.getElementById('calModal').classList.remove('show');}
+async function getCalData(muaji){if(calData[muaji])return calData[muaji];const res=await fetch(`/api/kabinat/${calKabinaId}/kalendar?muaji=${muaji}`);const d=await res.json();calData[muaji]=d;return d;}
+async function calNavigate(dir){calOffset+=dir;if(calOffset<0)calOffset=0;await renderCalMonths();}
+async function renderCalMonths(){
+  const now=new Date();const m1=new Date(now.getFullYear(),now.getMonth()+calOffset,1);const m2=new Date(now.getFullYear(),now.getMonth()+calOffset+1,1);
+  const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  document.getElementById('calPrevBtn').disabled=calOffset===0;
+  document.getElementById('calM1Title').textContent=months[lang][m1.getMonth()]+' '+m1.getFullYear();
+  document.getElementById('calM2Title').textContent=months[lang][m2.getMonth()]+' '+m2.getFullYear();
+  const [d1,d2]=await Promise.all([getCalData(fmt(m1)),getCalData(fmt(m2))]);
+  renderCalGrid('calGridM1',d1.ditet,m1);renderCalGrid('calGridM2',d2.ditet,m2);
 }
-function closeCalModal() { document.getElementById('calModal').classList.remove('show'); }
-
-async function getCalData(muaji) {
-  if (calData[muaji]) return calData[muaji];
-  const res = await fetch(`/api/kabinat/${calKabinaId}/kalendar?muaji=${muaji}`);
-  const data = await res.json();
-  calData[muaji] = data;
-  return data;
-}
-
-async function calNavigate(dir) {
-  calOffset += dir;
-  if (calOffset < 0) calOffset = 0;
-  await renderCalMonths();
-}
-
-async function renderCalMonths() {
-  const now = new Date();
-  const m1 = new Date(now.getFullYear(), now.getMonth() + calOffset, 1);
-  const m2 = new Date(now.getFullYear(), now.getMonth() + calOffset + 1, 1);
-  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-  document.getElementById('calPrevBtn').disabled = calOffset === 0;
-  document.getElementById('calM1Title').textContent = months[lang][m1.getMonth()] + ' ' + m1.getFullYear();
-  document.getElementById('calM2Title').textContent = months[lang][m2.getMonth()] + ' ' + m2.getFullYear();
-  const [d1, d2] = await Promise.all([getCalData(fmt(m1)), getCalData(fmt(m2))]);
-  renderCalGrid('calGridM1', d1.ditet, m1);
-  renderCalGrid('calGridM2', d2.ditet, m2);
-}
-
-function renderCalGrid(gridId, ditet, monthDate) {
-  const grid = document.getElementById(gridId);
-  const today = new Date().toISOString().split('T')[0];
-  const dnames = lang==='sq' ? ['Hë','Ma','Më','En','Pr','Sh','Di'] : ['Mo','Tu','We','Th','Fr','Sa','Su'];
-  let sd = monthDate.getDay(); sd = sd===0?6:sd-1;
-  grid.innerHTML = dnames.map(d=>`<div class="cal-dname">${d}</div>`).join('');
-  const prevLast = new Date(monthDate.getFullYear(), monthDate.getMonth(), 0).getDate();
-  for (let i=sd-1;i>=0;i--) grid.innerHTML += `<div class="cal-day other-m">${prevLast-i}</div>`;
-
-  ditet.forEach(d => {
-    const isPast = d.date < today;
-    const isBlocked = d.bllokuar || isPast;
-    const isToday = d.date === today;
-    const isIn = d.date === calPickIn;
-    const isOut = d.date === calPickOut;
-    const inRange = calPickIn && calPickOut && d.date > calPickIn && d.date < calPickOut;
-    const dayNum = parseInt(d.date.split('-')[2]);
-    const cls = ['cal-day',
-      isPast?'past':'',d.bllokuar?'blocked':'',isToday?'today':'',
-      isIn?'check-in':'',isOut?'check-out':'',inRange?'in-range':'',
-    ].filter(Boolean).join(' ');
-    const priceEl = !isBlocked ? `<div class="day-price">${(d.cmimi/1000).toFixed(1)}k</div>` : '';
-    grid.innerHTML += `<div class="${cls}" onclick="calDayClick('${d.date}',${isBlocked})">${dayNum}${priceEl}</div>`;
+function renderCalGrid(gridId,ditet,monthDate){
+  const grid=document.getElementById(gridId);const today=new Date().toISOString().split('T')[0];
+  const dn=lang==='sq'?['Hë','Ma','Më','En','Pr','Sh','Di']:['Mo','Tu','We','Th','Fr','Sa','Su'];
+  let sd=monthDate.getDay();sd=sd===0?6:sd-1;
+  grid.innerHTML=dn.map(d=>`<div class="cal-dname">${d}</div>`).join('');
+  const prevLast=new Date(monthDate.getFullYear(),monthDate.getMonth(),0).getDate();
+  for(let i=sd-1;i>=0;i--)grid.innerHTML+=`<div class="cal-day other-m">${prevLast-i}</div>`;
+  ditet.forEach(d=>{
+    const isPast=d.date<today,isBlocked=d.bllokuar||isPast,isToday=d.date===today;
+    const isIn=d.date===calPickIn,isOut=d.date===calPickOut;
+    const inRange=calPickIn&&calPickOut&&d.date>calPickIn&&d.date<calPickOut;
+    const dayNum=parseInt(d.date.split('-')[2]);
+    const cls=['cal-day',isPast?'past':'',d.bllokuar?'blocked':'',isToday?'today':'',isIn?'check-in':'',isOut?'check-out':'',inRange?'in-range':''].filter(Boolean).join(' ');
+    const priceEl=!isBlocked?`<div class="day-price">${(d.cmimi/1000).toFixed(1)}k</div>`:'';
+    grid.innerHTML+=`<div class="${cls}" onclick="calDayClick('${d.date}',${isBlocked})">${dayNum}${priceEl}</div>`;
   });
-
-  const lastDay = new Date(monthDate.getFullYear(), monthDate.getMonth()+1, 0).getDate();
-  const total = sd + lastDay;
-  const rem = total%7===0?0:7-total%7;
-  for(let d=1;d<=rem;d++) grid.innerHTML += `<div class="cal-day other-m">${d}</div>`;
+  const lastDay=new Date(monthDate.getFullYear(),monthDate.getMonth()+1,0).getDate();
+  const rem=(sd+lastDay)%7===0?0:7-(sd+lastDay)%7;
+  for(let d=1;d<=rem;d++)grid.innerHTML+=`<div class="cal-day other-m">${d}</div>`;
 }
-
-async function calDayClick(date, isBlocked) {
-  if (isBlocked) return;
-  if (calPickStep === 0 || (calPickStep === 1 && date <= calPickIn)) {
-    calPickIn = date; calPickOut = null; calPickStep = 1;
-    document.getElementById('btnZgjedh').disabled = true;
-    document.getElementById('calPriceSummary').style.display = 'none';
-  } else {
-    calPickOut = date; calPickStep = 0;
-    // Check for blocked dates in range
-    const allDites = Object.values(calData).flatMap(d=>d.ditet);
-    const hasBlocked = allDites.some(d=>d.bllokuar && d.date>calPickIn && d.date<calPickOut);
-    if (hasBlocked) {
-      toast(lang==='sq'?'Ka data të bllokuara në këtë periudhë.':'There are blocked dates in this period.','error');
-      calPickIn=date; calPickOut=null; calPickStep=1;
-    } else {
-      // Llogarit totalin
-      const datesInRange = allDites.filter(d=>d.date>=calPickIn && d.date<calPickOut);
-      const total = datesInRange.reduce((s,d)=>s+d.cmimi,0);
-      const nights = datesInRange.length;
+async function calDayClick(date,isBlocked){
+  if(isBlocked)return;
+  if(calPickStep===0||(calPickStep===1&&date<=calPickIn)){calPickIn=date;calPickOut=null;calPickStep=1;document.getElementById('btnZgjedh').disabled=true;document.getElementById('calPriceSummary').style.display='none';}
+  else{
+    calPickOut=date;calPickStep=0;
+    const allDites=Object.values(calData).flatMap(d=>d.ditet);
+    const hasBlocked=allDites.some(d=>d.bllokuar&&d.date>calPickIn&&d.date<calPickOut);
+    if(hasBlocked){toast(lang==='sq'?'Ka data të bllokuara.':'There are blocked dates.','error');calPickIn=date;calPickOut=null;calPickStep=1;}
+    else{
+      const datesInRange=allDites.filter(d=>d.date>=calPickIn&&d.date<calPickOut);
+      const total=datesInRange.reduce((s,d)=>s+d.cmimi,0);const nights=datesInRange.length;
       document.getElementById('calPriceSummary').style.display='block';
-      document.getElementById('cpNights').textContent = nights+' '+(lang==='sq'?'netë':'nights');
-      document.getElementById('cpBreakdown').textContent = '';
-      document.getElementById('cpTotal').textContent = total.toLocaleString()+' L';
-      document.getElementById('btnZgjedh').disabled = false;
-      document.getElementById('btnZgjedh').textContent = lang==='sq'
-        ? `Zgjedh: ${calPickIn} → ${calPickOut}`
-        : `Select: ${calPickIn} → ${calPickOut}`;
+      document.getElementById('cpNights').textContent=nights+' '+(lang==='sq'?'netë':'nights');
+      document.getElementById('cpTotal').textContent=total.toLocaleString()+' L';
+      document.getElementById('btnZgjedh').disabled=false;
+      document.getElementById('btnZgjedh').textContent=lang==='sq'?`Zgjedh: ${calPickIn} → ${calPickOut}`:`Select: ${calPickIn} → ${calPickOut}`;
     }
   }
   await renderCalMonths();
 }
-
-function confirmCalDates() {
-  if (!calPickIn || !calPickOut) return;
-  selectedDates = { in: calPickIn, out: calPickOut };
-  document.getElementById('panelIn').value = calPickIn;
-  document.getElementById('panelOut').value = calPickOut;
-  document.getElementById('checkIn').value = calPickIn;
-  document.getElementById('checkOut').value = calPickOut;
-  closeCalModal();
-  if (calKabinaId) selectKabina(calKabinaId);
-  else { updatePrice(); loadKabina(); }
-  calData = {};
+function confirmCalDates(){
+  if(!calPickIn||!calPickOut)return;
+  selectedDates={in:calPickIn,out:calPickOut};
+  document.getElementById('panelIn').value=calPickIn;document.getElementById('panelOut').value=calPickOut;
+  document.getElementById('checkIn').value=calPickIn;document.getElementById('checkOut').value=calPickOut;
+  closeCalModal();if(calKabinaId)selectKabina(calKabinaId);else{updatePrice();loadKabina();}calData={};
 }
+document.getElementById('calModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeCalModal();});
 
-// ── PRICE CALCULATION ─────────────────────────
-async function updatePrice() {
-  if (!selectedKabinaId) return;
-  const ci = document.getElementById('panelIn').value;
-  const co = document.getElementById('panelOut').value;
-  if (!ci || !co || ci >= co) { document.getElementById('priceSummary').style.display='none'; return; }
-  try {
-    const res = await fetch(`/api/kabina/disponueshme?check_in=${ci}&check_out=${co}`);
-    const data = await res.json();
-    const k = data.find(x=>x.id===selectedKabinaId);
-    if (!k || !k.breakdown) return;
-    const wd = k.breakdown.filter(d=>{const dow=new Date(d.date).getDay();return dow!==0&&dow!==6;});
-    const we = k.breakdown.filter(d=>{const dow=new Date(d.date).getDay();return dow===0||dow===6;});
+// Price
+async function updatePrice(){
+  if(!selectedKabinaId)return;
+  const ci=document.getElementById('panelIn').value;const co=document.getElementById('panelOut').value;
+  if(!ci||!co||ci>=co){document.getElementById('priceSummary').style.display='none';return;}
+  try{
+    const res=await fetch(`/api/kabina/disponueshme?check_in=${ci}&check_out=${co}`);
+    const data=await res.json();const k=data.find(x=>x.id===selectedKabinaId);
+    if(!k||!k.breakdown)return;
+    const wd=k.breakdown.filter(d=>{const dow=new Date(d.date).getDay();return dow!==0&&dow!==6;});
+    const we=k.breakdown.filter(d=>{const dow=new Date(d.date).getDay();return dow===0||dow===6;});
     document.getElementById('priceSummary').style.display='block';
-    document.getElementById('prWd').textContent = wd.length ? wd.length+' × '+parseInt(wd[0].cmimi).toLocaleString()+' L' : '—';
-    document.getElementById('prWe').textContent = we.length ? we.length+' × '+parseInt(we[0].cmimi).toLocaleString()+' L' : '—';
-    document.getElementById('prNights').textContent = k.breakdown.length+(lang==='sq'?' netë':' nights');
-    document.getElementById('prTotal').textContent = parseInt(k.total_periudha).toLocaleString()+' L';
-  } catch(e) { console.error(e); }
+    document.getElementById('prWd').textContent=wd.length?wd.length+' × '+parseInt(wd[0].cmimi).toLocaleString()+' L':'—';
+    document.getElementById('prWe').textContent=we.length?we.length+' × '+parseInt(we[0].cmimi).toLocaleString()+' L':'—';
+    document.getElementById('prNights').textContent=k.breakdown.length+(lang==='sq'?' netë':' nights');
+    document.getElementById('prTotal').textContent=parseInt(k.total_periudha).toLocaleString()+' L';
+  }catch(e){console.error(e);}
 }
-document.getElementById('panelIn').addEventListener('change', () => { selectedDates.in=document.getElementById('panelIn').value; updatePrice(); });
-document.getElementById('panelOut').addEventListener('change', () => { selectedDates.out=document.getElementById('panelOut').value; updatePrice(); });
+document.getElementById('panelIn').addEventListener('change',()=>{selectedDates.in=document.getElementById('panelIn').value;updatePrice();});
+document.getElementById('panelOut').addEventListener('change',()=>{selectedDates.out=document.getElementById('panelOut').value;updatePrice();});
 
-// ── SUBMIT ────────────────────────────────────
-async function submitBooking() {
-  const emri = document.getElementById('guestName').value.trim();
-  const telefon = document.getElementById('guestPhone').value.trim();
-  if (!emri||!telefon) { toast(lang==='sq'?'Plotëso emrin dhe telefonin.':'Fill in name and phone.','error'); return; }
-  const ci = document.getElementById('panelIn').value;
-  const co = document.getElementById('panelOut').value;
-  if (!ci||!co) { toast(lang==='sq'?'Zgjidhni datat.':'Select dates.','error'); return; }
-  const btn = document.getElementById('btnBook');
-  btn.disabled=true; btn.textContent=lang==='sq'?'Duke dërguar...':'Sending...';
-  const load = toast(lang==='sq'?'Duke ruajtur rezervimin...':'Saving booking...','loading',0);
-  try {
-    const res = await fetch('/api/kabina/rezervo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kabina_id:selectedKabinaId,emri,telefon,email:document.getElementById('guestEmail').value.trim()||null,persona:parseInt(document.getElementById('panelGuests').value)||2,check_in:ci,check_out:co,kerkesa:document.getElementById('guestNote').value.trim()||null})});
-    const data = await res.json();
-    load.remove();
-    if (!res.ok) { toast(data.gabim||'Gabim.','error'); btn.disabled=false; btn.textContent=lang==='sq'?'Konfirmo Rezervimin':'Confirm Booking'; return; }
-    const k = allKabina.find(x=>x.id===selectedKabinaId);
-    const nights = Math.max(1,Math.round((new Date(co)-new Date(ci))/86400000));
-    document.getElementById('modalDetails').innerHTML=`<div><strong>${lang==='sq'?'Emri':'Name'}:</strong> ${emri}</div><div><strong>${lang==='sq'?'Telefon':'Phone'}:</strong> ${telefon}</div><div><strong>${lang==='sq'?'Kabina':'Cabin'}:</strong> ${k.emri}</div><div><strong>Check-in:</strong> ${ci}</div><div><strong>Check-out:</strong> ${co}</div><div><strong>${lang==='sq'?'Netë':'Nights'}:</strong> ${nights}</div><div><strong>${lang==='sq'?'Totali':'Total'}:</strong> ${data.totali.toLocaleString()} L</div><div><strong>ID:</strong> #${data.id}</div>`;
+// Submit kërkesë
+async function submitKerkese(){
+  const emri=document.getElementById('guestName').value.trim();const telefon=document.getElementById('guestPhone').value.trim();
+  if(!emri||!telefon){toast(lang==='sq'?'Plotëso emrin dhe telefonin.':'Fill in name and phone.','error');return;}
+  const ci=document.getElementById('panelIn').value;const co=document.getElementById('panelOut').value;
+  if(!ci||!co){toast(lang==='sq'?'Zgjidhni datat.':'Select dates.','error');return;}
+  const btn=document.getElementById('btnKerkese');btn.disabled=true;btn.textContent=lang==='sq'?'Duke dërguar...':'Sending...';
+  const load=toast(lang==='sq'?'Duke dërguar kërkesën...':'Sending request...','loading',0);
+  try{
+    const res=await fetch('/api/kabina/kerkese',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kabina_id:selectedKabinaId,emri,telefon,email:document.getElementById('guestEmail').value.trim()||null,persona:parseInt(document.getElementById('panelGuests').value)||2,check_in:ci,check_out:co,kerkesa:document.getElementById('guestNote').value.trim()||null})});
+    const data=await res.json();load.remove();
+    if(!res.ok){toast(data.gabim||'Gabim.','error');btn.disabled=false;btn.textContent=lang==='sq'?'📨 Dërgo Kërkesën':'📨 Send Request';return;}
+    const k=allKabina.find(x=>x.id===selectedKabinaId);
+    const nights=Math.max(1,Math.round((new Date(co)-new Date(ci))/86400000));
+    document.getElementById('modalDetails').innerHTML=`<div><strong>${lang==='sq'?'Emri':'Name'}:</strong> ${emri}</div><div><strong>${lang==='sq'?'Telefon':'Phone'}:</strong> ${telefon}</div><div><strong>${lang==='sq'?'Kabina':'Cabin'}:</strong> ${k.emri}</div><div><strong>Check-in:</strong> ${ci} (${lang==='sq'?'ora 15:00':'15:00'})</div><div><strong>Check-out:</strong> ${co} (${lang==='sq'?'ora 11:00':'11:00'})</div><div><strong>${lang==='sq'?'Netë':'Nights'}:</strong> ${nights}</div><div><strong>${lang==='sq'?'Totali':'Total'}:</strong> ${data.totali.toLocaleString()} L</div><div><strong>ID:</strong> #${data.id}</div>`;
     document.getElementById('successModal').classList.add('show');
-    selectedKabinaId=null; document.getElementById('cabinInfo').innerHTML=`<div class="ph">${lang==='sq'?'Zgjidhni një kabinë':'Select a cabin'}</div>`; document.getElementById('priceSummary').style.display='none'; btn.textContent=lang==='sq'?'Konfirmo Rezervimin':'Confirm Booking';
-    calData={}; loadKabina();
-  } catch(e) { load.remove(); toast('Gabim lidhjeje.','error'); btn.disabled=false; btn.textContent=lang==='sq'?'Konfirmo Rezervimin':'Confirm Booking'; }
+    selectedKabinaId=null;document.getElementById('cabinInfo').innerHTML=`<div class="ph">${lang==='sq'?'Zgjidhni një kabinë':'Select a cabin'}</div>`;document.getElementById('priceSummary').style.display='none';btn.textContent=lang==='sq'?'📨 Dërgo Kërkesën':'📨 Send Request';
+    calData={};loadKabina();
+  }catch(e){load.remove();toast('Gabim lidhjeje.','error');btn.disabled=false;btn.textContent=lang==='sq'?'📨 Dërgo Kërkesën':'📨 Send Request';}
 }
-function closeModal() { document.getElementById('successModal').classList.remove('show'); }
-document.getElementById('calModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeCalModal(); });
+function closeModal(){document.getElementById('successModal').classList.remove('show');}
 
-// ── INIT ──────────────────────────────────────
-const today=new Date(), fmt=d=>d.toISOString().split('T')[0];
-const tom=new Date(today); tom.setDate(tom.getDate()+1);
-const da=new Date(today); da.setDate(da.getDate()+2);
-document.getElementById('checkIn').value=fmt(tom); document.getElementById('checkOut').value=fmt(da);
-document.getElementById('panelIn').value=fmt(tom); document.getElementById('panelOut').value=fmt(da);
+// Init
+const today=new Date(),fmt=d=>d.toISOString().split('T')[0];
+const tom=new Date(today);tom.setDate(tom.getDate()+1);
+const da=new Date(today);da.setDate(da.getDate()+2);
+document.getElementById('checkIn').value=fmt(tom);document.getElementById('checkOut').value=fmt(da);
+document.getElementById('panelIn').value=fmt(tom);document.getElementById('panelOut').value=fmt(da);
 selectedDates={in:fmt(tom),out:fmt(da)};
-fetch('/api/kabinat').then(r=>r.json()).then(data=>{allKabina=data.map(k=>({...k,e_zene:false}));renderKabina();}).catch(()=>loadKabina());
+fetch('/api/kabinat').then(r=>r.json()).then(d=>{allKabina=d.map(k=>({...k,e_zene:false}));renderKabina();}).catch(()=>loadKabina());
 loadKabina();
 setInterval(loadKabina,30000);
-
-
-function toggleMobileMenu(){
-  const overlay = document.getElementById('mobileMenuOverlay');
-  if(!overlay) return;
-  overlay.classList.toggle('show');
-  document.body.classList.toggle('menu-open', overlay.classList.contains('show'));
-}
-function closeMobileMenu(e){
-  if(e && e.target && e.target !== e.currentTarget) return;
-  const overlay = document.getElementById('mobileMenuOverlay');
-  if(!overlay) return;
-  overlay.classList.remove('show');
-  document.body.classList.remove('menu-open');
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeMobileMenu();
-});
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 600) closeMobileMenu();
-});
-document.querySelectorAll('.mobile-nav a').forEach(a => a.addEventListener('click', () => closeMobileMenu()));
-
 </script>
 </body>
 </html>

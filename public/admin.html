@@ -913,7 +913,7 @@ async function loadGantt(){
 function renderGantt(){
   const {dates, label} = getGanttDates();
   document.getElementById('ganttPeriod').textContent = label;
-  const today = new Date().toISOString().split('T')[0];
+  const _t=new Date();const today=`${_t.getFullYear()}-${String(_t.getMonth()+1).padStart(2,'0')}-${String(_t.getDate()).padStart(2,'0')}`;
   const table = document.getElementById('ganttTable');
 
   // Build header
@@ -935,7 +935,7 @@ function renderGantt(){
     tbody+=`<tr><td class="cabin-name-cell">${k.kodi}<br><span style="font-size:.68rem;color:var(--dim);font-weight:400">${k.emri.replace('Kabina ','')}</span></td>`;
     const skipDates=new Set();
     dates.forEach((d,di)=>{
-      const ds=d.toISOString().split('T')[0];
+      const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
       if(skipDates.has(ds)){return;}
       const isToday=ds===today;
       const rez=allRez.filter(r=>{
@@ -948,9 +948,9 @@ function renderGantt(){
         rezStore[r.id]={...r,kabina_emri:k.emri};
         // Count how many remaining dates this reservation covers
         const r_co=toDateStr(r.check_out);
-        const span=dates.slice(di).filter(dd=>{const dds=dd.toISOString().split('T')[0];return dds>=ds&&dds<r_co;}).length;
+        const span=dates.slice(di).filter(dd=>{const dds=`${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,'0')}-${String(dd.getDate()).padStart(2,'0')}`;return dds>=ds&&dds<r_co;}).length;
         // Mark subsequent dates to skip
-        dates.slice(di+1,di+span).forEach(dd=>skipDates.add(dd.toISOString().split('T')[0]));
+        dates.slice(di+1,di+span).forEach(dd=>skipDates.add(`${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,'0')}-${String(dd.getDate()).padStart(2,'0')}`));
         const icon = r.statusi==='pritje'?'⏳':r.statusi==='aktive'?'✅':'✓';
         const nm = ganttMode==='mujor'?'·':`${icon} ${r.emri}`;
         const ci_str=toDateStr(r.check_in);const co_str=toDateStr(r.check_out);

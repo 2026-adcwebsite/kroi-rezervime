@@ -555,6 +555,7 @@ function showTab(name){
 
 function toast(msg,type='success'){document.querySelectorAll('.toast').forEach(e=>e.remove());const el=document.createElement('div');el.className='toast '+type;el.textContent=msg;document.body.appendChild(el);setTimeout(()=>el.remove(),3500);}
 const fmtDate=d=>{if(!d)return '—';const s=typeof d==='string'?d:d.toISOString?d.toISOString().split('T')[0]:String(d);const parts=s.split('T')[0].split('-');return parts.length===3?`${parts[2]}/${parts[1]}/${parts[0]}`:'—';};
+const toDateStr=d=>{if(!d)return '';if(typeof d==='string')return d.split('T')[0];if(d instanceof Date){const y=d.getUTCFullYear(),m=String(d.getUTCMonth()+1).padStart(2,'0'),dd=String(d.getUTCDate()).padStart(2,'0');return `${y}-${m}-${dd}`;}return String(d).split('T')[0];};
 const fmtDateTime=d=>d?new Date(d).toLocaleString('sq-AL',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';
 function timeAgo(dt){const s=Math.floor((Date.now()-new Date(dt))/1000);if(s<60)return 'Tani';if(s<3600)return Math.floor(s/60)+' min';if(s<86400)return Math.floor(s/3600)+' orë';return fmtDate(dt);}
 function statusBadge(s){const m={pritje:'b-pritje',aktive:'b-aktive',anuluar:'b-anuluar',perfunduar:'b-perfunduar'};const l={pritje:'⏳ Pritje',aktive:'✅ Aktive',anuluar:'✕ Anuluar',perfunduar:'✓ Kryer'};return `<span class="badge ${m[s]||''}">${l[s]||s}</span>`;}
@@ -762,14 +763,18 @@ async function renderCabinCal(){
 
   // Map date → rez
   const rezByDate={};
-  ccalRez.forEach(r=>{let cur=new Date(r.check_in);const end=new Date(r.check_out);while(cur<end){const ds=cur.toISOString().split('T')[0];if(!rezByDate[ds])rezByDate[ds]=[];rezByDate[ds].push(r);cur.setDate(cur.getDate()+1);}});
+  ccalRez.forEach(r=>{
+    const ciStr=toDateStr(r.check_in);const coStr=toDateStr(r.check_out);
+    let cur=new Date(ciStr+'T12:00:00');const end=new Date(coStr+'T12:00:00');
+    while(cur<end){const ds=cur.toISOString().split('T')[0];if(!rezByDate[ds])rezByDate[ds]=[];rezByDate[ds].push(r);cur.setDate(cur.getDate()+1);}
+  });
 
   for(let day=1;day<=lastDay;day++){
     const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const isToday=ds===today;const rez=rezByDate[ds]||[];
     let rezHtml='';
     rez.forEach(r=>{
-      const isStart=r.check_in===ds;
+      const isStart=toDateStr(r.check_in)===ds;
       rezStore[r.id]={...r,kabina_emri:allKabinat.find(k=>k.id===ccalKabinaId)?.emri||'Kabinë'};
       const isEnd=new Date(r.check_out).toISOString().split('T')[0]===ds;
       const blockLabel=isStart?`▶ ${r.emri}`:isEnd?`${r.emri} ◀`:'──';
@@ -934,27 +939,22 @@ function renderGantt(){
       if(skipDates.has(ds)){return;}
       const isToday=ds===today;
       const rez=allRez.filter(r=>{
-        if(r.kabina_id!==k.id || r.statusi==='anuluar') return false;
-        const ci=typeof r.check_in==='string'?r.check_in.split('T')[0]:r.check_in instanceof Date?r.check_in.toISOString().split('T')[0]:String(r.check_in).split('T')[0];
-        const co=typeof r.check_out==='string'?r.check_out.split('T')[0]:r.check_out instanceof Date?r.check_out.toISOString().split('T')[0]:String(r.check_out).split('T')[0];
-        return ci<=ds && co>ds;
+        if(parseInt(r.kabina_id)!==parseInt(k.id)||r.statusi==='anuluar')return false;
+        const ci=toDateStr(r.check_in);const co=toDateStr(r.check_out);
+        return ci<=ds&&co>ds;
       });
       if(rez.length){
         const r=rez[0];
         rezStore[r.id]={...r,kabina_emri:k.emri};
         // Count how many remaining dates this reservation covers
-        const r_co=typeof r.check_out==='string'?r.check_out.split('T')[0]:r.check_out instanceof Date?r.check_out.toISOString().split('T')[0]:String(r.check_out).split('T')[0];
-        const span=dates.slice(di).filter(dd=>{
-          const dds=dd.toISOString().split('T')[0];
-          return dds>=ds && dds<r_co;
-        }).length;
+        const r_co=toDateStr(r.check_out);
+        const span=dates.slice(di).filter(dd=>{const dds=dd.toISOString().split('T')[0];return dds>=ds&&dds<r_co;}).length;
         // Mark subsequent dates to skip
         dates.slice(di+1,di+span).forEach(dd=>skipDates.add(dd.toISOString().split('T')[0]));
         const icon = r.statusi==='pritje'?'⏳':r.statusi==='aktive'?'✅':'✓';
         const nm = ganttMode==='mujor'?'·':`${icon} ${r.emri}`;
-        const ci_str=typeof r.check_in==='string'?r.check_in.split('T')[0]:r.check_in instanceof Date?r.check_in.toISOString().split('T')[0]:String(r.check_in).split('T')[0];
-        const co_str=typeof r.check_out==='string'?r.check_out.split('T')[0]:r.check_out instanceof Date?r.check_out.toISOString().split('T')[0]:String(r.check_out).split('T')[0];
-        const nights = Math.round((new Date(co_str)-new Date(ci_str))/86400000);
+        const ci_str=toDateStr(r.check_in);const co_str=toDateStr(r.check_out);
+        const nights=Math.round((new Date(co_str)-new Date(ci_str))/86400000);
         tbody+=`<td class="${isToday?'today-col':''}" colspan="${span}" style="padding:3px 2px;vertical-align:middle;">
           <div class="gantt-rez-block ${r.statusi}" onclick="showRezFromStore(${r.id})" title="${r.emri}\n${fmtDate(r.check_in)} → ${fmtDate(r.check_out)} (${nights} netë)\n${r.telefon}">
             <span class="gantt-rez-icon">${icon}</span>

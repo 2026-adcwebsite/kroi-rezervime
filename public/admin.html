@@ -74,13 +74,13 @@ nav.snav{flex:1;padding:.8rem 0;}
 .sc-purple{border-color:var(--purple-br);}.sc-purple .stat-value{color:var(--purple);}
 
 /* SECTION */
-.section{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;margin-bottom:1.5rem;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.section{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;margin-bottom:1.5rem;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04);}.section .rez-table{min-width:550px;}.section>div:has(.rez-table),.section>.rez-table{overflow-x:auto;-webkit-overflow-scrolling:touch;display:block;width:100%;}
 .sec-head{padding:1rem 1.3rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
 .sec-head h2{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:400;color:var(--text);}
 .sec-head-actions{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;}
 
 /* TABLE */
-.rez-table{width:100%;border-collapse:collapse;font-size:.83rem;min-width:600px;}.rez-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.rez-table{width:100%;border-collapse:collapse;font-size:.83rem;}
 .rez-table th{padding:.65rem 1rem;text-align:left;font-size:.63rem;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);font-weight:500;border-bottom:1px solid var(--border);background:var(--bg);}
 .rez-table td{padding:.73rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle;}
 .rez-table tr:last-child td{border-bottom:none;}
@@ -338,7 +338,7 @@ nav.snav{flex:1;padding:.8rem 0;}
         <div class="sec-head"><h2>📨 Kërkesa të Reja (Pritje)</h2>
           <button class="btn-icon" onclick="showTab('kerkesat')">Shiko të gjitha →</button>
         </div>
-        <div style="overflow-x:auto;"><table class="rez-table"><thead><tr><th>Klienti</th><th>Kabina</th><th>Check-in</th><th>Check-out</th><th>Netë</th><th>Totali</th><th>Veprime</th></tr></thead>
+        <table class="rez-table"><thead><tr><th>Klienti</th><th>Kabina</th><th>Check-in</th><th>Check-out</th><th>Netë</th><th>Totali</th><th>Veprime</th></tr></thead>
         <tbody id="tbody-pritje"><tr><td colspan="7"><div class="empty"><p>Duke ngarkuar...</p></div></td></tr></tbody></table>
       </div>
 
@@ -359,7 +359,7 @@ nav.snav{flex:1;padding:.8rem 0;}
         <div class="sec-head"><h2>📨 Kërkesa në Pritje</h2>
           <span style="font-size:.8rem;color:var(--amber);font-weight:500" id="kerkesaCount">—</span>
         </div>
-        <div style="overflow-x:auto;"><table class="rez-table"><thead><tr><th>Klienti</th><th>Kabina</th><th>Check-in</th><th>Check-out</th><th>Netë</th><th>Totali</th><th>Kërkesa</th><th>Veprime</th></tr></thead>
+        <table class="rez-table"><thead><tr><th>Klienti</th><th>Kabina</th><th>Check-in</th><th>Check-out</th><th>Netë</th><th>Totali</th><th>Kërkesa</th><th>Veprime</th></tr></thead>
         <tbody id="tbody-kerkesat"><tr><td colspan="8"><div class="empty"><div class="ei">📨</div><p>Duke ngarkuar...</p></div></td></tr></tbody></table>
       </div>
     </div>
@@ -379,7 +379,7 @@ nav.snav{flex:1;padding:.8rem 0;}
             <a href="/api/admin/export/kabina?statusi=aktive" class="btn-icon">📥 Excel</a>
           </div>
         </div>
-        <div style="overflow-x:auto;"><table class="rez-table"><thead><tr><th>Klienti</th><th>Kabina</th><th>Check-in</th><th>Check-out</th><th>Netë</th><th>Totali</th><th>Burimi</th><th>Statusi</th><th>Veprime</th></tr></thead>
+        <table class="rez-table"><thead><tr><th>Klienti</th><th>Kabina</th><th>Check-in</th><th>Check-out</th><th>Netë</th><th>Totali</th><th>Burimi</th><th>Statusi</th><th>Veprime</th></tr></thead>
         <tbody id="tbody-konfirmuara"><tr><td colspan="9"><div class="empty"><div class="ei">✅</div><p>Duke ngarkuar...</p></div></td></tr></tbody></table>
       </div>
     </div>

@@ -124,16 +124,6 @@ nav.snav{flex:1;padding:.8rem 0;}
 
 /* DISPONUESHMËRIA GRID */
 .avail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.7rem;padding:1.3rem;}
-.avail-item{border-radius:12px;padding:.9rem;text-align:center;border:1.5px solid var(--border);background:var(--bg);}
-.avail-item.e-lire{background:var(--moss-bg);border-color:var(--moss-br);}
-.avail-item.e-zene{background:var(--red-bg);border-color:var(--red-br);}
-.avail-kodi{font-family:'Playfair Display',serif;font-size:1.1rem;line-height:1;margin-bottom:3px;}
-.avail-item.e-lire .avail-kodi{color:var(--moss);}
-.avail-item.e-zene .avail-kodi{color:var(--red);}
-.avail-lloji{font-size:.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;}
-.avail-status{font-size:.72rem;font-weight:600;margin-top:5px;}
-.avail-item.e-lire .avail-status{color:var(--moss);}
-.avail-item.e-zene .avail-status{color:var(--red);}
 
 /* CABIN CALENDAR */
 .cabin-cal-tabs{display:flex;gap:.4rem;padding:1rem 1.3rem;border-bottom:1px solid var(--border);flex-wrap:wrap;}
@@ -147,17 +137,51 @@ nav.snav{flex:1;padding:.8rem 0;}
 .ccal-btn:hover{border-color:var(--gold);color:var(--gold);}
 .cabin-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
 .ccal-dname{text-align:center;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);padding:.3rem 0;}
-.ccal-day{min-height:52px;border-radius:8px;border:1.5px solid transparent;padding:.25rem .3rem;font-size:.78rem;transition:.15s;}
-.ccal-day.today{border-color:var(--gold);background:var(--gold-bg);}
-.ccal-day.other-m{opacity:.2;}
-.ccal-day .day-num{font-weight:500;color:var(--text);margin-bottom:2px;font-size:.75rem;}
-.ccal-day.today .day-num{color:var(--gold);}
-.rez-block{border-radius:5px;padding:2px 6px;font-size:.65rem;font-weight:600;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
-.rez-block.pritje{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-br);}
-.rez-block.pritje:hover{background:var(--amber-br);}
-.rez-block.aktive{background:var(--moss-bg);color:var(--moss);border:1px solid var(--moss-br);}
-.rez-block.aktive:hover{background:var(--moss-br);}
-.rez-block.perfunduar{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-br);}
+
+
+/* ── GANTT VIEW ── */
+.gantt-controls{display:flex;align-items:center;gap:1rem;padding:1rem 1.3rem;border-bottom:1px solid var(--border);flex-wrap:wrap;background:var(--bg);}
+.gantt-toggle{display:flex;background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;overflow:hidden;}
+.gtoggle{padding:.45rem 1.1rem;font-size:.8rem;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;transition:.2s;letter-spacing:.05em;}
+.gtoggle.active{background:var(--gold);color:#fff;}
+.gantt-nav{display:flex;align-items:center;gap:.5rem;}
+.gantt-nav-btn{background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:1rem;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:.2s;}
+.gantt-nav-btn:hover{border-color:var(--gold);color:var(--gold);}
+.gantt-period{font-family:'Playfair Display',serif;font-size:1rem;color:var(--text);font-weight:400;min-width:200px;text-align:center;}
+.gantt-wrap{overflow-x:auto;padding:0;max-height:70vh;overflow-y:auto;}
+.gantt-table{border-collapse:collapse;min-width:100%;table-layout:fixed;}
+.gantt-table th{background:var(--bg);border-bottom:2px solid var(--border2);border-right:1px solid var(--border);padding:.55rem .3rem;font-size:.68rem;text-align:center;color:var(--muted);font-weight:600;white-space:nowrap;position:sticky;top:0;z-index:10;letter-spacing:.05em;}
+.gantt-table th.today-h{background:rgba(139,105,20,.12);color:var(--gold);font-weight:700;}
+.gantt-table th.cabin-h{text-align:left;padding:.55rem .9rem;width:110px;min-width:110px;left:0;z-index:11;background:var(--bg);border-right:2px solid var(--border2);}
+.gantt-table td{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:3px 2px;height:46px;vertical-align:middle;overflow:hidden;}
+.gantt-table td.cabin-cell{padding:.35rem .9rem;background:var(--bg);position:sticky;left:0;z-index:5;border-right:2px solid var(--border2);width:110px;min-width:110px;}
+.cabin-cell-name{font-size:.82rem;font-weight:600;color:var(--text);}
+.cabin-cell-sub{font-size:.65rem;color:var(--dim);margin-top:1px;}
+.gantt-table td.today-col{background:rgba(139,105,20,.04);}
+.gantt-table tr:hover td:not(.cabin-cell){background:rgba(0,0,0,.02);}
+.gantt-table tr:hover td.cabin-cell{background:var(--bg);}
+.gantt-empty-cell{width:100%;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:4px;transition:.15s;}
+.gantt-empty-cell:hover{background:var(--moss-bg);}
+.gantt-empty-cell:hover::after{content:'+';font-size:1rem;color:var(--moss);font-weight:700;}
+.gantt-rez-block{height:34px;border-radius:6px;display:flex;align-items:center;padding:0 8px;font-size:.72rem;font-weight:600;cursor:pointer;overflow:hidden;white-space:nowrap;transition:.15s;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.gantt-rez-block:hover{opacity:.88;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.gantt-rez-block.pritje{background:linear-gradient(135deg,#F5C842,#E8A800);color:#5A3A00;}
+.gantt-rez-block.aktive{background:linear-gradient(135deg,#4E8A4A,#3D6B3A);color:#fff;}
+.gantt-rez-block.perfunduar{background:linear-gradient(135deg,#5B8DB8,#2563A8);color:#fff;opacity:.7;}
+.gantt-rez-icon{margin-right:5px;flex-shrink:0;font-size:.75rem;}
+.gantt-legend{display:flex;gap:1.2rem;padding:.7rem 1.3rem;border-top:1px solid var(--border);flex-wrap:wrap;background:var(--bg);}
+.gantt-leg{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--muted);}
+.gantt-leg-dot{width:14px;height:14px;border-radius:4px;flex-shrink:0;}
+
+/* ── CABIN CALENDAR IMPROVED ── */
+.rez-block{border-radius:4px;padding:2px 5px;font-size:.63rem;font-weight:600;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;line-height:1.4;display:block;}
+.rez-block.pritje{background:linear-gradient(135deg,#F5C842,#E8A800);color:#5A3A00;border:none;}
+.rez-block.aktive{background:linear-gradient(135deg,#4E8A4A,#3D6B3A);color:#fff;border:none;}
+.rez-block.perfunduar{background:linear-gradient(135deg,#5B8DB8,#2563A8);color:#fff;border:none;opacity:.75;}
+.rez-block:hover{opacity:.85;transform:scale(1.02);}
+
+/* ── AVAIL ITEMS IMPROVED ── */
+.avail-who{font-size:.65rem;color:var(--muted);margin-top:5px;line-height:1.4;border-top:1px solid var(--border);padding-top:5px;}
 
 /* POPUP */
 .popup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:300;align-items:center;justify-content:center;padding:1rem;}
@@ -660,7 +684,12 @@ async function loadPlanDitor(){
     const el=document.getElementById('planKabinaStatus');
     el.innerHTML=d.zena.map(k=>{
       const isZene=k.emri!==null&&k.check_in;
-      return `<div class="avail-item ${isZene?'e-zene':'e-lire'}"><div class="avail-kodi">${k.kodi}</div><div class="avail-lloji">${k.kabina_emri.replace('Kabina ','')}</div><div class="avail-status">${isZene?'🔴 E zënë':'🟢 E lirë'}</div>${isZene?`<div style="font-size:.65rem;color:var(--muted);margin-top:3px">${k.emri}<br>${fmtDate(k.check_in)}→${fmtDate(k.check_out)}</div>`:''}</div>`;
+      return `<div class="avail-item ${isZene?'e-zene':'e-lire'}">
+        <div class="avail-kodi">${k.kodi}</div>
+        <div class="avail-lloji">${k.kabina_emri.replace('Kabina ','')}</div>
+        <div class="avail-status">${isZene?'🔴 E zënë':'🟢 E lirë'}</div>
+        ${isZene&&k.emri?`<div class="avail-who">👤 ${k.emri}<br>📅 ${fmtDate(k.check_in)} – ${fmtDate(k.check_out)}</div>`:''}
+      </div>`;
     }).join('');
   }catch(e){console.error(e);}
 }
@@ -687,7 +716,13 @@ async function loadDisponueshme(){
     const res=await fetch(`/api/admin/disponueshme?check_in=${ci}&check_out=${co}`);
     const d=await res.json();
     const el=document.getElementById('availGrid');
-    el.innerHTML=d.map(k=>`<div class="avail-item ${k.e_zene?'e-zene':'e-lire'}"><div class="avail-kodi">${k.kodi}</div><div class="avail-lloji">${k.emri.replace('Kabina ','')}</div><div class="avail-lloji" style="margin-top:2px">${k.lloji} · ${k.kapaciteti}p</div><div class="avail-status">${k.e_zene?'🔴 E rezervuar':'🟢 E disponueshme'}</div>${!k.e_zene?`<button style="margin-top:6px;width:100%;background:var(--gold);color:#fff;border:none;border-radius:6px;padding:4px 8px;font-size:.7rem;cursor:pointer;font-family:'DM Sans'" onclick="openManualModalWithKabina(${k.id},'${ci}','${co}')">+ Rezervo</button>`:''}</div>`).join('');
+    el.innerHTML=d.map(k=>`<div class="avail-item ${k.e_zene?'e-zene':'e-lire'}">
+      <div class="avail-kodi">${k.kodi}</div>
+      <div class="avail-lloji">${k.emri.replace('Kabina ','')}</div>
+      <div class="avail-lloji">${k.lloji} · max ${k.kapaciteti}p</div>
+      <div class="avail-status">${k.e_zene?'🔴 E rezervuar':'🟢 E lirë'}</div>
+      ${!k.e_zene?`<button style="margin-top:6px;width:100%;background:var(--gold);color:#fff;border:none;border-radius:6px;padding:4px 6px;font-size:.69rem;cursor:pointer;font-family:'DM Sans';font-weight:600;" onclick="openManualModalWithKabina(${k.id},'${ci}','${co}')">+ Rezervo</button>`:''}
+    </div>`).join('');
   }catch(e){toast('Gabim.','error');}
 }
 
@@ -909,15 +944,19 @@ function renderGantt(){
         }).length;
         // Mark subsequent dates to skip
         dates.slice(di+1,di+span).forEach(dd=>skipDates.add(dd.toISOString().split('T')[0]));
-        const nm=ganttMode==='mujor'?'·':r.emri;
-        tbody+=`<td class="${isToday?'today-col':''}" colspan="${span}" style="position:relative;overflow:hidden;vertical-align:middle;">
-          <div class="gantt-block ${r.statusi}" onclick="showRezFromStore(${r.id})" title="${r.emri}: ${fmtDate(r.check_in)}→${fmtDate(r.check_out)}" style="position:relative;top:auto;left:auto;right:auto;bottom:auto;margin:3px 2px;">
-            ${nm}
+        const icon = r.statusi==='pritje'?'⏳':r.statusi==='aktive'?'✅':'✓';
+        const nm = ganttMode==='mujor'?'·':`${icon} ${r.emri}`;
+        const nights = Math.round((new Date(r.check_out)-new Date(r.check_in))/86400000);
+        tbody+=`<td class="${isToday?'today-col':''}" colspan="${span}" style="padding:3px 2px;vertical-align:middle;">
+          <div class="gantt-rez-block ${r.statusi}" onclick="showRezFromStore(${r.id})" title="${r.emri}\n${fmtDate(r.check_in)} → ${fmtDate(r.check_out)} (${nights} netë)\n${r.telefon}">
+            <span class="gantt-rez-icon">${icon}</span>
+            <span style="overflow:hidden;text-overflow:ellipsis;">${ganttMode==='mujor'?r.emri.split(' ')[0]:r.emri}</span>
+            ${ganttMode==='javor'?`<span style="opacity:.7;margin-left:4px;font-size:.65rem;">${fmtDate(r.check_in)}→${fmtDate(r.check_out)}</span>`:''}
           </div>
         </td>`;
       } else {
         tbody+=`<td class="${isToday?'today-col':''}">
-          <div class="gantt-cell-empty" onclick="openManualModalWithKabina(${k.id},'${ds}','')"></div>
+          <div class="gantt-empty-cell" onclick="openManualModalWithKabina(${k.id},'${ds}','')"></div>
         </td>`;
       }
     });

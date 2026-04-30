@@ -223,6 +223,7 @@ nav.snav{flex:1;padding:.8rem 0;}
     <div class="nav-item" onclick="showTab('kerkesat')"><span class="icon">📨</span><span>Kërkesa</span><span class="nav-badge amber" id="kerkesaBadge" style="display:none">0</span></div>
     <div class="nav-item" onclick="showTab('konfirmuara')"><span class="icon">✅</span><span>Konfirmuara</span></div>
     <div class="nav-sec">Pamje</div>
+    <div class="nav-item" onclick="showTab('gantt')"><span class="icon">📊</span><span>Gantt View</span></div>
     <div class="nav-item" onclick="showTab('plan-ditor')"><span class="icon">📋</span><span>Plan Ditor</span></div>
     <div class="nav-item" onclick="showTab('disponueshme')"><span class="icon">🔍</span><span>Disponueshmëria</span></div>
     <div class="nav-item" onclick="showTab('kabina-cal')"><span class="icon">📅</span><span>Kalendar Kabina</span></div>
@@ -321,6 +322,43 @@ nav.snav{flex:1;padding:.8rem 0;}
         </div>
         <table class="rez-table"><thead><tr><th>Klienti</th><th>Kabina</th><th>Check-in</th><th>Check-out</th><th>Netë</th><th>Totali</th><th>Burimi</th><th>Statusi</th><th>Veprime</th></tr></thead>
         <tbody id="tbody-konfirmuara"><tr><td colspan="9"><div class="empty"><div class="ei">✅</div><p>Duke ngarkuar...</p></div></td></tr></tbody></table>
+      </div>
+    </div>
+
+
+    <!-- GANTT VIEW -->
+    <div class="tab-panel" id="tab-gantt">
+      <div class="section">
+        <div class="sec-head">
+          <h2>📊 Gantt — Pamja e Kabinat</h2>
+          <div class="sec-head-actions">
+            <button class="btn-icon" onclick="openManualModal()">+ Rezervim Manual</button>
+          </div>
+        </div>
+        <div class="gantt-controls">
+          <div class="gantt-toggle">
+            <button class="gtoggle active" onclick="setGanttMode('ditor')">Ditorja</button>
+            <button class="gtoggle" onclick="setGanttMode('javor')">Javore</button>
+            <button class="gtoggle" onclick="setGanttMode('mujor')">Mujore</button>
+          </div>
+          <div class="gantt-nav">
+            <button class="gantt-nav-btn" onclick="ganttNavigate(-1)">‹</button>
+            <div class="gantt-period" id="ganttPeriod">—</div>
+            <button class="gantt-nav-btn" onclick="ganttNavigate(1)">›</button>
+          </div>
+          <button class="btn-icon" onclick="ganttGoToday()">Sot</button>
+        </div>
+        <div class="gantt-wrap">
+          <table class="gantt-table" id="ganttTable">
+            <tbody><tr><td colspan="20"><div class="empty"><div class="ei">📊</div><p>Duke ngarkuar...</p></div></td></tr></tbody>
+          </table>
+        </div>
+        <div class="gantt-legend">
+          <div class="gantt-leg"><div class="gantt-leg-dot" style="background:var(--amber-bg);border:1.5px solid var(--amber-br)"></div>Pritje</div>
+          <div class="gantt-leg"><div class="gantt-leg-dot" style="background:var(--moss-bg);border:1.5px solid var(--moss-br)"></div>Konfirmuar</div>
+          <div class="gantt-leg"><div class="gantt-leg-dot" style="background:var(--blue-bg);border:1.5px solid var(--blue-br)"></div>Perfunduar</div>
+          <div class="gantt-leg"><div class="gantt-leg-dot" style="background:var(--moss-bg);opacity:.4"></div>Klik për rezervim manual</div>
+        </div>
       </div>
     </div>
 
@@ -474,7 +512,7 @@ if(isLoggedIn)document.getElementById('loginWrap').classList.add('hidden');
 setInterval(()=>document.getElementById('clockEl').textContent=new Date().toLocaleTimeString('sq-AL',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),1000);
 
 const titles={dashboard:'Dashboard',kerkesat:'Kërkesa në Pritje',konfirmuara:'Rezervime të Konfirmuara','plan-ditor':'Plan Pune Ditor',disponueshme:'Disponueshmëria',
-  'kabina-cal':'Kalendar Kabinash',cmime:'Çmimet',export:'Export'};
+  'kabina-cal':'Kalendar Kabinash','gantt':'Gantt — Të gjitha Kabinat',cmime:'Çmimet',export:'Export'};
 
 function showTab(name){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
@@ -487,11 +525,12 @@ function showTab(name){
   if(name==='plan-ditor')loadPlanDitor();
   if(name==='disponueshme')initDisponueshme();
   if(name==='kabina-cal')loadCabinCal();
+  if(name==='gantt')loadGantt();
   if(name==='cmime')loadCmime();
 }
 
 function toast(msg,type='success'){document.querySelectorAll('.toast').forEach(e=>e.remove());const el=document.createElement('div');el.className='toast '+type;el.textContent=msg;document.body.appendChild(el);setTimeout(()=>el.remove(),3500);}
-const fmtDate=d=>d?new Date(d+'T00:00:00').toLocaleDateString('sq-AL',{day:'2-digit',month:'2-digit',year:'numeric'}):'—';
+const fmtDate=d=>{if(!d)return '—';const s=typeof d==='string'?d:d.toISOString?d.toISOString().split('T')[0]:String(d);const parts=s.split('T')[0].split('-');return parts.length===3?`${parts[2]}/${parts[1]}/${parts[0]}`:'—';};
 const fmtDateTime=d=>d?new Date(d).toLocaleString('sq-AL',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';
 function timeAgo(dt){const s=Math.floor((Date.now()-new Date(dt))/1000);if(s<60)return 'Tani';if(s<3600)return Math.floor(s/60)+' min';if(s<86400)return Math.floor(s/3600)+' orë';return fmtDate(dt);}
 function statusBadge(s){const m={pritje:'b-pritje',aktive:'b-aktive',anuluar:'b-anuluar',perfunduar:'b-perfunduar'};const l={pritje:'⏳ Pritje',aktive:'✅ Aktive',anuluar:'✕ Anuluar',perfunduar:'✓ Kryer'};return `<span class="badge ${m[s]||''}">${l[s]||s}</span>`;}
@@ -697,7 +736,10 @@ async function renderCabinCal(){
     rez.forEach(r=>{
       const isStart=r.check_in===ds;
       rezStore[r.id]={...r,kabina_emri:allKabinat.find(k=>k.id===ccalKabinaId)?.emri||'Kabinë'};
-      rezHtml+=`<div class="rez-block ${r.statusi}" onclick="showRezFromStore(${r.id})" title="${r.emri}: ${fmtDate(r.check_in)} → ${fmtDate(r.check_out)}">${isStart?r.emri:'·'}</div>`;
+      const isEnd=new Date(r.check_out).toISOString().split('T')[0]===ds;
+      const blockLabel=isStart?`▶ ${r.emri}`:isEnd?`${r.emri} ◀`:'──';
+      const blockStyle=isStart?'border-radius:6px 0 0 6px;margin-right:-1px;':isEnd?'border-radius:0 6px 6px 0;margin-left:-1px;':'border-radius:0;margin:0 -1px;';
+      rezHtml+=`<div class="rez-block ${r.statusi}" onclick="showRezFromStore(${r.id})" title="${r.emri}: ${r.check_in} → ${r.check_out} (${r.netet} netë)" style="${blockStyle}">${blockLabel}</div>`;
     });
     grid.innerHTML+=`<div class="ccal-day ${isToday?'today':''}"><div class="day-num">${day}</div>${rezHtml}</div>`;
   }
@@ -781,6 +823,109 @@ async function submitManual(){
     if(!res.ok){toast(d.gabim||'Gabim.','error');return;}
     toast('✅ Rezervimi u krijua!');closeManualModal();await loadRezAll();updateDashboard();if(ccalKabinaId)renderCabinCal();
   }catch(e){toast('Gabim.','error');}
+}
+
+
+// ── GANTT VIEW ──────────────────────────────
+let ganttMode='ditor', ganttOffset=0;
+const dayNames=['Di','Hë','Ma','Më','En','Pr','Sh'];
+const monthNames=['Jan','Shk','Mar','Pri','Maj','Qer','Kor','Gus','Sht','Tet','Nën','Dhj'];
+const monthsFull=['Janar','Shkurt','Mars','Prill','Maj','Qershor','Korrik','Gusht','Shtator','Tetor','Nëntor','Dhjetor'];
+
+function setGanttMode(mode){
+  ganttMode=mode; ganttOffset=0;
+  document.querySelectorAll('.gtoggle').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderGantt();
+}
+function ganttNavigate(dir){ ganttOffset+=dir; renderGantt(); }
+function ganttGoToday(){ ganttOffset=0; renderGantt(); }
+
+function getGanttDates(){
+  const today=new Date(); today.setHours(0,0,0,0);
+  let dates=[], label='';
+  if(ganttMode==='ditor'){
+    const d=new Date(today); d.setDate(d.getDate()+ganttOffset);
+    // Show 1 day with hourly breakdown - actually show 3 days centered
+    for(let i=-1;i<=1;i++){const dd=new Date(d);dd.setDate(dd.getDate()+i);dates.push(new Date(dd));}
+    label=d.toLocaleDateString('sq-AL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  } else if(ganttMode==='javor'){
+    const d=new Date(today); d.setDate(d.getDate()+ganttOffset*7);
+    // Start of week (Monday)
+    const dow=d.getDay(); const mon=new Date(d); mon.setDate(d.getDate()-(dow===0?6:dow-1));
+    for(let i=0;i<7;i++){const dd=new Date(mon);dd.setDate(mon.getDate()+i);dates.push(dd);}
+    label=`${dates[0].getDate()} ${monthNames[dates[0].getMonth()]} — ${dates[6].getDate()} ${monthNames[dates[6].getMonth()]} ${dates[6].getFullYear()}`;
+  } else {
+    const d=new Date(today.getFullYear(),today.getMonth()+ganttOffset,1);
+    const daysInMonth=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+    for(let i=1;i<=daysInMonth;i++) dates.push(new Date(d.getFullYear(),d.getMonth(),i));
+    label=monthsFull[d.getMonth()]+' '+d.getFullYear();
+  }
+  return {dates, label};
+}
+
+async function loadGantt(){
+  if(!allKabinat.length) await loadKabinatList();
+  if(!allRez.length) await loadRezAll();
+  renderGantt();
+}
+
+function renderGantt(){
+  const {dates, label} = getGanttDates();
+  document.getElementById('ganttPeriod').textContent = label;
+  const today = new Date().toISOString().split('T')[0];
+  const table = document.getElementById('ganttTable');
+
+  // Build header
+  let thead = '<thead><tr><th class="cabin-h">Kabina</th>';
+  dates.forEach(d=>{
+    const ds=d.toISOString().split('T')[0];
+    const isToday=ds===today;
+    const dow=dayNames[d.getDay()];
+    const label=ganttMode==='mujor'
+      ? `<div style="font-size:.65rem">${dow}</div><div style="font-weight:700">${d.getDate()}</div>`
+      : `<div>${dow}</div><div style="font-weight:700">${d.getDate()} ${monthNames[d.getMonth()]}</div>`;
+    thead+=`<th class="${isToday?'today-h':''}" style="min-width:${ganttMode==='mujor'?'32px':'80px'}">${label}</th>`;
+  });
+  thead+='</tr></thead>';
+
+  // Build rows per cabin
+  let tbody='<tbody>';
+  allKabinat.forEach(k=>{
+    tbody+=`<tr><td class="cabin-name-cell">${k.kodi}<br><span style="font-size:.68rem;color:var(--dim);font-weight:400">${k.emri.replace('Kabina ','')}</span></td>`;
+    const skipDates=new Set();
+    dates.forEach((d,di)=>{
+      const ds=d.toISOString().split('T')[0];
+      if(skipDates.has(ds)){return;}
+      const isToday=ds===today;
+      const rez=allRez.filter(r=>r.kabina_id===k.id && r.check_in<=ds && r.check_out>ds && r.statusi!=='anuluar');
+      if(rez.length){
+        const r=rez[0];
+        rezStore[r.id]={...r,kabina_emri:k.emri};
+        // Count how many remaining dates this reservation covers
+        const span=dates.slice(di).filter(dd=>{
+          const dds=dd.toISOString().split('T')[0];
+          return dds>=ds && dds<r.check_out;
+        }).length;
+        // Mark subsequent dates to skip
+        dates.slice(di+1,di+span).forEach(dd=>skipDates.add(dd.toISOString().split('T')[0]));
+        const nm=ganttMode==='mujor'?'·':r.emri;
+        tbody+=`<td class="${isToday?'today-col':''}" colspan="${span}" style="position:relative;overflow:hidden;vertical-align:middle;">
+          <div class="gantt-block ${r.statusi}" onclick="showRezFromStore(${r.id})" title="${r.emri}: ${fmtDate(r.check_in)}→${fmtDate(r.check_out)}" style="position:relative;top:auto;left:auto;right:auto;bottom:auto;margin:3px 2px;">
+            ${nm}
+          </div>
+        </td>`;
+      } else {
+        tbody+=`<td class="${isToday?'today-col':''}">
+          <div class="gantt-cell-empty" onclick="openManualModalWithKabina(${k.id},'${ds}','')"></div>
+        </td>`;
+      }
+    });
+    tbody+='</tr>';
+  });
+  tbody+='</tbody>';
+
+  table.innerHTML=thead+tbody;
 }
 
 // ── INIT ─────────────────────────────────────

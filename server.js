@@ -10,6 +10,7 @@ const path    = require('path');
 const multer  = require('multer');
 const XLSX    = require('xlsx');
 const fs      = require('fs');
+const https   = require('https');
 
 const app  = express();
 const PORT = process.env.PORT || 3030;
@@ -41,7 +42,7 @@ const storage = multer.diskStorage({
     cb(null, dir);
   },
   filename: (req, file, cb) => {
-    const ext  = path.extname(file.originalname);
+    const ext = path.extname(file.originalname);
     cb(null, `k${req.params.id}_${Date.now()}${ext}`);
   }
 });
@@ -83,6 +84,20 @@ async function llogaritTotal(kabina_id, check_in, check_out) {
   return { total, breakdown };
 }
 
+// ── WhatsApp Njoftim ──────────────────────────
+async function dergoPorosi(msg) {
+  try {
+    const phone   = process.env.WA_PHONE   || '355697015966';
+    const apikey  = process.env.WA_APIKEY  || '';
+    if (!apikey) return;
+    const encoded = encodeURIComponent(msg);
+    const url = `https://api.callmebot.com/whatsapp.php?phone=${phone}&text=${encoded}&apikey=${apikey}`;
+    https.get(url, (res) => {
+      console.log(`📱 WhatsApp u dërgua — status: ${res.statusCode}`);
+    }).on('error', e => console.error('WhatsApp error:', e.message));
+  } catch(e) { console.error('WhatsApp error:', e.message); }
+}
+
 // ════════════════════════════════════════════
 //  KABINAT
 // ════════════════════════════════════════════
@@ -105,7 +120,6 @@ app.get('/api/kabinat/:id/kalendar', async (req, res) => {
     const [year, month] = muaji.split('-').map(Number);
     const fillim = new Date(year, month - 1, 1);
     const mbarim = new Date(year, month, 0);
-    // Blloko datat me statusi 'aktive' ose 'pritje'
     const [rez] = await db.query(`
       SELECT check_in, check_out FROM rezervimet_kabina
       WHERE kabina_id=? AND statusi IN ('aktive','pritje')
@@ -149,7 +163,6 @@ app.get('/api/kabina/disponueshme', async (req, res) => {
       const [k] = await db.query('SELECT * FROM kabinat WHERE aktive=1 ORDER BY id');
       return res.json(k.map(x => ({ ...x, e_zene: false })));
     }
-    // E zënë nëse ka rezervim aktive OSE pritje
     const [kabinat] = await db.query(`
       SELECT k.*, CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END AS e_zene
       FROM kabinat k
@@ -170,29 +183,45 @@ app.get('/api/kabina/disponueshme', async (req, res) => {
 //  KABINA REZERVIMET (KËRKESA)
 // ════════════════════════════════════════════
 
-// POST — klienti dërgon kërkesë (statusi = 'pritje')
 app.post('/api/kabina/kerkese', async (req, res) => {
   try {
-    const { kabina_id, emri, telefon, email, persona, check_in, check_out, kerkesa } = req.body;
+    const kabina_id = parseInt(req.body.kabina_id);
+    const { emri, telefon, email, check_in, check_out, kerkesa } = req.body;
+    const persona = parseInt(req.body.persona) || 2;
+
     if (!kabina_id || !emri || !telefon || !check_in || !check_out)
       return res.status(400).json({ gabim: 'Mungojnë të dhënat e detyrueshme.' });
     if (new Date(check_out) <= new Date(check_in))
       return res.status(400).json({ gabim: 'Check-out duhet të jetë pas check-in.' });
-    // Kontrollo konfliktin (vetëm aktive + pritje)
+
     const [k] = await db.query(`
       SELECT id FROM rezervimet_kabina
       WHERE kabina_id=? AND statusi IN ('aktive','pritje')
         AND check_in<? AND check_out>?
     `, [kabina_id, check_out, check_in]);
     if (k.length) return res.status(409).json({ gabim: 'Kabina është e rezervuar për këto data.' });
+
     const { total } = await llogaritTotal(kabina_id, check_in, check_out);
-    const [result] = await db.query(`
-      INSERT INTO rezervimet_kabina
-        (kabina_id,emri,telefon,email,persona,check_in,check_out,totali,kerkesa,burim,statusi)
-      VALUES (?,?,?,?,?,?,?,?,?,'online','pritje')
-    `, [kabina_id, emri, telefon, email||null, persona||2, check_in, check_out, total, kerkesa||null]);
+
+    const [result] = await db.query(
+      `INSERT INTO rezervimet_kabina
+        (kabina_id, emri, telefon, email, persona, check_in, check_out, totali, kerkesa, burim, statusi)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'online', 'pritje')`,
+      [kabina_id, emri, telefon, email||null, persona, check_in, check_out, total, kerkesa||null]
+    );
+
+    // WhatsApp njoftim
+    const [kabInfo] = await db.query('SELECT emri FROM kabinat WHERE id=?', [kabina_id]);
+    const kabEmri = kabInfo.length ? kabInfo[0].emri : `Kabina ${kabina_id}`;
+    const nights = Math.round((new Date(check_out) - new Date(check_in)) / 86400000);
+    const msg = `🌲 KROI - Kërkesë e Re!\n📅 ${kabEmri}\n👤 ${emri}\n📞 ${telefon}\n🗓 Check-in: ${check_in}\n🗓 Check-out: ${check_out}\n🌙 Netë: ${nights}\n💰 Totali: ${Math.round(total).toLocaleString()} L${kerkesa ? '\n📝 ' + kerkesa : ''}`;
+    dergoPorosi(msg);
+
     res.status(201).json({ sukses: true, id: result.insertId, totali: total });
-  } catch (e) { res.status(500).json({ gabim: e.message }); }
+  } catch (e) {
+    console.error('KERKESE ERROR:', e.message);
+    res.status(500).json({ gabim: e.message });
+  }
 });
 
 app.get('/api/kabina/rezervimet', async (req, res) => {
@@ -201,7 +230,7 @@ app.get('/api/kabina/rezervimet', async (req, res) => {
     const ku = statusi ? 'WHERE r.statusi=?' : '';
     const params = statusi ? [statusi] : [];
     const [rows] = await db.query(`
-      SELECT r.*, k.emri AS kabina_emri, k.lloji, k.cmimi_nate
+      SELECT r.*, k.emri AS kabina_emri, k.lloji, k.cmimi_nate, k.id AS kabina_id
       FROM rezervimet_kabina r JOIN kabinat k ON k.id=r.kabina_id
       ${ku} ORDER BY r.krijuar_me DESC
     `, params);
@@ -213,39 +242,59 @@ app.get('/api/kabina/rezervimet', async (req, res) => {
 //  ADMIN API
 // ════════════════════════════════════════════
 
-// PATCH status kabina (konfirmo/refuzo/perfundo)
 app.patch('/api/admin/kabina/rezervimet/:id/status', async (req, res) => {
   try {
     const { statusi } = req.body;
     if (!['pritje','aktive','anuluar','perfunduar'].includes(statusi))
       return res.status(400).json({ gabim: 'Status i pavlefshëm.' });
     await db.query('UPDATE rezervimet_kabina SET statusi=? WHERE id=?', [statusi, req.params.id]);
+
+    // WhatsApp njoftim për konfirmim
+    if (statusi === 'aktive') {
+      const [r] = await db.query(`
+        SELECT r.emri, r.telefon, r.check_in, r.check_out, k.emri AS kabina_emri
+        FROM rezervimet_kabina r JOIN kabinat k ON k.id=r.kabina_id
+        WHERE r.id=?`, [req.params.id]);
+      if (r.length) {
+        const msg = `✅ KROI - Rezervim u Konfirmua!\n📅 ${r[0].kabina_emri}\n👤 ${r[0].emri}\n📞 ${r[0].telefon}\n🗓 ${r[0].check_in} → ${r[0].check_out}`;
+        dergoPorosi(msg);
+      }
+    }
     res.json({ sukses: true });
   } catch (e) { res.status(500).json({ gabim: e.message }); }
 });
 
-// POST rezervim manual admin (direkt aktive)
 app.post('/api/admin/kabina/rezervo', async (req, res) => {
   try {
-    const { kabina_id, emri, telefon, email, persona, check_in, check_out, kerkesa } = req.body;
+    const kabina_id = parseInt(req.body.kabina_id);
+    const { emri, telefon, email, check_in, check_out, kerkesa } = req.body;
+    const persona = parseInt(req.body.persona) || 2;
+
     if (!kabina_id || !emri || !check_in || !check_out)
       return res.status(400).json({ gabim: 'Mungojnë të dhënat.' });
+    if (new Date(check_out) <= new Date(check_in))
+      return res.status(400).json({ gabim: 'Check-out duhet të jetë pas check-in.' });
+
     const [k] = await db.query(`
       SELECT id FROM rezervimet_kabina
       WHERE kabina_id=? AND statusi IN ('aktive','pritje') AND check_in<? AND check_out>?
     `, [kabina_id, check_out, check_in]);
     if (k.length) return res.status(409).json({ gabim: 'Kabina është e rezervuar për këto data.' });
+
     const { total } = await llogaritTotal(kabina_id, check_in, check_out);
-    const [r] = await db.query(`
-      INSERT INTO rezervimet_kabina
-        (kabina_id,emri,telefon,email,persona,check_in,check_out,totali,kerkesa,burim,statusi)
-      VALUES (?,?,?,?,?,?,?,?,?,'admin','aktive')
-    `, [kabina_id, emri, telefon||'—', email||null, persona||2, check_in, check_out, total, kerkesa||null]);
+    const [r] = await db.query(
+      `INSERT INTO rezervimet_kabina
+        (kabina_id, emri, telefon, email, persona, check_in, check_out, totali, kerkesa, burim, statusi)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'admin', 'aktive')`,
+      [kabina_id, emri, telefon||'—', email||null, persona, check_in, check_out, total, kerkesa||null]
+    );
     res.status(201).json({ sukses: true, id: r.insertId, totali: total });
-  } catch (e) { res.status(500).json({ gabim: e.message }); }
+  } catch (e) {
+    console.error('ADMIN REZERVO ERROR:', e.message);
+    res.status(500).json({ gabim: e.message });
+  }
 });
 
-// GET kalendar admin per kabinë
 app.get('/api/admin/kabina/:id/kalendar-rezervime', async (req, res) => {
   try {
     const muaji = req.query.muaji || new Date().toISOString().substring(0,7);
@@ -266,25 +315,19 @@ app.get('/api/admin/kabina/:id/kalendar-rezervime', async (req, res) => {
   } catch (e) { res.status(500).json({ gabim: e.message }); }
 });
 
-// GET plan pune ditor — ardhje dhe ikje
 app.get('/api/admin/plan-ditor', async (req, res) => {
   try {
     const data = req.query.data || new Date().toISOString().split('T')[0];
-    // Check-in sot (arrivals)
     const [ardhje] = await db.query(`
       SELECT r.*, k.emri AS kabina_emri, k.kodi
       FROM rezervimet_kabina r JOIN kabinat k ON k.id=r.kabina_id
-      WHERE r.check_in=? AND r.statusi='aktive'
-      ORDER BY k.id
+      WHERE r.check_in=? AND r.statusi='aktive' ORDER BY k.id
     `, [data]);
-    // Check-out sot (departures)
     const [ikje] = await db.query(`
       SELECT r.*, k.emri AS kabina_emri, k.kodi
       FROM rezervimet_kabina r JOIN kabinat k ON k.id=r.kabina_id
-      WHERE r.check_out=? AND r.statusi IN ('aktive','perfunduar')
-      ORDER BY k.id
+      WHERE r.check_out=? AND r.statusi IN ('aktive','perfunduar') ORDER BY k.id
     `, [data]);
-    // Kabinat të zëna sot
     const [zena] = await db.query(`
       SELECT k.id, k.kodi, k.emri AS kabina_emri,
              r.emri, r.check_in, r.check_out, r.statusi
@@ -298,7 +341,6 @@ app.get('/api/admin/plan-ditor', async (req, res) => {
   } catch (e) { res.status(500).json({ gabim: e.message }); }
 });
 
-// GET disponueshmëria për datë të ardhshme (admin)
 app.get('/api/admin/disponueshme', async (req, res) => {
   try {
     const { check_in, check_out } = req.query;
@@ -342,11 +384,10 @@ app.delete('/api/admin/kabina/:id/foto/:fotoId', async (req, res) => {
 app.get('/api/admin/export/kabina', async (req, res) => {
   try {
     const { data_fillim, data_mbarim, statusi } = req.query;
-    let ku = '', params = [];
-    const conditions = [];
+    const conditions = [], params = [];
     if (data_fillim && data_mbarim) { conditions.push('r.check_in BETWEEN ? AND ?'); params.push(data_fillim, data_mbarim); }
     if (statusi) { conditions.push('r.statusi=?'); params.push(statusi); }
-    if (conditions.length) ku = 'WHERE ' + conditions.join(' AND ');
+    const ku = conditions.length ? 'WHERE ' + conditions.join(' AND ') : '';
     const [rows] = await db.query(`
       SELECT r.id, r.emri, r.telefon, r.email, k.emri AS kabina,
              k.lloji, r.persona, r.check_in, r.check_out, r.netet,
@@ -371,7 +412,6 @@ app.get('/api/admin/export/kabina', async (req, res) => {
   } catch (e) { res.status(500).json({ gabim: e.message }); }
 });
 
-// Export plan ditor Excel
 app.get('/api/admin/export/plan-ditor', async (req, res) => {
   try {
     const data = req.query.data || new Date().toISOString().split('T')[0];
@@ -402,7 +442,7 @@ app.get('/api/admin/export/plan-ditor', async (req, res) => {
 });
 
 // ════════════════════════════════════════════
-//  AUTO-CLOSE — Mbyll rezervimet e kaluara
+//  AUTO-CLOSE
 // ════════════════════════════════════════════
 async function autoCloseExpired() {
   try {

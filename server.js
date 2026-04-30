@@ -1,6 +1,6 @@
 require('dotenv').config();
 // ============================================
-// KROI Rezervime - Server API v4
+// KROI Rezervime - Server API v4.1
 // Sistem kërkese (pritje → aktive/anuluar)
 // ============================================
 const express = require('express');

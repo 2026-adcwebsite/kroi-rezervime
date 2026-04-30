@@ -67,7 +67,7 @@ nav a.active{color:var(--gold);border-bottom:2px solid var(--gold);}
 .btn-search:hover{background:var(--moss-l);}
 
 /* LAYOUT */
-.content-wrap{max-width:1320px;margin:0 auto;padding:1.5rem;display:grid;grid-template-columns:1fr 390px;gap:2rem;align-items:start;}
+.content-wrap{max-width:960px;margin:0 auto;padding:1.5rem;}
 .sec-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text);font-weight:400;margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;}
 .cnt-badge{background:var(--moss-bg);border:1px solid var(--moss-br);border-radius:20px;padding:2px 10px;font-size:.73rem;color:var(--moss);font-weight:500;}
 
@@ -147,7 +147,7 @@ nav a.active{color:var(--gold);border-bottom:2px solid var(--gold);}
 .gal-count{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.7);font-size:.82rem;background:rgba(0,0,0,.5);padding:.3rem .9rem;border-radius:20px;}
 
 /* BOOKING PANEL */
-.booking-panel{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:1.8rem 1.5rem;position:sticky;top:140px;box-shadow:0 4px 20px rgba(0,0,0,.06);}
+.booking-panel{display:none !important;}
 .booking-panel h3{font-family:'Playfair Display',serif;color:var(--text);font-size:1.3rem;margin-bottom:.5rem;font-weight:400;}
 .booking-panel .subtitle{font-size:.78rem;color:var(--muted);margin-bottom:1.2rem;padding-bottom:.8rem;border-bottom:1px solid var(--border);}
 .sel-info{background:var(--moss-bg);border:1px solid var(--moss-br);border-radius:10px;padding:1rem;margin-bottom:1.4rem;min-height:80px;display:flex;align-items:center;justify-content:center;}
@@ -232,8 +232,32 @@ nav a.active{color:var(--gold);border-bottom:2px solid var(--gold);}
 footer{background:var(--surface);border-top:1px solid var(--border);padding:1.5rem;text-align:center;margin-top:2rem;}
 footer p{font-size:.8rem;color:var(--muted);line-height:1.8;}
 footer a{color:var(--gold);}
-@media(max-width:960px){.content-wrap{grid-template-columns:1fr}.booking-panel{position:static}.cal-months{grid-template-columns:1fr}.policies{grid-template-columns:1fr 1fr}}
+@media(max-width:960px){.cal-months{grid-template-columns:1fr}.policies{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.content-wrap{padding:1rem}.search-wrap{top:60px}.hero{height:180px}.policies{grid-template-columns:1fr}}
+
+/* ── MOBILE IMPROVEMENTS ── */
+@media(max-width:600px){
+  .content-wrap{padding:.8rem;}
+  .search-wrap{padding:.7rem 1rem;gap:.5rem;top:58px;}
+  .sf input,.sf select{padding:.4rem .7rem;font-size:.82rem;}
+  .btn-search{padding:.45rem 1rem;font-size:.78rem;}
+  .cabins-grid{grid-template-columns:1fr;}
+  .policies{grid-template-columns:1fr 1fr;}
+  .faq-section{padding:1rem;}
+  .cal-modal{padding:1rem;}
+  .cal-months{grid-template-columns:1fr;}
+  .bbox{max-height:92vh;overflow-y:auto;}
+  .bbox-row{grid-template-columns:1fr;}
+  .bbox-body{padding:1rem;}
+  .bbox-footer{padding:0 1rem 1rem;}
+  .bbox-head{padding:1.2rem 1rem;}
+  .hero{height:160px;}
+}
+@media(max-width:400px){
+  .hero{height:140px;}
+  .policies{grid-template-columns:1fr;}
+  .cabin-name{font-size:1rem;}
+}
 </style>
 </head>
 <body>

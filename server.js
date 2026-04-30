@@ -205,8 +205,8 @@ app.post('/api/kabina/kerkese', async (req, res) => {
 
     const [result] = await db.query(
       `INSERT INTO rezervimet_kabina
-        (kabina_id, emri, telefon, email, persona, check_in, check_out, totali, kerkesa, burim, statusi)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'online', 'pritje')`,
+        (kabina_id, emri, telefon, email, persona, check_in, check_out, totali, kerkesa, burim)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'online')`,
       [kabina_id, emri, telefon, email||null, persona, check_in, check_out, total, kerkesa||null]
     );
 

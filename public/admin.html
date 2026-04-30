@@ -222,40 +222,103 @@ nav.snav{flex:1;padding:.8rem 0;}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 @media(max-width:900px){.sidebar{width:60px;}.sidebar .nav-item span,.sidebar-logo .sub,.sidebar-logo .name,.nav-sec,.clock,.sidebar-footer .btn-logout span{display:none;}.main{margin-left:60px;}.stats-grid{grid-template-columns:repeat(2,1fr);}.plan-grid{grid-template-columns:1fr;}}
 
-/* ── ADMIN MOBILE ── */
-@media(max-width:768px){
-  .sidebar{width:56px;}
-  .sidebar .nav-item span,.sidebar-logo .sub,.sidebar-logo .name,.nav-sec,.clock{display:none;}
-  .sidebar-footer .btn-logout span{display:none;}
-  .nav-item{justify-content:center;padding:.6rem;}
-  .nav-item .icon{width:auto;font-size:1.1rem;}
-  .main{margin-left:56px;}
-  .topbar{padding:.7rem 1rem;flex-wrap:wrap;gap:.5rem;}
+
+
+/* ══ MOBILE ADMIN ══ */
+@media(max-width:900px){
+  /* Hide sidebar completely, show bottom nav instead */
+  .sidebar{display:none;}
+  .main{margin-left:0 !important;}
+  
+  /* Topbar */
+  .topbar{padding:.7rem 1rem;}
   .topbar h1{font-size:1.1rem;}
-  .topbar-right{gap:.4rem;flex-wrap:wrap;}
-  .btn-icon{padding:.35rem .6rem;font-size:.73rem;}
-  .content{padding:.8rem 1rem;}
-  .stats-grid{grid-template-columns:repeat(2,1fr);gap:.7rem;}
+  .last-ref{display:none;}
+  .topbar-right .btn-icon:nth-child(1),.topbar-right .btn-icon:nth-child(2){display:none;}
+  
+  /* Content */
+  .content{padding:.8rem;}
+  
+  /* Stats - 2 columns */
+  .stats-grid{grid-template-columns:1fr 1fr !important;gap:.6rem;}
+  .stat-card{padding:.9rem 1rem;}
   .stat-value{font-size:1.6rem;}
-  .plan-grid{grid-template-columns:1fr;gap:1rem;}
-  .avail-grid{grid-template-columns:repeat(3,1fr);}
+  .stat-label{font-size:.62rem;}
+  .stat-sub{font-size:.67rem;}
+  
+  /* Plan grid */
+  .plan-grid{grid-template-columns:1fr !important;}
+  
+  /* Avail grid */
+  .avail-grid{grid-template-columns:repeat(3,1fr) !important;gap:.5rem;padding:.8rem;}
+  .avail-kodi{font-size:.9rem;}
+  
+  /* Cabin cal tabs */
   .cabin-cal-tabs{gap:.3rem;padding:.7rem .9rem;}
-  .cab-tab{padding:.3rem .7rem;font-size:.73rem;}
-  .gantt-controls{gap:.6rem;padding:.7rem 1rem;}
-  .gantt-period{min-width:120px;font-size:.85rem;}
-  .section{border-radius:10px;}
-  .sec-head{padding:.8rem 1rem;flex-direction:column;align-items:flex-start;gap:.6rem;}
+  .cab-tab{padding:.3rem .65rem;font-size:.73rem;}
+  .cabin-cal-wrap{padding:.9rem;}
+  .cabin-cal-grid{gap:2px;}
+  .ccal-day{min-height:44px;padding:.2rem .25rem;}
+  
+  /* Gantt */
+  .gantt-controls{padding:.7rem 1rem;gap:.5rem;}
+  .gantt-period{min-width:100px;font-size:.82rem;}
+  .gantt-wrap{max-height:60vh;}
+  
+  /* Section */
+  .sec-head{padding:.8rem 1rem;flex-direction:column;align-items:flex-start;gap:.5rem;}
+  .sec-head h2{font-size:.95rem;}
+  
+  /* Tables scroll */
   .rez-table{font-size:.78rem;}
-  .rez-table th,.rez-table td{padding:.5rem .7rem;}
+  .rez-table th{padding:.5rem .6rem;font-size:.6rem;}
+  .rez-table td{padding:.55rem .6rem;}
+  
+  /* Modal */
+  .modal-box{padding:1.3rem;}
+  .popup-box{padding:1.3rem;max-width:96%;}
+  
+  /* Filter bar */
+  .filter-bar{padding:.6rem 1rem;}
+  .filter-bar input,.filter-bar select{font-size:.78rem;padding:.32rem .6rem;}
 }
+
+@media(max-width:900px){
+  /* Bottom navigation bar */
+  body::after{
+    content:'';display:block;height:60px;
+  }
+  .mobile-bottom-nav{
+    display:flex !important;
+    position:fixed;bottom:0;left:0;right:0;
+    background:var(--surface);border-top:1.5px solid var(--border);
+    z-index:100;height:60px;
+  }
+  .mbn-item{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:3px;cursor:pointer;border:none;background:transparent;
+    font-family:'DM Sans',sans-serif;font-size:.6rem;color:var(--dim);
+    transition:.15s;padding:.3rem 0;
+  }
+  .mbn-item .mbn-icon{font-size:1.2rem;line-height:1;}
+  .mbn-item.active{color:var(--gold);}
+  .mbn-item:hover{color:var(--gold);}
+  .mbn-badge{position:absolute;top:-2px;right:-4px;background:var(--red);color:#fff;border-radius:10px;padding:1px 5px;font-size:.58rem;font-weight:700;}
+  .mbn-icon-wrap{position:relative;display:inline-block;}
+}
+
+@media(min-width:901px){
+  .mobile-bottom-nav{display:none !important;}
+}
+
 @media(max-width:480px){
-  .stats-grid{grid-template-columns:1fr 1fr;}
-  .avail-grid{grid-template-columns:repeat(2,1fr);}
-  .topbar-right .btn-icon:not(:last-child){display:none;}
-  .gantt-toggle .gtoggle{padding:.4rem .7rem;font-size:.74rem;}
-  .modal-box{padding:1.2rem;}
-  .popup-box{padding:1.2rem;}
+  .stats-grid{grid-template-columns:1fr 1fr !important;gap:.5rem;}
+  .stat-value{font-size:1.4rem;}
+  .avail-grid{grid-template-columns:repeat(2,1fr) !important;}
+  .content{padding:.6rem;}
+  .topbar{padding:.6rem .8rem;}
 }
+
 </style>
 </head>
 <body>
@@ -602,6 +665,7 @@ async function loadAll(){
   document.getElementById('lastRef').textContent='Rifreskuar: '+new Date().toLocaleTimeString('sq-AL');
   await Promise.all([loadKabinatList(),loadRezAll()]);
   updateDashboard();
+  updateMobileBadge();
 }
 
 async function loadKabinatList(){
@@ -1015,8 +1079,36 @@ function renderGantt(){
   table.innerHTML=thead+tbody;
 }
 
+
+// ── MOBILE NAV ──────────────────────────────
+function isMobile(){ return window.innerWidth <= 900; }
+function showTabMobile(name){
+  showTab(name);
+  if(isMobile()){
+    document.querySelectorAll('.mbn-item').forEach(b=>b.classList.remove('active'));
+    const btn=document.getElementById('mbn-'+name.replace('-',''));
+    if(btn)btn.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+}
+function checkMobileNav(){
+  const nav=document.getElementById('mobileBottomNav');
+  if(!nav)return;
+  nav.style.display=isMobile()?'flex':'none';
+}
+window.addEventListener('resize',checkMobileNav);
+window.addEventListener('load',checkMobileNav);
+// Update badge on mobile nav
+const _origUpdate=typeof updateDashboard==='function'?updateDashboard:null;
+function updateMobileBadge(){
+  const pritje=allRez?allRez.filter(r=>r.statusi==='pritje').length:0;
+  const b=document.getElementById('mbn-badge');
+  if(b){b.textContent=pritje;b.style.display=pritje?'inline':'none';}
+}
+
 // ── INIT ─────────────────────────────────────
 function initApp(){
+  checkMobileNav();
   const today=new Date().toISOString().split('T')[0];
   document.getElementById('planDate').value=today;
   document.getElementById('exp-plan-date').value=today;
@@ -1025,5 +1117,30 @@ function initApp(){
 }
 if(isLoggedIn)initApp();
 </script>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mobile-bottom-nav" id="mobileBottomNav" style="display:none;">
+  <button class="mbn-item active" onclick="showTabMobile('dashboard')" id="mbn-dashboard">
+    <span class="mbn-icon-wrap"><span class="mbn-icon">📊</span></span>
+    <span>Dashboard</span>
+  </button>
+  <button class="mbn-item" onclick="showTabMobile('kerkesat')" id="mbn-kerkesat">
+    <span class="mbn-icon-wrap"><span class="mbn-icon">📨</span><span class="mbn-badge" id="mbn-badge" style="display:none">0</span></span>
+    <span>Kërkesa</span>
+  </button>
+  <button class="mbn-item" onclick="showTabMobile('plan-ditor')" id="mbn-plan">
+    <span class="mbn-icon-wrap"><span class="mbn-icon">📋</span></span>
+    <span>Plani</span>
+  </button>
+  <button class="mbn-item" onclick="showTabMobile('gantt')" id="mbn-gantt">
+    <span class="mbn-icon-wrap"><span class="mbn-icon">📅</span></span>
+    <span>Gantt</span>
+  </button>
+  <button class="mbn-item" onclick="showTabMobile('konfirmuara')" id="mbn-konfirm">
+    <span class="mbn-icon-wrap"><span class="mbn-icon">✅</span></span>
+    <span>Aktive</span>
+  </button>
+</div>
+
 </body>
 </html>

@@ -84,6 +84,32 @@ async function llogaritTotal(kabina_id, check_in, check_out) {
   return { total, breakdown };
 }
 
+// ── Email Njoftim (EmailJS) ──────────────────
+async function dergoEmail(params, templateId='template_dwvn06r') {
+  try {
+    const data = JSON.stringify({
+      service_id:  'service_ro3sw2l',
+      template_id: templateId,
+      user_id:     'BoqOYynpoBUruTfDR',
+      template_params: params
+    });
+    const options = {
+      hostname: 'api.emailjs.com',
+      path: '/api/v1.0/email/send',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(data)
+      }
+    };
+    const req = https.request(options, (res) => {
+      console.log(`📧 Email u dërgua — status: ${res.statusCode}`);
+    });
+    req.on('error', e => console.error('Email error:', e.message));
+    req.end(data);
+  } catch(e) { console.error('Email error:', e.message); }
+}
+
 // ── WhatsApp Njoftim ──────────────────────────
 async function dergoPorosi(msg) {
   try {
@@ -216,6 +242,36 @@ app.post('/api/kabina/kerkese', async (req, res) => {
     const nights = Math.round((new Date(check_out) - new Date(check_in)) / 86400000);
     const msg = `🌲 KROI - Kërkesë e Re!\n📅 ${kabEmri}\n👤 ${emri}\n📞 ${telefon}\n🗓 Check-in: ${check_in}\n🗓 Check-out: ${check_out}\n🌙 Netë: ${nights}\n💰 Totali: ${Math.round(total).toLocaleString()} L${kerkesa ? '\n📝 ' + kerkesa : ''}`;
     dergoPorosi(msg);
+
+    // Email njoftim — admin
+    const nights2 = Math.round((new Date(check_out) - new Date(check_in)) / 86400000);
+    dergoEmail({
+      rez_id:    result.insertId,
+      kabina:    kabEmri,
+      emri:      emri,
+      telefon:   telefon,
+      check_in:  check_in,
+      check_out: check_out,
+      netet:     nights2,
+      totali:    Math.round(total).toLocaleString() + ' L',
+      kerkesa:   kerkesa || '—'
+    });
+
+    // Email konfirmimi — klienti (vetëm nëse ka dhënë email)
+    if (email) {
+      dergoEmail({
+        rez_id:       result.insertId,
+        kabina:       kabEmri,
+        emri:         emri,
+        telefon:      telefon,
+        check_in:     check_in,
+        check_out:    check_out,
+        netet:        nights2,
+        totali:       Math.round(total).toLocaleString() + ' L',
+        kerkesa:      kerkesa || '—',
+        email_klient: email
+      }, 'template_nsy7oxr');
+    }
 
     res.status(201).json({ sukses: true, id: result.insertId, totali: total });
   } catch (e) {

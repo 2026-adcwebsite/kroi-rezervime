@@ -11,6 +11,7 @@ const multer  = require('multer');
 const XLSX    = require('xlsx');
 const fs      = require('fs');
 const https   = require('https');
+const crypto  = require('crypto');
 
 const app  = express();
 const PORT = process.env.PORT || 3030;
@@ -232,11 +233,12 @@ app.post('/api/kabina/kerkese', async (req, res) => {
 
     const { total } = await llogaritTotal(kabina_id, check_in, check_out);
 
+    const anulo_token = crypto.randomBytes(32).toString('hex');
     const [result] = await db.query(
       `INSERT INTO rezervimet_kabina
-        (kabina_id, emri, telefon, email, persona, check_in, check_out, totali, kerkesa, burim)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'online')`,
-      [kabina_id, emri, telefon, email||null, persona, check_in, check_out, total, kerkesa||null]
+        (kabina_id, emri, telefon, email, persona, check_in, check_out, totali, kerkesa, burim, anulo_token)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'online', ?)`,
+      [kabina_id, emri, telefon, email||null, persona, check_in, check_out, total, kerkesa||null, anulo_token]
     );
 
     // WhatsApp njoftim
@@ -248,17 +250,19 @@ app.post('/api/kabina/kerkese', async (req, res) => {
 
     // Email njoftim — admin
     const nights2 = Math.round((new Date(check_out) - new Date(check_in)) / 86400000);
+    const anulo_link = `https://kroi-rezervime-production.up.railway.app/anulo?token=${anulo_token}`;
     dergoEmail({
-      name:      emri,
-      rez_id:    result.insertId,
-      kabina:    kabEmri,
-      emri:      emri,
-      telefon:   telefon,
-      check_in:  check_in,
-      check_out: check_out,
-      netet:     nights2,
-      totali:    Math.round(total).toLocaleString() + ' L',
-      kerkesa:   kerkesa || '—'
+      name:       emri,
+      rez_id:     result.insertId,
+      kabina:     kabEmri,
+      emri:       emri,
+      telefon:    telefon,
+      check_in:   check_in,
+      check_out:  check_out,
+      netet:      nights2,
+      totali:     Math.round(total).toLocaleString() + ' L',
+      kerkesa:    kerkesa || '—',
+      anulo_link: anulo_link
     });
 
     // Email konfirmimi — klienti (vetëm nëse ka dhënë email)
@@ -274,7 +278,8 @@ app.post('/api/kabina/kerkese', async (req, res) => {
         netet:        nights2,
         totali:       Math.round(total).toLocaleString() + ' L',
         kerkesa:      kerkesa || '—',
-        email_klient: email
+        email_klient: email,
+        anulo_link:   anulo_link
       }, 'template_nsy7oxr');
     }
 
@@ -515,6 +520,59 @@ async function autoCloseExpired() {
 }
 autoCloseExpired();
 setInterval(autoCloseExpired, 5 * 60 * 1000);
+
+
+// ── ANULIM REZERVIMI ─────────────────────────
+app.get('/anulo', async (req, res) => {
+  const { token } = req.query;
+  if (!token) return res.send(paginaAnulimit('❌ Link i pavlefshëm.', false));
+  try {
+    const [rows] = await db.query(
+      'SELECT r.*, k.emri AS kabina_emri FROM rezervimet_kabina r JOIN kabinat k ON k.id=r.kabina_id WHERE r.anulo_token=?',
+      [token]
+    );
+    if (!rows.length) return res.send(paginaAnulimit('❌ Rezervimi nuk u gjet ose linku është i pavlefshëm.', false));
+    const r = rows[0];
+    if (r.statusi === 'anuluar') return res.send(paginaAnulimit(`Rezervimi #${r.id} është tashmë i anuluar.`, false));
+    if (r.statusi === 'perfunduar') return res.send(paginaAnulimit(`Rezervimi #${r.id} ka përfunduar dhe nuk mund të anulohet.`, false));
+    await db.query("UPDATE rezervimet_kabina SET statusi='anuluar', anulo_token=NULL WHERE id=?", [r.id]);
+    // WhatsApp njoftim për admin
+    const msg = `❌ KROI - Rezervim u Anulua!
+📅 ${r.kabina_emri}
+👤 ${r.emri}
+📞 ${r.telefon}
+🗓 ${r.check_in} → ${r.check_out}`;
+    dergoPorosi(msg);
+    res.send(paginaAnulimit(`✅ Rezervimi juaj #${r.id} u anulua me sukses.<br><strong>${r.kabina_emri}</strong><br>${r.check_in} → ${r.check_out}`, true));
+  } catch(e) {
+    res.send(paginaAnulimit('❌ Gabim. Ju lutem kontaktoni +355 69 222 3412.', false));
+  }
+});
+
+function paginaAnulimit(msg, success) {
+  return `<!DOCTYPE html>
+<html lang="sq">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KROI — Anulim Rezervimi</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',sans-serif;background:#F7F4EF;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem;}
+.box{background:#fff;border-radius:20px;padding:2.5rem 2rem;max-width:420px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.08);}
+.logo{font-size:2rem;color:#8B6914;font-weight:700;letter-spacing:.1em;margin-bottom:.3rem;}
+.sub{font-size:.75rem;color:#9E9488;letter-spacing:.2em;text-transform:uppercase;margin-bottom:2rem;}
+.icon{font-size:3rem;margin-bottom:1rem;}
+.msg{font-size:1rem;color:#1A1A18;line-height:1.7;margin-bottom:1.5rem;}
+.btn{display:inline-block;background:#8B6914;color:#fff;border-radius:10px;padding:.75rem 2rem;text-decoration:none;font-weight:600;font-size:.9rem;}
+.btn.green{background:#3D6B3A;}
+</style></head>
+<body><div class="box">
+<div class="logo">KROI</div>
+<div class="sub">Agroturizëm & Restorant</div>
+<div class="icon">${success ? '✅' : '❌'}</div>
+<div class="msg">${msg}</div>
+<a href="https://kroi-rezervime-production.up.railway.app/kabina" class="btn ${success ? 'green' : ''}">← Kthehu te faqja</a>
+</div></body></html>`;
+}
 
 // ── FAQET HTML ────────────────────────────────
 app.get('/',           (req, res) => res.sendFile(path.join(__dirname, 'public', 'rezervimi-kabina.html')));

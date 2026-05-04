@@ -88,9 +88,10 @@ async function llogaritTotal(kabina_id, check_in, check_out) {
 async function dergoEmail(params, templateId='template_dwvn06r') {
   try {
     const data = JSON.stringify({
-      service_id:  'service_ro3sw2l',
-      template_id: templateId,
-      user_id:     'BoqOYynpoBUruTfDR',
+      service_id:   'service_ro3sw2l',
+      template_id:  templateId,
+      user_id:      'BoqOYynpoBUruTfDR',
+      accessToken:  process.env.EMAILJS_PRIVATE_KEY || '',
       template_params: params
     });
     const options = {

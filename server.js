@@ -247,6 +247,7 @@ app.post('/api/kabina/kerkese', async (req, res) => {
     // Email njoftim — admin
     const nights2 = Math.round((new Date(check_out) - new Date(check_in)) / 86400000);
     dergoEmail({
+      name:      emri,
       rez_id:    result.insertId,
       kabina:    kabEmri,
       emri:      emri,
@@ -261,6 +262,7 @@ app.post('/api/kabina/kerkese', async (req, res) => {
     // Email konfirmimi — klienti (vetëm nëse ka dhënë email)
     if (email) {
       dergoEmail({
+        name:         emri,
         rez_id:       result.insertId,
         kabina:       kabEmri,
         emri:         emri,

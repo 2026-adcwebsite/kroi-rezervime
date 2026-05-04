@@ -104,7 +104,9 @@ async function dergoEmail(params, templateId='template_dwvn06r') {
       }
     };
     const req = https.request(options, (res) => {
-      console.log(`📧 Email u dërgua — status: ${res.statusCode}`);
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => console.log(`📧 Email status: ${res.statusCode} — ${body}`));
     });
     req.on('error', e => console.error('Email error:', e.message));
     req.end(data);
